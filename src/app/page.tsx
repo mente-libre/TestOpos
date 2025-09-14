@@ -1,133 +1,174 @@
 'use client';
 
-import { useState } from 'react';
-import { BrainCircuit } from 'lucide-react';
-
-import { FileUploader } from '@/components/app/file-uploader';
-import { TestView } from '@/components/app/test-view';
-import { ResultsView } from '@/components/app/results-view';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-
-// Types
-export type Document = {
-  fileName: string;
-  questions: string[];
-};
-
-export type TestQuestion = {
-  question: string;
-  options: string[];
-  userAnswer: string | null;
-  // In a real app, this would be populated from the source
-  correctAnswer: string; 
-};
-
-export type AppView = 'upload' | 'test' | 'results';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { FileUp, Bot, BarChart3, Upload } from 'lucide-react';
 
 export default function Home() {
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [view, setView] = useState<AppView>('upload');
-  const [testQuestions, setTestQuestions] = useState<TestQuestion[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
-  const handleQuestionsExtracted = (doc: Document) => {
-    setDocuments((prevDocs) => [...prevDocs, doc]);
+  const handleUploadAreaClick = () => {
+    fileInputRef.current?.click();
   };
 
-  const startTest = () => {
-    const allQuestions = documents.flatMap((doc) => doc.questions);
-    if (allQuestions.length === 0) return;
-
-    // Shuffle and pick 90 questions for the test
-    const shuffled = allQuestions.sort(() => 0.5 - Math.random());
-    const selectedQuestions = shuffled.slice(0, Math.min(90, shuffled.length));
-
-    const formattedTest: TestQuestion[] = selectedQuestions.map((q) => ({
-      question: q,
-      options: ['A', 'B', 'C', 'D'], // Dummy options
-      userAnswer: null,
-      correctAnswer: 'A', // Dummy correct answer
-    }));
-    
-    setTestQuestions(formattedTest);
-    setView('test');
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setSelectedFileName(event.target.files[0].name);
+    }
   };
-
-  const handleTestFinish = (answers: TestQuestion[]) => {
-    setTestQuestions(answers);
-    setView('results');
-  };
-
-  const resetToUpload = () => {
-    setView('upload');
-    // Optionally reset documents if you want a clean slate
-    // setDocuments([]);
-  };
-  
-  const totalQuestions = documents.reduce((acc, doc) => acc + doc.questions.length, 0);
 
   return (
-    <>
-      <div className="flex flex-col min-h-screen">
-        <main className="flex-grow container mx-auto px-4 py-8 md:py-12">
-          <header className="text-center mb-8 md:mb-12">
-            <div className="inline-flex items-center justify-center gap-3 mb-2">
-              <BrainCircuit className="h-10 w-10 text-primary" />
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tighter font-headline bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-                OposTest IA
-              </h1>
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
+      <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="text-2xl font-bold text-primary">Opofy</div>
+            <nav className="hidden md:flex items-center space-x-4">
+              <a href="#" className="text-secondary hover:text-primary transition-colors">Inicio</a>
+              <a href="#" className="text-secondary hover:text-primary transition-colors">Exámenes</a>
+              <a href="#" className="text-secondary hover:text-primary transition-colors">Estadísticas</a>
+              <a href="#" className="text-secondary hover:text-primary transition-colors">Ayuda</a>
+            </nav>
+            <div>
+              <Button>Iniciar Sesión</Button>
             </div>
-            <p className="max-w-2xl mx-auto text-muted-foreground md:text-xl">
-              Sube tus exámenes, extraemos las preguntas y genera tests al instante.
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section className="py-16 md:py-24 text-center bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Prepara tus oposiciones con exámenes reales</h1>
+            <p className="max-w-3xl mx-auto text-lg text-secondary mb-8">
+              Sube tus exámenes en PDF y genera tests personalizados para practicar. Mejora tu rendimiento con inteligencia artificial.
             </p>
-          </header>
+            <Button size="lg">Comenzar ahora</Button>
+          </div>
+        </section>
 
-          {view === 'upload' && (
-            <div className="max-w-4xl mx-auto space-y-8">
-              <FileUploader onQuestionsExtracted={handleQuestionsExtracted} />
-              
-              {documents.length > 0 && (
-                <Card className="animate-in fade-in duration-500">
-                  <CardHeader>
-                    <CardTitle>Exámenes Disponibles</CardTitle>
-                    <CardDescription>
-                      Hemos procesado {documents.length} documento(s) con un total de {totalQuestions} preguntas.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {documents.map((doc, index) => (
-                        <li key={index} className="text-sm p-3 bg-secondary rounded-md flex items-center justify-between">
-                          <span className="font-medium truncate pr-4">{doc.fileName}</span>
-                          <span className="text-muted-foreground whitespace-nowrap">{doc.questions.length} preguntas</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <Button onClick={startTest} className="w-full mt-6" size="lg" disabled={totalQuestions === 0}>
-                      Comenzar Test Aleatorio ({Math.min(90, totalQuestions)} Preguntas)
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
+        <section className="py-16 md:py-24">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold text-center mb-12">Cómo funciona</h2>
+            <div className="grid md:grid-cols-3 gap-8">
+              <Card className="text-center hover:shadow-lg hover:-translate-y-1 transition-transform">
+                <CardHeader>
+                  <div className="mx-auto bg-primary/10 rounded-full h-16 w-16 flex items-center justify-center mb-4">
+                    <FileUp className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold">Sube tus exámenes</h3>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">Sube los PDFs de exámenes anteriores. Organízalos por categoría, comunidad o año.</p>
+                </CardContent>
+              </Card>
+              <Card className="text-center hover:shadow-lg hover:-translate-y-1 transition-transform">
+                <CardHeader>
+                  <div className="mx-auto bg-primary/10 rounded-full h-16 w-16 flex items-center justify-center mb-4">
+                    <Bot className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold">IA genera tests</h3>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">Nuestra IA analiza los documentos y crea tests personalizados con preguntas y respuestas.</p>
+                </CardContent>
+              </Card>
+              <Card className="text-center hover:shadow-lg hover:-translate-y-1 transition-transform">
+                <CardHeader>
+                  <div className="mx-auto bg-primary/10 rounded-full h-16 w-16 flex items-center justify-center mb-4">
+                    <BarChart3 className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold">Analiza tu progreso</h3>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">Obtén estadísticas detalladas de tu rendimiento, identifica tus puntos débiles y mejora.</p>
+                </CardContent>
+              </Card>
             </div>
-          )}
+          </div>
+        </section>
 
-          {view === 'test' && (
-            <TestView
-              questions={testQuestions}
-              onTestFinish={handleTestFinish}
-            />
-          )}
+        <section className="py-16 md:py-24 bg-light dark:bg-background">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold text-center mb-12">Tus exámenes</h2>
+            
+            <Card className="mb-12">
+              <CardHeader>
+                <h3 className="text-xl font-semibold">Subir nuevo examen</h3>
+              </CardHeader>
+              <CardContent>
+                <div 
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-primary transition-colors mb-6"
+                  onClick={handleUploadAreaClick}
+                >
+                  <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4"/>
+                  <p className="text-muted-foreground">{selectedFileName ? `Archivo seleccionado: ${selectedFileName}` : 'Haz clic o arrastra aquí tu archivo PDF'}</p>
+                  <input ref={fileInputRef} type="file" id="fileInput" accept=".pdf" className="hidden" onChange={handleFileChange} />
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4 items-end">
+                    <div>
+                        <label htmlFor="examCategory" className="block text-sm font-medium text-gray-700 mb-1">Categoría:</label>
+                        <Select>
+                            <SelectTrigger id="examCategory">
+                                <SelectValue placeholder="Selecciona una categoría" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="madrid">Comunidad de Madrid</SelectItem>
+                                <SelectItem value="valencia">Comunidad Valenciana</SelectItem>
+                                <SelectItem value="andalucia">Andalucía</SelectItem>
+                                <SelectItem value="estado">Administración del Estado</SelectItem>
+                                <SelectItem value="otros">Otras</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <Button>Procesar examen</Button>
+                </div>
+              </CardContent>
+            </Card>
 
-          {view === 'results' && (
-            <ResultsView questions={testQuestions} onRetry={startTest} onReset={resetToUpload} />
-          )}
+            <h3 className="text-2xl font-bold mb-6">Tus categorías</h3>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <Card className="hover:shadow-lg hover:-translate-y-1 transition-transform">
+                    <div className="bg-primary text-primary-foreground font-semibold p-4 rounded-t-lg">
+                        Comunidad de Madrid
+                    </div>
+                    <CardContent className="pt-6">
+                        <div className="text-4xl font-bold text-primary mb-2">5</div>
+                        <p className="text-muted-foreground">exámenes disponibles</p>
+                    </CardContent>
+                </Card>
+                <Card className="hover:shadow-lg hover:-translate-y-1 transition-transform">
+                    <div className="bg-primary text-primary-foreground font-semibold p-4 rounded-t-lg">
+                        Administración del Estado
+                    </div>
+                    <CardContent className="pt-6">
+                        <div className="text-4xl font-bold text-primary mb-2">3</div>
+                        <p className="text-muted-foreground">exámenes disponibles</p>
+                    </CardContent>
+                </Card>
+                <Card className="hover:shadow-lg hover:-translate-y-1 transition-transform">
+                    <div className="bg-primary text-primary-foreground font-semibold p-4 rounded-t-lg">
+                        Comunidad Valenciana
+                    </div>
+                    <CardContent className="pt-6">
+                        <div className="text-4xl font-bold text-primary mb-2">2</div>
+                        <p className="text-muted-foreground">exámenes disponibles</p>
+                    </CardContent>
+                </Card>
+            </div>
+          </div>
+        </section>
+      </main>
 
-        </main>
-        <footer className="text-center p-4 text-muted-foreground text-sm">
-          <p>Creado con ❤️ para Opositores.</p>
-        </footer>
-      </div>
-    </>
+      <footer className="bg-dark text-white py-8 text-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <p>© 2024 Opofy - Preparación inteligente para oposiciones</p>
+            <p className="text-sm text-gray-400 mt-2">Una app segura y eficaz para tu preparación</p>
+        </div>
+      </footer>
+    </div>
   );
 }
