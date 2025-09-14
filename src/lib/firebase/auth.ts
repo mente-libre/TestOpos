@@ -13,6 +13,11 @@ import app from "./config";
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
+// Set the authDomain for popup operations to ensure correct redirects
+auth.tenantId = null; // Ensure we're not in a multi-tenant context
+auth.useDeviceLanguage();
+
+
 export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, provider);
