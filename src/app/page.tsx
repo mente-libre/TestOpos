@@ -57,31 +57,16 @@ export default function Home() {
     const loadInitialData = async () => {
       setIsLoading(true);
       
-      // Ensure seed data exists, then fetch categories
-      const seedResult = await ensureSeedData();
-      if (seedResult.success) {
-        if(seedResult.dataWasSeeded) {
-          console.log("Database has been seeded with initial exams.");
-        }
-        // Now fetch all categories
-        const result = await getAllExamsGroupedByCategory();
-        if (result.success && result.categories) {
-          setCategories(result.categories);
-        } else {
-          console.error("Failed to fetch categories:", result.error);
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: "No se pudieron cargar las carpetas de exámenes.",
-          });
-        }
+      const result = await getAllExamsGroupedByCategory();
+      if (result.success && result.categories) {
+        setCategories(result.categories);
       } else {
-        console.error("Failed to seed database:", seedResult.error);
-         toast({
-            variant: "destructive",
-            title: "Error Crítico",
-            description: "No se pudo inicializar la base de datos.",
-          });
+        console.error("Failed to fetch categories:", result.error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "No se pudieron cargar las carpetas de exámenes.",
+        });
       }
 
       setIsLoading(false);

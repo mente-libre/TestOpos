@@ -1,5 +1,3 @@
-
-
 'use server';
 
 import { db } from './config';
@@ -53,31 +51,24 @@ const CATEGORY_DEFINITIONS = [
 
 /**
  * Ensures that the initial seed data (demo exams) exists in Firestore.
- * If a demo exam doesn't exist, it will be created.
+ * This is only called if the exams collection is empty.
  * @returns An object indicating success or failure.
  */
 export const ensureSeedData = async () => {
     try {
+        console.log('Seeding database with initial exams...');
         const examsRef = collection(db, 'exams');
         const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest3];
-        let dataWasSeeded = false;
 
         for (const seedExam of seedExams) {
-            // Check if an exam with the same fileName already exists
-            const q = query(examsRef, where("fileName", "==", seedExam.fileName));
-            const querySnapshot = await getDocs(q);
-
-            if (querySnapshot.empty) {
-                // If it doesn't exist, add it
-                await addDoc(examsRef, {
-                    ...seedExam,
-                    userId: 'system', // Mark as a system-generated exam
-                    createdAt: Timestamp.now(),
-                });
-                dataWasSeeded = true;
-            }
+            await addDoc(examsRef, {
+                ...seedExam,
+                userId: 'system', // Mark as a system-generated exam
+                createdAt: Timestamp.now(),
+            });
         }
-        return { success: true, dataWasSeeded };
+        console.log('Database seeded successfully.');
+        return { success: true };
     } catch (error) {
         console.error('Error ensuring seed data:', error);
         return { success: false, error: 'Failed to seed database.' };
@@ -115,6 +106,7 @@ export const saveExam = async (
 
 /**
  * Retrieves all exams and groups them by category.
+ * If no exams are found, it seeds the database and tries again.
  * @returns An object with the list of summarized categories or an error.
  */
 export const getAllExamsGroupedByCategory = async () => {
@@ -122,16 +114,22 @@ export const getAllExamsGroupedByCategory = async () => {
         const examsRef = collection(db, 'exams');
         const querySnapshot = await getDocs(examsRef);
 
-        const categoryMap: { [key: string]: number } = {};
+        if (querySnapshot.empty) {
+            // If there are no exams, seed the database and recall the function
+            const seedResult = await ensureSeedData();
+            if (seedResult.success) {
+                return getAllExamsGroupedByCategory(); // Recursive call after seeding
+            } else {
+                // If seeding fails, return an error.
+                return { success: false, error: seedResult.error || "Failed to initialize database." };
+            }
+        }
 
+        const categoryMap: { [key: string]: number } = {};
         querySnapshot.forEach(doc => {
             const exam = doc.data() as Omit<Exam, 'id'>;
             if (exam.category) {
-                if (categoryMap[exam.category]) {
-                    categoryMap[exam.category]++;
-                } else {
-                    categoryMap[exam.category] = 1;
-                }
+                categoryMap[exam.category] = (categoryMap[exam.category] || 0) + 1;
             }
         });
 
