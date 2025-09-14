@@ -173,7 +173,7 @@ export default function Home() {
               ) : (
                 <>
                   <Link href="/login" passHref>
-                    <Button variant="ghost">Iniciar Sesión</Button>
+                    <Button variant="outline">Iniciar Sesión</Button>
                   </Link>
                   <Link href="/register" passHref>
                     <Button>Registrarse</Button>
@@ -350,5 +350,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
