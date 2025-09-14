@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -8,7 +8,8 @@ import { FileUp, Bot, BarChart3, Upload, User, LogOut, Loader2, AlertCircle, Che
 import Link from 'next/link';
 import { onAuthStateChange, signOut, type User as FirebaseUser } from '@/lib/firebase/auth';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { getQuestionsFromPdf } from '@/app/actions';
+import { processAndSaveExam } from '@/app/actions';
+import { getExams, type Exam } from '@/lib/firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useRouter } from 'next/navigation';
@@ -19,22 +20,62 @@ interface Question {
   correctAnswerIndex: number;
 }
 
+interface Category {
+  id: string;
+  name: string;
+  examCount: number;
+}
+
+const CATEGORY_DEFINITIONS = [
+    { id: "madrid", name: "Comunidad de Madrid" },
+    { id: "valencia", name: "Comunidad Valenciana" },
+    { id: "andalucia", name: "Andalucía" },
+    { id: "estado", name: "Administración del Estado" },
+    { id: "otros", name: "Otras" },
+];
+
 export default function Home() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
   
   const { toast } = useToast();
   const router = useRouter();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChange(setUser);
-    return () => unsubscribe();
+  const loadExams = useCallback(async (currentUser: FirebaseUser) => {
+      const result = await getExams(currentUser);
+      if (result.success && result.exams) {
+        const counts = result.exams.reduce((acc, exam) => {
+          acc[exam.category] = (acc[exam.category] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>);
+
+        const updatedCategories = CATEGORY_DEFINITIONS.map(catDef => ({
+          ...catDef,
+          examCount: counts[catDef.id] || 0,
+        })).filter(c => c.examCount > 0);
+
+        setCategories(updatedCategories);
+      }
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChange((currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        loadExams(currentUser);
+      } else {
+        setCategories([]);
+      }
+    });
+    return () => unsubscribe();
+  }, [loadExams]);
 
   const handleUploadAreaClick = () => {
     fileInputRef.current?.click();
@@ -69,11 +110,15 @@ export default function Home() {
 
   const handleProcessExam = async () => {
     if (!selectedFile) {
-      toast({
-        variant: 'destructive',
-        title: 'No hay archivo',
-        description: 'Por favor, selecciona un archivo PDF para procesar.',
-      });
+      setError('Por favor, selecciona un archivo PDF para procesar.');
+      return;
+    }
+    if (!selectedCategory) {
+      setError('Por favor, selecciona una categoría para el examen.');
+      return;
+    }
+    if (!user) {
+      setError('Debes iniciar sesión para guardar un examen.');
       return;
     }
     
@@ -83,12 +128,16 @@ export default function Home() {
 
     try {
       const pdfDataUri = await fileToDataUri(selectedFile);
-      const result = await getQuestionsFromPdf(pdfDataUri, false);
+      const result = await processAndSaveExam(pdfDataUri, selectedFile.name, selectedCategory, user);
 
       if (result.success) {
         setQuestions(result.questions ?? []);
         setError(null);
-        // No navegamos aquí todavía, solo mostramos las preguntas
+        toast({
+            title: '¡Examen guardado!',
+            description: `Se ha guardado en "${CATEGORY_DEFINITIONS.find(c=>c.id === selectedCategory)?.name}".`,
+        });
+        await loadExams(user); // Recargar los exámenes y categorías
       } else {
         setError(result.error ?? 'Ha ocurrido un error desconocido.');
         setQuestions(null);
@@ -103,8 +152,6 @@ export default function Home() {
   };
 
   const handleStartTest = () => {
-    // Aquí podemos pasar las preguntas a la página de test en el futuro
-    // Por ahora, simplemente navegamos a la página de test
     if (questions) {
       sessionStorage.setItem('testQuestions', JSON.stringify(questions));
       router.push('/test');
@@ -230,22 +277,20 @@ export default function Home() {
                 <div className="grid sm:grid-cols-2 gap-4 items-end">
                     <div>
                         <label htmlFor="examCategory" className="block text-sm font-medium text-gray-700 mb-1">Categoría:</label>
-                        <Select>
+                        <Select onValueChange={setSelectedCategory} value={selectedCategory}>
                             <SelectTrigger id="examCategory">
                                 <SelectValue placeholder="Selecciona una categoría" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="madrid">Comunidad de Madrid</SelectItem>
-                                <SelectItem value="valencia">Comunidad Valenciana</SelectItem>
-                                <SelectItem value="andalucia">Andalucía</SelectItem>
-                                <SelectItem value="estado">Administración del Estado</SelectItem>
-                                <SelectItem value="otros">Otras</SelectItem>
+                                {CATEGORY_DEFINITIONS.map(cat => (
+                                    <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
                     </div>
-                    <Button onClick={handleProcessExam} disabled={isLoading}>
+                    <Button onClick={handleProcessExam} disabled={isLoading || !user}>
                       {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      {isLoading ? 'Procesando...' : 'Procesar examen'}
+                      {isLoading ? 'Procesando...' : 'Procesar y Guardar'}
                     </Button>
                 </div>
               </CardContent>
@@ -254,7 +299,7 @@ export default function Home() {
             {error && (
               <Alert variant="destructive" className="mb-8">
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error al procesar</AlertTitle>
+                <AlertTitle>Error</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
@@ -268,50 +313,46 @@ export default function Home() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <ul className="list-decimal list-inside space-y-2 mb-6">
-                    {questions.map((q, index) => <li key={index}>{q.questionText}</li>)}
+                  <p className="mb-4 text-muted-foreground">Se han extraído {questions.length} preguntas. ¡Ya puedes comenzar el test!</p>
+                  <ul className="list-decimal list-inside space-y-2 mb-6 text-sm">
+                    {questions.slice(0, 5).map((q, index) => <li key={index}>{q.questionText}</li>)}
+                    {questions.length > 5 && <li className="text-muted-foreground">... y {questions.length - 5} más.</li>}
                   </ul>
                   <Button onClick={handleStartTest}>Comenzar Test</Button>
                 </CardContent>
               </Card>
             )}
-             {questions === null && !error && isLoading && (
-                 <div className="flex justify-center items-center">
+             {isLoading && (
+                 <div className="flex justify-center items-center p-8">
                     <Loader2 className="mr-2 h-8 w-8 animate-spin" />
-                    <p>La IA está leyendo tu examen...</p>
+                    <p>La IA está leyendo y guardando tu examen...</p>
                  </div>
              )}
 
             <h3 className="text-2xl font-bold mt-12 mb-6">Tus categorías</h3>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-                <Card className="hover:shadow-lg hover:-translate-y-1 transition-transform">
-                    <div className="bg-primary text-primary-foreground font-semibold p-4 rounded-t-lg">
-                        Comunidad de Madrid
+            {user ? (
+                categories.length > 0 ? (
+                    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        {categories.map(category => (
+                            <Card key={category.id} className="hover:shadow-lg hover:-translate-y-1 transition-transform">
+                                <div className="bg-primary text-primary-foreground font-semibold p-4 rounded-t-lg">
+                                    {category.name}
+                                </div>
+                                <CardContent className="pt-6">
+                                    <div className="text-4xl font-bold text-primary mb-2">{category.examCount}</div>
+                                    <p className="text-muted-foreground">exámenes disponibles</p>
+                                </CardContent>
+                            </Card>
+                        ))}
                     </div>
-                    <CardContent className="pt-6">
-                        <div className="text-4xl font-bold text-primary mb-2">5</div>
-                        <p className="text-muted-foreground">exámenes disponibles</p>
-                    </CardContent>
-                </Card>
-                <Card className="hover:shadow-lg hover:-translate-y-1 transition-transform">
-                    <div className="bg-primary text-primary-foreground font-semibold p-4 rounded-t-lg">
-                        Administración del Estado
-                    </div>
-                    <CardContent className="pt-6">
-                        <div className="text-4xl font-bold text-primary mb-2">3</div>
-                        <p className="text-muted-foreground">exámenes disponibles</p>
-                    </CardContent>
-                </Card>
-                <Card className="hover:shadow-lg hover:-translate-y-1 transition-transform">
-                    <div className="bg-primary text-primary-foreground font-semibold p-4 rounded-t-lg">
-                        Comunidad Valenciana
-                    </div>
-                    <CardContent className="pt-6">
-                        <div className="text-4xl font-bold text-primary mb-2">2</div>
-                        <p className="text-muted-foreground">exámenes disponibles</p>
-                    </CardContent>
-                </Card>
-            </div>
+                ) : (
+                    <p className="text-center text-muted-foreground">Aún no has guardado ningún examen. ¡Sube uno para empezar!</p>
+                )
+            ) : (
+                <p className="text-center text-muted-foreground">
+                    <Link href="/login" className="text-primary underline">Inicia sesión</Link> para ver tus exámenes guardados.
+                </p>
+            )}
           </div>
         </section>
       </main>
