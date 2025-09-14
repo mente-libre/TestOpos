@@ -15,7 +15,7 @@ const ExtractQuestionsFromPdfInputSchema = z.object({
   pdfDataUri: z
     .string()
     .describe(
-      'The PDF document, as a data URI that must include a MIME type and use Base64 encoding. Expected format: \'data:<mimetype>;base64,<encoded_data>\'.' // Corrected typo here
+      "The PDF document, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
 });
 export type ExtractQuestionsFromPdfInput = z.infer<
