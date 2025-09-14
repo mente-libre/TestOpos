@@ -25,7 +25,7 @@ export type ExtractQuestionsFromPdfInput = z.infer<
 const ExtractQuestionsFromPdfOutputSchema = z.object({
   questions: z
     .array(z.string())
-    .describe('The extracted questions from the PDF.'),
+    .describe('An array of questions extracted from the document. The questions should not include the question number or any answer choices.'),
 });
 export type ExtractQuestionsFromPdfOutput = z.infer<
   typeof ExtractQuestionsFromPdfOutputSchema
@@ -41,16 +41,11 @@ const extractQuestionsFromPdfPrompt = ai.definePrompt({
   name: 'extractQuestionsFromPdfPrompt',
   input: {schema: ExtractQuestionsFromPdfInputSchema},
   output: {schema: ExtractQuestionsFromPdfOutputSchema},
-  prompt: `You are an expert at extracting questions from PDF documents for civil service exams.
-
-  Your task is to meticulously analyze the following PDF document and extract only the questions.
-
-  Follow these instructions carefully:
-  1.  **Identify Questions**: Look for numbered lists, paragraphs ending in a question mark, or phrases that are clearly formatted as test questions.
-  2.  **Ignore Non-Question Content**: Do not include headers, footers, page numbers, introductory text, or answer choices. Focus solely on the text of the question itself.
-  3.  **Clean the Output**: Ensure that each extracted question is a clean, single string. Do not include the question number (e.g., "1.", "2).") in the final string.
-
-  Return the questions in the format specified by the output schema. If no questions are found, return an empty array.
+  prompt: `You are an expert at processing PDF documents for civil service exams.
+  Your task is to extract only the questions from the provided PDF.
+  - Ignore headers, footers, page numbers, and any introductory text.
+  - Extract only the question text. Do not include the question number (e.g., "1.", "2)") or any multiple-choice answers.
+  - Return the questions as an array of strings. If no questions are found, return an empty array.
 
   PDF Document: {{media url=pdfDataUri}}`,
 });
