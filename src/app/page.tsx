@@ -81,13 +81,16 @@ export default function Home() {
 
       if (result.success) {
         setQuestions(result.questions ?? []);
+        setError(null);
         // No navegamos aquí todavía, solo mostramos las preguntas
       } else {
         setError(result.error ?? 'Ha ocurrido un error desconocido.');
+        setQuestions(null);
       }
     } catch (e) {
       console.error(e);
       setError('No se pudo procesar el archivo. Inténtalo de nuevo.');
+      setQuestions(null);
     } finally {
       setIsLoading(false);
     }
@@ -95,7 +98,11 @@ export default function Home() {
 
   const handleStartTest = () => {
     // Aquí podemos pasar las preguntas a la página de test en el futuro
-    router.push('/test');
+    // Por ahora, simplemente navegamos a la página de test
+    if (questions) {
+      sessionStorage.setItem('testQuestions', JSON.stringify(questions));
+      router.push('/test');
+    }
   };
 
   return (
@@ -262,15 +269,12 @@ export default function Home() {
                 </CardContent>
               </Card>
             )}
-             {questions && questions.length === 0 && !error && (
-              <Alert>
-                <Bot className="h-4 w-4" />
-                <AlertTitle>No se encontraron preguntas</AlertTitle>
-                <AlertDescription>
-                  La IA no pudo encontrar preguntas en el documento. Prueba con otro PDF.
-                </AlertDescription>
-              </Alert>
-            )}
+             {questions === null && !error && isLoading && (
+                 <div className="flex justify-center items-center">
+                    <Loader2 className="mr-2 h-8 w-8 animate-spin" />
+                    <p>La IA está leyendo tu examen...</p>
+                 </div>
+             )}
 
             <h3 className="text-2xl font-bold mt-12 mb-6">Tus categorías</h3>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">

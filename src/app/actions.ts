@@ -2,6 +2,7 @@
 
 import { extractQuestionsFromPdf } from '@/ai/flows/extract-questions-from-pdf';
 
+// This function is not currently used for file uploads but is kept for future URL processing.
 async function fetchPdfAsDataUri(url: string): Promise<string> {
     const response = await fetch(url, { redirect: 'follow' });
     if (!response.ok) {
@@ -9,9 +10,8 @@ async function fetchPdfAsDataUri(url: string): Promise<string> {
     }
     const blob = await response.blob();
     
-    // Check if the content type is HTML, which indicates it's not a direct PDF link
     if (blob.type.includes('text/html')) {
-        throw new Error('La URL proporcionada no es un enlace de descarga directa de PDF. Por favor, usa un enlace que apunte directamente al archivo PDF.');
+        throw new Error('La URL proporcionada no es un enlace de descarga directa de PDF.');
     }
 
     const buffer = await blob.arrayBuffer();
@@ -24,6 +24,7 @@ export async function getQuestionsFromPdf(pdfIdentifier: string, isUrl: boolean)
     let pdfDataUri: string;
 
     if (isUrl) {
+      // This block handles PDF processing from a URL.
       if (!pdfIdentifier.startsWith('http')) {
         return { success: false, error: 'La URL introducida no es válida.' };
       }
@@ -31,29 +32,31 @@ export async function getQuestionsFromPdf(pdfIdentifier: string, isUrl: boolean)
         pdfDataUri = await fetchPdfAsDataUri(pdfIdentifier);
       } catch (fetchError: any) {
         console.error('Error fetching PDF from URL:', fetchError);
-        // Pass the specific error message from fetchPdfAsDataUri
         return { success: false, error: fetchError.message || 'Error al descargar el PDF desde la URL.' };
       }
     } else {
-      // It's a data URI from a file upload
+      // This block handles PDF processing from a file upload (data URI).
       pdfDataUri = pdfIdentifier;
     }
 
+    // Call the AI flow to extract questions
     const result = await extractQuestionsFromPdf({ pdfDataUri });
 
     if (result && result.questions && result.questions.length > 0) {
       return { success: true, questions: result.questions };
     }
     
-    // Provide a more specific error if no questions were found
+    // Handle the case where the AI runs successfully but finds no questions.
     if (result && result.questions) {
-        return { success: false, error: 'No se encontraron preguntas en el documento. La IA podría no haber podido leer el PDF, o el documento está en blanco.' };
+        return { success: false, error: 'No se encontraron preguntas en el documento. La IA podría no haber podido leer el PDF, o el documento no contiene preguntas.' };
     }
     
-    return { success: false, error: 'La IA no pudo extraer preguntas del PDF. El formato podría ser incompatible.' };
+    // Handle other AI-related failures.
+    return { success: false, error: 'La IA no pudo extraer preguntas del PDF. El formato podría ser incompatible o el archivo estar corrupto.' };
 
   } catch (error) {
-    console.error('Error extracting questions:', error);
-    return { success: false, error: 'Error al procesar el PDF. Asegúrate de que el formato es correcto.' };
+    console.error('Error in getQuestionsFromPdf:', error);
+    // Provide a generic but informative error for unexpected issues.
+    return { success: false, error: 'Ocurrió un error inesperado en el servidor al procesar el PDF.' };
   }
 }
