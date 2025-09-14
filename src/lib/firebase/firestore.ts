@@ -77,44 +77,18 @@ export const ensureSeedData = async () => {
 
 
 /**
- * Saves a new exam document to Firestore for a specific user.
- * @param userId The ID of the user who owns the exam.
- * @param examData The data for the exam, excluding id and userId.
- * @returns An object indicating success or failure.
- */
-export const saveExam = async (
-  userId: string,
-  examData: Omit<Exam, 'id' | 'userId' | 'createdAt'>
-) => {
-  try {
-    if (!userId) {
-      throw new Error('User ID is required to save an exam.');
-    }
-    
-    await addDoc(collection(db, 'exams'), {
-      ...examData,
-      userId,
-      createdAt: Timestamp.now(),
-    });
-    return { success: true };
-  } catch (error) {
-    console.error('Error saving exam to Firestore:', error);
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred while saving the exam.';
-    return { success: false, error: errorMessage };
-  }
-};
-
-/**
  * Retrieves all exams and groups them by category.
  * If no exams are found, it seeds the database and tries again.
+ * This version is optimized to perform count queries instead of fetching all documents.
  * @returns An object with the list of summarized categories or an error.
  */
 export const getAllExamsGroupedByCategory = async () => {
     try {
         const examsRef = collection(db, 'exams');
-        const querySnapshot = await getDocs(examsRef);
+        const totalExamsSnapshot = await getCountFromServer(examsRef);
+        const totalExams = totalExamsSnapshot.data().count;
 
-        if (querySnapshot.empty) {
+        if (totalExams === 0) {
             // If there are no exams, seed the database and recall the function
             const seedResult = await ensureSeedData();
             if (seedResult.success) {
@@ -125,19 +99,19 @@ export const getAllExamsGroupedByCategory = async () => {
             }
         }
 
-        const categoryMap: { [key: string]: number } = {};
-        querySnapshot.forEach(doc => {
-            const exam = doc.data() as Omit<Exam, 'id'>;
-            if (exam.category) {
-                categoryMap[exam.category] = (categoryMap[exam.category] || 0) + 1;
+        const categories: Category[] = [];
+        for (const def of CATEGORY_DEFINITIONS) {
+            const q = query(examsRef, where('category', '==', def.id));
+            const snapshot = await getCountFromServer(q);
+            const count = snapshot.data().count;
+            if (count > 0) {
+                categories.push({
+                    id: def.id,
+                    name: def.name,
+                    examCount: count,
+                });
             }
-        });
-
-        const categories: Category[] = CATEGORY_DEFINITIONS.map(def => ({
-            id: def.id,
-            name: def.name,
-            examCount: categoryMap[def.id] || 0,
-        })).filter(c => c.examCount > 0);
+        }
         
         return { success: true, categories };
 
@@ -228,6 +202,34 @@ export const getExamById = async (examId: string) => {
       error instanceof Error
         ? error.message
         : 'An unknown error occurred while fetching the exam.';
+    return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * Saves a new exam document to Firestore for a specific user.
+ * @param userId The ID of the user who owns the exam.
+ * @param examData The data for the exam, excluding id and userId.
+ * @returns An object indicating success or failure.
+ */
+export const saveExam = async (
+  userId: string,
+  examData: Omit<Exam, 'id' | 'userId' | 'createdAt'>
+) => {
+  try {
+    if (!userId) {
+      throw new Error('User ID is required to save an exam.');
+    }
+    
+    await addDoc(collection(db, 'exams'), {
+      ...examData,
+      userId,
+      createdAt: Timestamp.now(),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving exam to Firestore:', error);
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred while saving the exam.';
     return { success: false, error: errorMessage };
   }
 };
