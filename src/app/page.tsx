@@ -4,15 +4,24 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FileUp, Bot, BarChart3, Upload, User, LogOut } from 'lucide-react';
+import { FileUp, Bot, BarChart3, Upload, User, LogOut, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { onAuthStateChange, signOut, type User as FirebaseUser } from '@/lib/firebase/auth';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { getQuestionsFromPdf } from '@/app/actions';
+import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function Home() {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [questions, setQuestions] = useState<string[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  
+  const { toast } = useToast();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChange(setUser);
@@ -25,7 +34,59 @@ export default function Home() {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      setSelectedFileName(event.target.files[0].name);
+      const file = event.target.files[0];
+      if (file.type !== 'application/pdf') {
+        toast({
+          variant: 'destructive',
+          title: 'Error en el archivo',
+          description: 'Por favor, selecciona un archivo PDF.',
+        });
+        return;
+      }
+      setSelectedFile(file);
+      setSelectedFileName(file.name);
+      setQuestions(null);
+      setError(null);
+    }
+  };
+  
+  const fileToDataUri = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleProcessExam = async () => {
+    if (!selectedFile) {
+      toast({
+        variant: 'destructive',
+        title: 'No hay archivo',
+        description: 'Por favor, selecciona un archivo PDF para procesar.',
+      });
+      return;
+    }
+    
+    setIsLoading(true);
+    setQuestions(null);
+    setError(null);
+
+    try {
+      const pdfDataUri = await fileToDataUri(selectedFile);
+      const result = await getQuestionsFromPdf(pdfDataUri, false);
+
+      if (result.success) {
+        setQuestions(result.questions ?? []);
+      } else {
+        setError(result.error ?? 'Ha ocurrido un error desconocido.');
+      }
+    } catch (e) {
+      console.error(e);
+      setError('No se pudo procesar el archivo. Inténtalo de nuevo.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -79,8 +140,10 @@ export default function Home() {
             <p className="max-w-3xl mx-auto text-lg text-secondary mb-8">
               Sube tus exámenes en PDF y genera tests personalizados para practicar. Mejora tu rendimiento con inteligencia artificial.
             </p>
-            <Link href="/register" passHref>
-                <Button size="lg">Comenzar ahora</Button>
+            <Link href={user ? '#' : '/register'} passHref>
+                <Button size="lg" onClick={() => user && document.getElementById('upload-section')?.scrollIntoView({ behavior: 'smooth' })}>
+                  {user ? 'Empezar a subir' : 'Comenzar ahora'}
+                </Button>
             </Link>
           </div>
         </section>
@@ -126,7 +189,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-16 md:py-24 bg-light dark:bg-background">
+        <section id="upload-section" className="py-16 md:py-24 bg-light dark:bg-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold text-center mb-12">Tus exámenes</h2>
             
@@ -159,12 +222,49 @@ export default function Home() {
                             </SelectContent>
                         </Select>
                     </div>
-                    <Button>Procesar examen</Button>
+                    <Button onClick={handleProcessExam} disabled={isLoading}>
+                      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      {isLoading ? 'Procesando...' : 'Procesar examen'}
+                    </Button>
                 </div>
               </CardContent>
             </Card>
 
-            <h3 className="text-2xl font-bold mb-6">Tus categorías</h3>
+            {error && (
+              <Alert variant="destructive" className="mb-8">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error al procesar</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            {questions && questions.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-6 w-6 text-green-500" />
+                    <h3 className="text-xl font-semibold">Preguntas Extraídas</h3>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <ul className="list-decimal list-inside space-y-2">
+                    {questions.map((q, index) => <li key={index}>{q}</li>)}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
+             {questions && questions.length === 0 && !error && (
+              <Alert>
+                <Bot className="h-4 w-4" />
+                <AlertTitle>No se encontraron preguntas</AlertTitle>
+                <AlertDescription>
+                  La IA no pudo encontrar preguntas en el documento. Prueba con otro PDF.
+                </AlertDescription>
+              </Alert>
+            )}
+
+
+            <h3 className="text-2xl font-bold mt-12 mb-6">Tus categorías</h3>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
                 <Card className="hover:shadow-lg hover:-translate-y-1 transition-transform">
                     <div className="bg-primary text-primary-foreground font-semibold p-4 rounded-t-lg">
