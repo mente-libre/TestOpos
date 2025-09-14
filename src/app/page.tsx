@@ -44,9 +44,7 @@ export default function Home() {
 
   // Effect for handling authentication state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChange((currentUser) => {
-      setUser(currentUser);
-    });
+    const unsubscribe = onAuthStateChange(setUser);
     // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
