@@ -1,33 +1,57 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+interface Question {
+  question: string;
+  options: string[];
+  correct: number; // Placeholder
+}
 
 export default function TestPage() {
-  // Datos de ejemplo inspirados en tu maqueta
-  const testData = {
-    category: 'Comunidad de Madrid',
-    questions: [
-      {
-        question: '¿En qué año se aprobó el Estatuto de Autonomía de la Comunidad de Madrid?',
-        options: ['1981', '1983', '1985', '1987'],
-        correct: 1,
-      },
-      {
-        question: '¿Cuál de estos no es un órgano administrativo de la Comunidad de Madrid?',
-        options: [
-          'Consejería de Educación',
-          'Consejería de Sanidad',
-          'Delegación de Hacienda',
-          'Consejería de Transportes',
-        ],
-        correct: 2,
-      },
-    ],
-  };
+  const [testData, setTestData] = useState<{ category: string; questions: Question[] } | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const storedQuestions = sessionStorage.getItem('testQuestions');
+    if (storedQuestions) {
+      try {
+        const questionsText: string[] = JSON.parse(storedQuestions);
+        const formattedQuestions: Question[] = questionsText.map(q => ({
+          question: q,
+          // Placeholder options as the AI doesn't provide them yet
+          options: ['Opción A', 'Opción B', 'Opción C', 'Opción D'], 
+          correct: 0, // Placeholder correct answer
+        }));
+        
+        setTestData({
+          category: 'Examen Personalizado',
+          questions: formattedQuestions,
+        });
+
+      } catch (error) {
+        console.error("Error parsing questions from sessionStorage", error);
+        router.push('/');
+      }
+    } else {
+        // If there are no questions, redirect to home
+        router.push('/');
+    }
+  }, [router]);
+
+  if (!testData) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p>Cargando test...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
