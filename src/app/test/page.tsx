@@ -34,12 +34,10 @@ export default function TestPage() {
   const handleFinishTest = useCallback(() => {
     setIsFinished(true);
     setIsReviewMode(false); // Make sure we show the results summary first
+    if (!questions) return;
     setAnswers(prevAnswers => {
-      // Ensure questions is not null before mapping
-      if (!questions) return prevAnswers;
       return questions.map((q, index) => {
         const userAnswer = prevAnswers[index];
-        // Ensure userAnswer is not undefined
         if (!userAnswer) return { selectedIndex: null, status: 'unanswered' };
         const isCorrect = userAnswer.selectedIndex === q.correctAnswerIndex;
         return {
