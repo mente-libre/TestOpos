@@ -48,7 +48,7 @@ export async function getQuestionsFromPdf(pdfIdentifier: string, isUrl: boolean)
     
     // Handle the case where the AI runs successfully but finds no questions.
     if (result && result.questions) {
-        return { success: false, error: 'No se encontraron preguntas en el documento. La IA podría no haber podido leer el PDF, o el documento no contiene preguntas.' };
+        return { success: false, error: 'No se encontraron preguntas en el documento. La IA podría no haber podido leer el PDF, o el documento no contiene preguntas válidas con 4 opciones.' };
     }
     
     // Handle other AI-related failures.
