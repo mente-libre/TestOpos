@@ -34,6 +34,7 @@ export default function Home() {
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [user, setUser] = useState<FirebaseUser | null>(null);
+  const userRef = useRef(user);
   const [isLoading, setIsLoading] = useState(false);
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -43,9 +44,12 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
+    userRef.current = user;
+  }, [user]);
+
+  useEffect(() => {
     const unsubscribe = onAuthStateChange(async (currentUser) => {
-      // Only update state if the user has actually changed
-      if (currentUser?.uid !== user?.uid) {
+      if (currentUser?.uid !== userRef.current?.uid) {
         setUser(currentUser);
         if (currentUser) {
           const result = await getExams(currentUser);
@@ -58,7 +62,7 @@ export default function Home() {
       }
     });
     return () => unsubscribe();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleUploadAreaClick = () => {
@@ -357,3 +361,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
