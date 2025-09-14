@@ -6,10 +6,11 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FileUp, Bot, BarChart3, Upload, User, LogOut, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
-import { onAuthStateChange, signOut, type User as FirebaseUser } from '@/lib/firebase/auth';
+import { onAuthStateChange, signOut } from '@/lib/firebase/auth';
+import type { User as FirebaseUser } from 'firebase/auth';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { processAndSaveExam } from '@/app/actions';
-import { getExamsForUser, type Category } from '@/lib/firebase/firestore';
+import { getExamsForUser, seedInitialDataForUser, type Category } from '@/lib/firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useRouter } from 'next/navigation';
@@ -50,12 +51,11 @@ export default function Home() {
   const { toast } = useToast();
   const router = useRouter();
 
-  // Effect for handling authentication state changes and loading user data
+  // Effect for handling auth and data loading
   useEffect(() => {
+    setIsLoading(true);
     const unsubscribe = onAuthStateChange(async (firebaseUser: FirebaseUser | null) => {
-      setIsLoading(true);
       if (firebaseUser) {
-        // Create a simple, serializable user object for React state
         const appUser: AppUser = {
           uid: firebaseUser.uid,
           displayName: firebaseUser.displayName,
@@ -63,25 +63,23 @@ export default function Home() {
         };
         setUser(appUser);
         
-        // Fetch user's exams and categories
-        const result = await getExamsForUser(firebaseUser.uid);
+        await seedInitialDataForUser(appUser.uid);
+        const result = await getExamsForUser(appUser.uid);
+
         if (result.success && result.categories) {
           setCategories(result.categories);
         } else {
-          setCategories([]);
+          console.error("Failed to fetch categories:", result.error);
         }
-
       } else {
         setUser(null);
-        setCategories([]); // Clear categories on logout
+        setCategories([]);
       }
       setIsLoading(false);
     });
-
-    // Cleanup subscription on unmount
+    
     return () => unsubscribe();
-  }, []); // Empty dependency array ensures this runs only once on mount
-
+  }, []);
 
   const handleUploadAreaClick = () => {
     fileInputRef.current?.click();
@@ -174,7 +172,6 @@ export default function Home() {
 
   const handleStartTest = () => {
     if (questions) {
-      // Temporarily store questions for the immediate test session
       sessionStorage.setItem('testQuestions', JSON.stringify(questions));
       sessionStorage.setItem('testTitle', 'Examen recién subido');
       router.push('/test');

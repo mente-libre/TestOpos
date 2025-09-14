@@ -10,6 +10,7 @@ import {
   Timestamp,
   doc,
   getDoc,
+  getCountFromServer,
 } from 'firebase/firestore';
 import { madridAdminTest } from '../seed-data';
 
@@ -77,7 +78,6 @@ export const saveExam = async (
 
 /**
  * Retrieves all exams for a user and groups them by category.
- * If the user has no exams for a certain category, it can seed initial data.
  * @param userId The ID of the user.
  * @returns An object with the list of summarized categories or an error.
  */
@@ -104,19 +104,6 @@ export const getExamsForUser = async (userId: string) => {
             }
         });
 
-        // --- Seed Data Logic ---
-        // If there are no exams for Madrid, add the seed data.
-        if (!categoryMap['madrid'] || categoryMap['madrid'] === 0) {
-            await saveExam(userId, {
-                fileName: madridAdminTest.fileName,
-                category: madridAdminTest.category,
-                questions: madridAdminTest.questions,
-            });
-            // Update the map to reflect the new seeded exam
-            categoryMap['madrid'] = 1;
-        }
-        // --- End of Seed Data Logic ---
-
         const categories: Category[] = CATEGORY_DEFINITIONS.map(def => ({
             id: def.id,
             name: def.name,
@@ -131,6 +118,44 @@ export const getExamsForUser = async (userId: string) => {
         return { success: false, error: errorMessage };
     }
 }
+
+/**
+ * Seeds initial demo data for a user if it doesn't exist.
+ * @param userId The ID of the user.
+ */
+export const seedInitialDataForUser = async (userId: string) => {
+  try {
+    if (!userId) {
+      throw new Error('User ID is required to seed data.');
+    }
+
+    const madridCategory = 'madrid';
+    const examsRef = collection(db, 'exams');
+    
+    // Check if the user already has exams in the "madrid" category
+    const q = query(examsRef, where('userId', '==', userId), where('category', '==', madridCategory));
+    const snapshot = await getCountFromServer(q);
+
+    if (snapshot.data().count === 0) {
+      console.log(`No exams found for user ${userId} in category '${madridCategory}'. Seeding initial data...`);
+      // If no exams for Madrid, add the seed data.
+      await saveExam(userId, {
+        fileName: madridAdminTest.fileName,
+        category: madridAdminTest.category,
+        questions: madridAdminTest.questions,
+      });
+      console.log(`Successfully seeded initial data for user ${userId}.`);
+    } else {
+      console.log(`User ${userId} already has data for category '${madridCategory}'. Skipping seed.`);
+    }
+    return { success: true };
+  } catch (error) {
+      console.error(`Error seeding initial data for user ${userId}:`, error);
+      // We don't want to throw an error here, just log it. The app can continue without seed data.
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred during data seeding.';
+      return { success: false, error: errorMessage };
+  }
+};
 
 
 /**
