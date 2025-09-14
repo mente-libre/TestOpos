@@ -25,7 +25,6 @@ export default function TestPage() {
         const questionsText: string[] = JSON.parse(storedQuestions);
         const formattedQuestions: Question[] = questionsText.map(q => ({
           question: q,
-          // Placeholder options as the AI doesn't provide them yet
           options: ['Opción A', 'Opción B', 'Opción C', 'Opción D'], 
           correct: 0, // Placeholder correct answer
         }));
@@ -40,7 +39,6 @@ export default function TestPage() {
         router.push('/');
       }
     } else {
-        // If there are no questions, redirect to home
         router.push('/');
     }
   }, [router]);
