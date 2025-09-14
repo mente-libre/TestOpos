@@ -3,13 +3,18 @@
 import { extractQuestionsFromPdf } from '@/ai/flows/extract-questions-from-pdf';
 
 async function fetchPdfAsDataUri(url: string): Promise<string> {
-    const response = await fetch(url);
+    const response = await fetch(url, { redirect: 'follow' });
     if (!response.ok) {
         throw new Error(`Error HTTP ${response.status}: ${response.statusText}`);
     }
     const blob = await response.blob();
-    // Adobe URLs often return text/html first, so we can't be too strict.
-    // We will let Genkit decide if it's a valid PDF.
+    
+    // Most PDF viewers like Adobe's will return text/html for the initial response.
+    // If we get HTML, it's not a direct download link.
+    if (blob.type.includes('text/html')) {
+        throw new Error('La URL proporcionada no es un enlace de descarga directa de PDF. Por favor, usa un enlace que apunte directamente al archivo PDF.');
+    }
+
     const buffer = await blob.arrayBuffer();
     const base64 = Buffer.from(buffer).toString('base64');
     return `data:${blob.type || 'application/pdf'};base64,${base64}`;
@@ -25,7 +30,7 @@ export async function getQuestionsFromPdf(pdfIdentifier: string) {
             pdfDataUri = await fetchPdfAsDataUri(pdfIdentifier);
         } catch (fetchError: any) {
             console.error('Error fetching PDF from URL:', fetchError);
-            return { success: false, error: `No se pudo descargar el PDF de la URL. Asegúrate de que sea un enlace de descarga directa. Error: ${fetchError.message}` };
+            return { success: false, error: fetchError.message };
         }
     } else {
         pdfDataUri = pdfIdentifier;
