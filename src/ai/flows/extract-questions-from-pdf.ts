@@ -67,9 +67,9 @@ const extractQuestionsFromPdfPrompt = ai.definePrompt({
   Rules:
   - Ignore headers, footers, page numbers, and any introductory text.
   - Extract only the question text, without the question number (e.g., "1.", "2)").
-  - Extract the full text for each of the 4 options.
+  - Only include questions that have exactly 4 multiple-choice options. If a question has more or fewer than 4 options, skip it.
   - Analyze the PDF to determine which of the options is the correct one. If the correct answer is marked with an asterisk, in bold, or indicated in a separate answer key section, use that information.
-  - Return a JSON object with a "questions" array. If no questions are found, return an empty array.
+  - Return a JSON object with a "questions" array. If no valid questions are found, return an empty array.
 
   PDF Document: {{media url=pdfDataUri}}`,
 });

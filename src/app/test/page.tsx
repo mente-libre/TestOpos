@@ -62,23 +62,25 @@ export default function TestPage() {
           <CardContent>
             <div className="space-y-8">
               {testData.questions.map((q, qIndex) => (
-                <div key={qIndex} className="p-6 bg-light rounded-lg border">
-                  <p className="font-semibold mb-4 text-lg">{qIndex + 1}. {q.questionText}</p>
-                  <RadioGroup>
-                    <div className="space-y-3">
-                      {q.options.map((option, oIndex) => (
-                         <Label
-                            key={oIndex}
-                            htmlFor={`q${qIndex}-opt${oIndex}`}
-                            className="flex items-center space-x-3 p-4 border rounded-md cursor-pointer hover:bg-primary/5 has-[:checked]:bg-primary/10 has-[:checked]:border-primary transition-colors"
-                         >
-                            <RadioGroupItem value={String(oIndex)} id={`q${qIndex}-opt${oIndex}`} />
-                            <span>{option}</span>
-                        </Label>
-                      ))}
-                    </div>
-                  </RadioGroup>
-                </div>
+                q && q.options ? (
+                  <div key={qIndex} className="p-6 bg-light rounded-lg border">
+                    <p className="font-semibold mb-4 text-lg">{qIndex + 1}. {q.questionText}</p>
+                    <RadioGroup>
+                      <div className="space-y-3">
+                        {q.options.map((option, oIndex) => (
+                          <Label
+                              key={oIndex}
+                              htmlFor={`q${qIndex}-opt${oIndex}`}
+                              className="flex items-center space-x-3 p-4 border rounded-md cursor-pointer hover:bg-primary/5 has-[:checked]:bg-primary/10 has-[:checked]:border-primary transition-colors"
+                          >
+                              <RadioGroupItem value={String(oIndex)} id={`q${qIndex}-opt${oIndex}`} />
+                              <span>{option}</span>
+                          </Label>
+                        ))}
+                      </div>
+                    </RadioGroup>
+                  </div>
+                ) : null
               ))}
             </div>
             <div className="flex justify-end mt-8">
