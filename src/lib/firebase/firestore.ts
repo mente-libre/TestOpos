@@ -12,6 +12,8 @@ import {
   getDoc,
   getCountFromServer,
 } from 'firebase/firestore';
+import { madridAdminTest, estadoConstitutionTest } from '../seed-data';
+
 
 // Main type for an exam document
 export interface Exam {
@@ -46,6 +48,40 @@ const CATEGORY_DEFINITIONS = [
     { id: "estado", name: "Administración del Estado" },
     { id: "otros", name: "Otras" },
 ];
+
+/**
+ * Ensures that the initial seed data (demo exams) exists in Firestore.
+ * If a demo exam doesn't exist, it will be created.
+ * @returns An object indicating success or failure.
+ */
+export const ensureSeedData = async () => {
+    try {
+        const examsRef = collection(db, 'exams');
+        const seedExams = [madridAdminTest, estadoConstitutionTest];
+        let dataWasSeeded = false;
+
+        for (const seedExam of seedExams) {
+            // Check if an exam with the same fileName already exists
+            const q = query(examsRef, where("fileName", "==", seedExam.fileName));
+            const querySnapshot = await getDocs(q);
+
+            if (querySnapshot.empty) {
+                // If it doesn't exist, add it
+                await addDoc(examsRef, {
+                    ...seedExam,
+                    userId: 'system', // Mark as a system-generated exam
+                    createdAt: Timestamp.now(),
+                });
+                dataWasSeeded = true;
+            }
+        }
+        return { success: true, dataWasSeeded };
+    } catch (error) {
+        console.error('Error ensuring seed data:', error);
+        return { success: false, error: 'Failed to seed database.' };
+    }
+}
+
 
 /**
  * Saves a new exam document to Firestore for a specific user.

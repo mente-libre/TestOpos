@@ -10,7 +10,7 @@ import { onAuthStateChange, signOut } from '@/lib/firebase/auth';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { processAndSaveExam } from '@/app/actions';
-import { getAllExamsGroupedByCategory, type Category } from '@/lib/firebase/firestore';
+import { getAllExamsGroupedByCategory, type Category, ensureSeedData } from '@/lib/firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useRouter } from 'next/navigation';
@@ -54,19 +54,40 @@ export default function Home() {
 
   // Effect for handling auth and data loading
   useEffect(() => {
-    const loadData = async () => {
+    const loadInitialData = async () => {
       setIsLoading(true);
-      const result = await getAllExamsGroupedByCategory();
-      if (result.success && result.categories) {
-        setCategories(result.categories);
+      
+      // Ensure seed data exists, then fetch categories
+      const seedResult = await ensureSeedData();
+      if (seedResult.success) {
+        if(seedResult.dataWasSeeded) {
+          console.log("Database has been seeded with initial exams.");
+        }
+        // Now fetch all categories
+        const result = await getAllExamsGroupedByCategory();
+        if (result.success && result.categories) {
+          setCategories(result.categories);
+        } else {
+          console.error("Failed to fetch categories:", result.error);
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "No se pudieron cargar las carpetas de exámenes.",
+          });
+        }
       } else {
-        console.error("Failed to fetch categories:", result.error);
-        // Optionally set an error state to show in the UI
+        console.error("Failed to seed database:", seedResult.error);
+         toast({
+            variant: "destructive",
+            title: "Error Crítico",
+            description: "No se pudo inicializar la base de datos.",
+          });
       }
+
       setIsLoading(false);
     };
 
-    loadData();
+    loadInitialData();
 
     const unsubscribe = onAuthStateChange(async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
@@ -82,7 +103,7 @@ export default function Home() {
     });
     
     return () => unsubscribe();
-  }, []);
+  }, [toast]);
 
   const handleUploadAreaClick = () => {
     fileInputRef.current?.click();
