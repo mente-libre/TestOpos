@@ -44,21 +44,18 @@ export default function Home() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChange(async (currentUser) => {
-      // Prevent infinite loop by only setting user and loading data if user has changed
-      if (currentUser?.uid !== user?.uid) {
-        setUser(currentUser);
-        if (currentUser) {
-          const result = await getExams(currentUser);
-          if (result.success && result.categories) {
-            setCategories(result.categories);
-          }
-        } else {
-          setCategories([]);
+      setUser(currentUser);
+      if (currentUser) {
+        const result = await getExams(currentUser);
+        if (result.success && result.categories) {
+          setCategories(result.categories);
         }
+      } else {
+        setCategories([]);
       }
     });
     return () => unsubscribe();
-  }, [user]);
+  }, []);
 
   const handleUploadAreaClick = () => {
     fileInputRef.current?.click();
