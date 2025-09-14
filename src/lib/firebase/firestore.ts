@@ -19,6 +19,20 @@ export interface Exam {
   createdAt: Timestamp;
 }
 
+export interface Category {
+  id: string;
+  name: string;
+  examCount: number;
+}
+
+const CATEGORY_DEFINITIONS = [
+    { id: "madrid", name: "Comunidad de Madrid" },
+    { id: "valencia", name: "Comunidad Valenciana" },
+    { id: "andalucia", name: "Andalucía" },
+    { id: "estado", name: "Administración del Estado" },
+    { id: "otros", name: "Otras" },
+];
+
 export const saveExam = async (user: User, examData: Omit<Exam, "userId" | "createdAt" | "id">) => {
   try {
     const docRef = await addDoc(collection(db, "exams"), {
@@ -37,13 +51,28 @@ export const getExams = async (user: User) => {
   try {
     const q = query(collection(db, "exams"), where("userId", "==", user.uid));
     const querySnapshot = await getDocs(q);
+    
     const exams: Exam[] = [];
     querySnapshot.forEach((doc) => {
       exams.push({ id: doc.id, ...doc.data() } as Exam);
     });
-    return { success: true, exams };
+
+    const counts = exams.reduce((acc, exam) => {
+        acc[exam.category] = (acc[exam.category] || 0) + 1;
+        return acc;
+    }, {} as Record<string, number>);
+
+    const categories: Category[] = CATEGORY_DEFINITIONS.map(catDef => ({
+        ...catDef,
+        examCount: counts[catDef.id] || 0,
+    })).filter(c => c.examCount > 0);
+
+
+    return { success: true, exams, categories };
   } catch (error) {
     console.error("Error getting documents: ", error);
     return { success: false, error: "No se pudieron obtener los exámenes." };
   }
 };
+
+    

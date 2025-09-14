@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { onAuthStateChange, signOut, type User as FirebaseUser } from '@/lib/firebase/auth';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { processAndSaveExam } from '@/app/actions';
-import { getExams, type Exam } from '@/lib/firebase/firestore';
+import { getExams, type Category } from '@/lib/firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useRouter } from 'next/navigation';
@@ -18,12 +18,6 @@ interface Question {
   questionText: string;
   options: string[];
   correctAnswerIndex: number;
-}
-
-interface Category {
-  id: string;
-  name: string;
-  examCount: number;
 }
 
 const CATEGORY_DEFINITIONS = [
@@ -48,20 +42,10 @@ export default function Home() {
   const { toast } = useToast();
   const router = useRouter();
 
-  const loadExams = useCallback(async (currentUser: FirebaseUser) => {
+  const loadCategories = useCallback(async (currentUser: FirebaseUser) => {
       const result = await getExams(currentUser);
-      if (result.success && result.exams) {
-        const counts = result.exams.reduce((acc, exam) => {
-          acc[exam.category] = (acc[exam.category] || 0) + 1;
-          return acc;
-        }, {} as Record<string, number>);
-
-        const updatedCategories = CATEGORY_DEFINITIONS.map(catDef => ({
-          ...catDef,
-          examCount: counts[catDef.id] || 0,
-        })).filter(c => c.examCount > 0);
-
-        setCategories(updatedCategories);
+      if (result.success && result.categories) {
+        setCategories(result.categories);
       }
   }, []);
 
@@ -69,13 +53,13 @@ export default function Home() {
     const unsubscribe = onAuthStateChange((currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        loadExams(currentUser);
+        loadCategories(currentUser);
       } else {
         setCategories([]);
       }
     });
     return () => unsubscribe();
-  }, [loadExams]);
+  }, [loadCategories]);
 
   const handleUploadAreaClick = () => {
     fileInputRef.current?.click();
@@ -137,7 +121,7 @@ export default function Home() {
             title: '¡Examen guardado!',
             description: `Se ha guardado en "${CATEGORY_DEFINITIONS.find(c=>c.id === selectedCategory)?.name}".`,
         });
-        await loadExams(user); // Recargar los exámenes y categorías
+        await loadCategories(user); // Recargar los exámenes y categorías
       } else {
         setError(result.error ?? 'Ha ocurrido un error desconocido.');
         setQuestions(null);
@@ -366,3 +350,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
