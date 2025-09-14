@@ -42,30 +42,30 @@ export default function Home() {
   const { toast } = useToast();
   const router = useRouter();
 
-  // Effect for handling authentication state changes
+  // Effect for handling authentication and loading user data
   useEffect(() => {
-    const unsubscribe = onAuthStateChange(setUser);
-    return () => unsubscribe();
-  }, []);
-
-  // Effect for loading user data when user state changes
-  useEffect(() => {
-    const loadUserData = async () => {
-      if (user) {
-        const result = await getExams(user);
-        if (result.success && result.categories) {
-          setCategories(result.categories);
+    const unsubscribe = onAuthStateChange(async (currentUser) => {
+      // This condition is crucial to prevent infinite loops.
+      // Only proceed if the user's login status has actually changed.
+      if (currentUser?.uid !== user?.uid) {
+        setUser(currentUser);
+        if (currentUser) {
+          const result = await getExams(currentUser);
+          if (result.success && result.categories) {
+            setCategories(result.categories);
+          } else {
+            setCategories([]);
+          }
         } else {
+          // User logged out, clear their data
           setCategories([]);
         }
-      } else {
-        // Clear categories when user logs out
-        setCategories([]);
       }
-    };
+    });
 
-    loadUserData();
-  }, [user]);
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, [user]); // Depend on user to re-evaluate if it changes from other places.
 
 
   const handleUploadAreaClick = () => {
