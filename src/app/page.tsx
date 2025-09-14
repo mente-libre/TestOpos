@@ -58,7 +58,8 @@ export default function Home() {
       }
     });
     return () => unsubscribe();
-  }, [user]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleUploadAreaClick = () => {
     fileInputRef.current?.click();
