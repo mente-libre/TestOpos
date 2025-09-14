@@ -763,4 +763,130 @@ export const madridAdminTest2: SeedExam = {
     ]
 };
 
+export const madridAdminTest3: SeedExam = {
+    fileName: "Test Auxiliar Administrativo 3 (Demo)",
+    category: "madrid",
+    questions: [
+        {
+            "questionText": "Los Derechos fundamentales y las Libertades Públicas, se recogen en:",
+            "options": [
+                "En el Capítulo III, Sección primera del Título I de la Constitución española de 1978.",
+                "En el Capítulo III, Sección segunda del Título II de la Constitución española de 1978.",
+                "En el Capítulo II, Sección primera del Título I de la Constitución española de 1978.",
+                "Respuesta no especificada"
+            ],
+            "correctAnswerIndex": 2
+        },
+        {
+            "questionText": "Señale cuál de las siguientes respuestas es la correcta de acuerdo con lo dispuesto en la Constitución española de 1978:",
+            "options": [
+                "Cualquier ciudadano podrá recabar la tutela ante los Tribunales del derecho a la producción",
+                "Los miembros de las Fuerzas Armadas podrán recabar la tutela del derecho de petición, en",
+                "Cualquier ciudadano podrá recabar la tutela del derecho a la protección de la salud de la",
+                "Ninguna de las anteriores"
+            ],
+            "correctAnswerIndex": 1
+        },
+        {
+            "questionText": "Cuando se habla de la delegación legislativa en la Constitución española de 1978 ¿cuál de las siguientes aﬁrmaciones es la correcta?",
+            "options": [
+                "Las Cortes Generales sólo podrá delegar en el Gobierno la potestad de dictar normas con",
+                "La delegación legislativa deberá otorgarse en todo caso mediante una Ley de bases.",
+                "No podrá entenderse concedida de modo implícito o por tiempo indeterminado.",
+                "La delegación legislativa se agota en el momento de la entrada en vigor de la norma"
+            ],
+            "correctAnswerIndex": 2
+        },
+        {
+            "questionText": "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978.",
+            "options": [
+                "La CE reconoce la iniciativa popular para la presentación de proyectos de Ley.",
+                "Para el ejercicio de dicha iniciativa popular se exigirán no menos de 500.000 ﬁrmas",
+                "Tendrá que ser una Ley orgánica la que regule las formas de ejercicio y requisitos de la",
+                "Respuesta no especificada"
+            ],
+            "correctAnswerIndex": 2
+        },
+        {
+            "questionText": "Señale la respuesta correcta de acuerdo con lo dispuesto en la Constitución española de 1978:",
+            "options": [
+                "Los Poderes del Estado emanan del pueblo español.",
+                "La soberanía nacional reside en las Cortes Generales como representantes que son del",
+                "La forma política del Estado español es la democracia.",
+                "España se constituye en un Estado liberal y democrático de Derecho."
+            ],
+            "correctAnswerIndex": 0
+        },
+        {
+            "questionText": "La dignidad de la persona, los derechos inviolables que le son inherentes, el libre desarrollo de la personalidad, el respeto a la ley y a los derechos de los demás, son de conformidad con lo dispuesto en el artículo 10 de la Constitución española de 1978:",
+            "options": [
+                "El fundamento del orden político y de la paz social.",
+                "Los principios ordenadores del ordenamiento jurídico español.",
+                "Los principios que deberán regir la actuación de los poderes públicos.",
+                "Respuesta no especificada"
+            ],
+            "correctAnswerIndex": 0
+        },
+        {
+            "questionText": "La Constitución española de 1978 reconoce el derecho a expresar y difundir libremente los pensamientos, ideas y opiniones. Señale cuál de las siguientes respuestas es la incorrecta:",
+            "options": [
+                "Este derecho se encuadra, de acuerdo con la propia Constitución, dentro de los denominados",
+                "Su ejercicio no podrá verse restringido mediante ningún tipo de censura previa.",
+                "Al tratarse de un derecho fundamental, su ejercicio no podrá ser sometido a límite alguno.",
+                "Respuesta no especificada"
+            ],
+            "correctAnswerIndex": 2
+        },
+        {
+            "questionText": "Respecto del Ministerio Fiscal, y de acuerdo con lo dispuesto en la Constitución española de 1978, ¿cuál de las siguientes aﬁrmaciones es incorrecta?",
+            "options": [
+                "El Ministerio Fiscal ejerce sus funciones por medio de órganos propios conforme a los",
+                "Además de los principios señalados en la respuesta A, también ejercerá sus funciones de",
+                "El Ministerio Fiscal tiene como misión, entre otras, la de velar por la independencia de los",
+                "El Fiscal General del Estado será nombrado por el Rey, a propuesta del Consejo General del"
+            ],
+            "correctAnswerIndex": 3
+        },
+        {
+            "questionText": "El Gobierno, de acuerdo con lo dispuesto en la Constitución española de 1978:",
+            "options": [
+                "Dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado.",
+                "Dirige la política interior y exterior, la Administración civil y militar pero no la defensa del Estado.",
+                "Dirige la política interior y exterior, la Administración civil y la defensa del Estado, pero no la militar.",
+                "Dirige la política exterior, la Administración civil y militar y la defensa del Estado, coordina"
+            ],
+            "correctAnswerIndex": 0
+        },
+        {
+            "questionText": "¿Cuál de las siguientes aﬁrmaciones es la correcta de conformidad con lo dispuesto en la Constitución española de 1978?",
+            "options": [
+                "Los Estatutos de las distintas Comunidades Autónomas no podrán presentar diferencia alguna",
+                "Los Estatutos de las distintas Comunidades Autónomas podrán presentar diferencias que",
+                "Las diferencias entre los Estatutos de las distintas Comunidades Autónomas no podrán implicar, en ningún caso, privilegios económicos o sociales.",
+                "Las diferencias entre los Estatutos de las distintas Comunidades Autónomas no podrán implicar, en ningún caso, privilegios económicos."
+            ],
+            "correctAnswerIndex": 2
+        },
+        {
+            "questionText": "Según lo dispuesto en el artículo 149.3 de la Constitución española de 1978, señale la respuesta correcta:",
+            "options": [
+                "Las materias no atribuidas expresamente al Estado por la Constitución corresponderán a las",
+                "La competencia sobre las materias que no se hayan asumido por los Estatutos de Autonomía",
+                "El Derecho estatal será, en todo caso, supletorio del Derecho de las Comunidades Autónomas.",
+                "Ninguna de las anteriores respuestas es correcta."
+            ],
+            "correctAnswerIndex": 2
+        },
+        {
+            "questionText": "En la Comunidad de Madrid, ¿a quién le corresponde la potestad de establecer y exigir tributos de conformidad con su Estatuto de Autonomía?",
+            "options": [
+                "Al Presidente de la Comunidad de Madrid.",
+                "A la Asamblea.",
+                "Al Consejero de Hacienda.",
+                "Respuesta no especificada"
+            ],
+            "correctAnswerIndex": 1
+        }
+    ]
+};
     

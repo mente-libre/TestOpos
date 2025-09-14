@@ -14,7 +14,7 @@ import {
   getDoc,
   getCountFromServer,
 } from 'firebase/firestore';
-import { madridAdminTest, estadoConstitutionTest, madridAdminTest2 } from '../seed-data';
+import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest3 } from '../seed-data';
 
 
 // Main type for an exam document
@@ -59,7 +59,7 @@ const CATEGORY_DEFINITIONS = [
 export const ensureSeedData = async () => {
     try {
         const examsRef = collection(db, 'exams');
-        const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2];
+        const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest3];
         let dataWasSeeded = false;
 
         for (const seedExam of seedExams) {
