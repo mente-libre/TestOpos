@@ -44,18 +44,21 @@ export default function Home() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChange(async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        const result = await getExams(currentUser);
-        if (result.success && result.categories) {
-          setCategories(result.categories);
+      // Prevent infinite loop by only setting user and loading data if user has changed
+      if (currentUser?.uid !== user?.uid) {
+        setUser(currentUser);
+        if (currentUser) {
+          const result = await getExams(currentUser);
+          if (result.success && result.categories) {
+            setCategories(result.categories);
+          }
+        } else {
+          setCategories([]);
         }
-      } else {
-        setCategories([]);
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [user]);
 
   const handleUploadAreaClick = () => {
     fileInputRef.current?.click();
@@ -117,13 +120,14 @@ export default function Home() {
             title: '¡Examen guardado!',
             description: `Se ha guardado en "${CATEGORY_DEFINITIONS.find(c=>c.id === selectedCategory)?.name}".`,
         });
+        // Recargar los exámenes y categorías
         if (user) {
-          // Recargar los exámenes y categorías
-          const examsResult = await getExams(user);
-          if (examsResult.success && examsResult.categories) {
-            setCategories(examsResult.categories);
-          }
+            const examsResult = await getExams(user);
+            if (examsResult.success && examsResult.categories) {
+                setCategories(examsResult.categories);
+            }
         }
+
       } else {
         setError(result.error ?? 'Ha ocurrido un error desconocido.');
         setQuestions(null);
