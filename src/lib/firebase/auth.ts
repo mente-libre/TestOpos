@@ -6,7 +6,8 @@ import {
   signInWithPopup,
   onAuthStateChanged,
   signOut as firebaseSignOut,
-  type User
+  type User,
+  type AuthError
 } from "firebase/auth";
 import app from "./config";
 
@@ -23,6 +24,10 @@ export const signInWithGoogle = async () => {
     const result = await signInWithPopup(auth, provider);
     return result.user;
   } catch (error) {
+    // Don't log an error if the user simply closes the popup.
+    if ((error as AuthError).code === 'auth/popup-closed-by-user') {
+        return null;
+    }
     console.error("Error signing in with Google: ", error);
     return null;
   }
