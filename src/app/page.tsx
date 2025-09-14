@@ -121,7 +121,9 @@ export default function Home() {
             title: '¡Examen guardado!',
             description: `Se ha guardado en "${CATEGORY_DEFINITIONS.find(c=>c.id === selectedCategory)?.name}".`,
         });
-        await loadCategories(user); // Recargar los exámenes y categorías
+        if (user) {
+          await loadCategories(user); // Recargar los exámenes y categorías
+        }
       } else {
         setError(result.error ?? 'Ha ocurrido un error desconocido.');
         setQuestions(null);
@@ -350,3 +352,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
