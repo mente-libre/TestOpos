@@ -10,7 +10,7 @@ import { onAuthStateChange, signOut } from '@/lib/firebase/auth';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { processAndSaveExam } from '@/app/actions';
-import { getExamsForUser, seedInitialDataForUser, type Category } from '@/lib/firebase/firestore';
+import { getAllExamsGroupedByCategory, type Category } from '@/lib/firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useRouter } from 'next/navigation';
@@ -54,7 +54,20 @@ export default function Home() {
 
   // Effect for handling auth and data loading
   useEffect(() => {
-    setIsLoading(true);
+    const loadData = async () => {
+      setIsLoading(true);
+      const result = await getAllExamsGroupedByCategory();
+      if (result.success && result.categories) {
+        setCategories(result.categories);
+      } else {
+        console.error("Failed to fetch categories:", result.error);
+        // Optionally set an error state to show in the UI
+      }
+      setIsLoading(false);
+    };
+
+    loadData();
+
     const unsubscribe = onAuthStateChange(async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
         const appUser: AppUser = {
@@ -63,20 +76,9 @@ export default function Home() {
           email: firebaseUser.email,
         };
         setUser(appUser);
-        
-        await seedInitialDataForUser(appUser.uid);
-        const result = await getExamsForUser(appUser.uid);
-
-        if (result.success && result.categories) {
-          setCategories(result.categories);
-        } else {
-          console.error("Failed to fetch categories:", result.error);
-        }
       } else {
         setUser(null);
-        setCategories([]);
       }
-      setIsLoading(false);
     });
     
     return () => unsubscribe();
@@ -142,12 +144,10 @@ export default function Home() {
             title: '¡Examen guardado!',
             description: `Se ha guardado en "${CATEGORY_DEFINITIONS.find(c=>c.id === selectedCategory)?.name}".`,
         });
-        // Recargar los exámenes y categorías
-        if (user) {
-            const examsResult = await getExamsForUser(user.uid);
-            if (examsResult.success && examsResult.categories) {
-                setCategories(examsResult.categories);
-            }
+        // Recargar las categorías
+        const examsResult = await getAllExamsGroupedByCategory();
+        if (examsResult.success && examsResult.categories) {
+            setCategories(examsResult.categories);
         }
 
       } else {
@@ -358,7 +358,7 @@ export default function Home() {
                   <Loader2 className="mr-2 h-8 w-8 animate-spin" />
                   <p>Cargando tus datos...</p>
               </div>
-            ) : user ? (
+            ) : (
                 categories.length > 0 ? (
                     <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {categories.map(category => (
@@ -374,12 +374,8 @@ export default function Home() {
                         ))}
                     </div>
                 ) : (
-                    <p className="text-center text-muted-foreground">Aún no has guardado ningún examen. ¡Sube uno para empezar!</p>
+                    <p className="text-center text-muted-foreground">Aún no hay exámenes disponibles. ¡Sube uno para empezar!</p>
                 )
-            ) : (
-                <p className="text-center text-muted-foreground">
-                    <Link href="/login" className="text-primary underline">Inicia sesión</Link> para ver tus exámenes guardados.
-                </p>
             )}
           </div>
         </section>

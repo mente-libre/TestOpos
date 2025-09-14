@@ -14,7 +14,6 @@ export default function ExamPage() {
   const router = useRouter();
   const examId = params.id as string;
 
-  const [user, setUser] = useState<User | null>(null);
   const [exam, setExam] = useState<Exam | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,27 +24,17 @@ export default function ExamPage() {
       return;
     }
 
-    const unsubscribe = onAuthStateChange(async (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        const result = await getExamById(examId);
-        if (result.success && result.exam) {
-          // Basic check to ensure the user owns this exam
-          if (result.exam.userId === currentUser.uid) {
-            setExam(result.exam);
-          } else {
-             setError('No tienes permiso para ver este examen.');
-          }
-        } else {
-          setError(result.error || 'No se pudo cargar el examen.');
-        }
+    const fetchExam = async () => {
+      const result = await getExamById(examId);
+      if (result.success && result.exam) {
+        setExam(result.exam);
       } else {
-        router.push('/login');
+        setError(result.error || 'No se pudo cargar el examen.');
       }
       setIsLoading(false);
-    });
+    };
 
-    return () => unsubscribe();
+    fetchExam();
   }, [examId, router]);
   
   const handleStartTest = () => {

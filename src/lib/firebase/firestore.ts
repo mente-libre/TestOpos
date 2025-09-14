@@ -12,7 +12,6 @@ import {
   getDoc,
   getCountFromServer,
 } from 'firebase/firestore';
-import { madridAdminTest, estadoConstitutionTest } from '../seed-data';
 
 // Main type for an exam document
 export interface Exam {
@@ -77,19 +76,13 @@ export const saveExam = async (
 };
 
 /**
- * Retrieves all exams for a user and groups them by category.
- * @param userId The ID of the user.
+ * Retrieves all exams and groups them by category.
  * @returns An object with the list of summarized categories or an error.
  */
-export const getExamsForUser = async (userId: string) => {
+export const getAllExamsGroupedByCategory = async () => {
     try {
-        if (!userId) {
-            throw new Error('User ID is required to fetch exams.');
-        }
-
         const examsRef = collection(db, 'exams');
-        const q = query(examsRef, where('userId', '==', userId));
-        const querySnapshot = await getDocs(q);
+        const querySnapshot = await getDocs(examsRef);
 
         const categoryMap: { [key: string]: number } = {};
 
@@ -113,77 +106,28 @@ export const getExamsForUser = async (userId: string) => {
         return { success: true, categories };
 
     } catch (error) {
-        console.error('Error getting exams for user:', error);
+        console.error('Error getting all exams:', error);
         const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
         return { success: false, error: errorMessage };
     }
 }
 
-/**
- * Seeds initial demo data for a user if it doesn't exist.
- * @param userId The ID of the user.
- */
-export const seedInitialDataForUser = async (userId: string) => {
-  try {
-    if (!userId) {
-      throw new Error('User ID is required to seed data.');
-    }
-    
-    // Seed Madrid Test
-    await seedExamIfNotExists(userId, madridAdminTest);
-
-    // Seed Estado Constitution Test
-    await seedExamIfNotExists(userId, estadoConstitutionTest);
-
-    return { success: true };
-
-  } catch (error) {
-      console.error(`Error seeding initial data for user ${userId}:`, error);
-      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred during data seeding.';
-      return { success: false, error: errorMessage };
-  }
-};
-
-/**
- * Helper function to seed a single exam if it doesn't exist for the user in that category.
- * @param userId The ID of the user.
- * @param examToSeed The exam data to potentially seed.
- */
-const seedExamIfNotExists = async (userId: string, examToSeed: Omit<Exam, 'id' | 'userId' | 'createdAt'>) => {
-  const examsRef = collection(db, 'exams');
-  const q = query(examsRef, where('userId', '==', userId), where('category', '==', examToSeed.category), where('fileName', '==', examToSeed.fileName));
-  const snapshot = await getCountFromServer(q);
-
-  if (snapshot.data().count === 0) {
-    console.log(`No exam named "${examToSeed.fileName}" found for user ${userId}. Seeding...`);
-    await saveExam(userId, {
-      fileName: examToSeed.fileName,
-      category: examToSeed.category,
-      questions: examToSeed.questions,
-    });
-    console.log(`Successfully seeded exam "${examToSeed.fileName}" for user ${userId}.`);
-  } else {
-    console.log(`User ${userId} already has exam "${examToSeed.fileName}". Skipping seed.`);
-  }
-}
-
 
 /**
  * Retrieves all exams belonging to a specific category for a user.
- * @param userId The ID of the user.
+ * This function now fetches all exams in a category, regardless of user.
  * @param categoryId The ID of the category.
  * @returns An object with the list of exams or an error.
  */
-export const getExamsForCategory = async (userId: string, categoryId: string) => {
+export const getExamsForCategory = async (categoryId: string) => {
   try {
-    if (!userId || !categoryId) {
-      throw new Error('User ID and Category ID are required.');
+    if (!categoryId) {
+      throw new Error('Category ID is required.');
     }
 
     const examsRef = collection(db, 'exams');
     const q = query(
       examsRef,
-      where('userId', '==', userId),
       where('category', '==', categoryId)
     );
     const querySnapshot = await getDocs(q);

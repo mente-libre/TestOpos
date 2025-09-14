@@ -14,30 +14,25 @@ export default function CategoryPage() {
   const router = useRouter();
   const categoryId = params.id as string;
 
-  const [user, setUser] = useState<User | null>(null);
   const [exams, setExams] = useState<Exam[]>([]);
   const [categoryName, setCategoryName] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChange(async (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        const result = await getExamsForCategory(currentUser.uid, categoryId);
-        if (result.success && result.exams) {
-          setExams(result.exams);
-          setCategoryName(result.categoryName || 'Categoría');
-        } else {
-          setError(result.error || 'No se pudieron cargar los exámenes.');
-        }
+    const fetchExams = async () => {
+      setIsLoading(true);
+      const result = await getExamsForCategory(categoryId);
+      if (result.success && result.exams) {
+        setExams(result.exams);
+        setCategoryName(result.categoryName || 'Categoría');
       } else {
-        router.push('/login');
+        setError(result.error || 'No se pudieron cargar los exámenes.');
       }
       setIsLoading(false);
-    });
+    };
 
-    return () => unsubscribe();
+    fetchExams();
   }, [categoryId, router]);
 
   if (isLoading) {
