@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FileUp, Bot, BarChart3, Upload } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Home() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -32,8 +33,13 @@ export default function Home() {
               <a href="#" className="text-secondary hover:text-primary transition-colors">Estadísticas</a>
               <a href="#" className="text-secondary hover:text-primary transition-colors">Ayuda</a>
             </nav>
-            <div>
-              <Button>Iniciar Sesión</Button>
+            <div className="flex items-center gap-4">
+              <Link href="/login" passHref>
+                <Button variant="ghost">Iniciar Sesión</Button>
+              </Link>
+              <Link href="/register" passHref>
+                <Button>Registrarse</Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -46,7 +52,9 @@ export default function Home() {
             <p className="max-w-3xl mx-auto text-lg text-secondary mb-8">
               Sube tus exámenes en PDF y genera tests personalizados para practicar. Mejora tu rendimiento con inteligencia artificial.
             </p>
-            <Button size="lg">Comenzar ahora</Button>
+            <Link href="/register" passHref>
+                <Button size="lg">Comenzar ahora</Button>
+            </Link>
           </div>
         </section>
 
