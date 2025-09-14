@@ -45,7 +45,17 @@ export default function TestPage() {
           router.push('/');
         }
       } else {
-        router.push('/');
+        // Fallback for tests started from session storage (before examId was mandatory)
+        const sessionQuestions = sessionStorage.getItem('testQuestions');
+        const sessionTitle = sessionStorage.getItem('testTitle');
+        if (sessionQuestions && sessionTitle) {
+          const parsedQuestions = JSON.parse(sessionQuestions);
+          setQuestions(parsedQuestions);
+          setTitle(sessionTitle);
+          setAnswers(parsedQuestions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
+        } else {
+            router.push('/');
+        }
       }
       setIsLoading(false);
     };
@@ -66,7 +76,7 @@ export default function TestPage() {
       }, 1000);
       return () => clearInterval(timer);
     }
-  }, [isLoading, isFinished]);
+  }, [isLoading, isFinished, handleFinishTest]);
 
   const handleSelectOption = (questionIndex: number, optionIndex: number) => {
     if (isFinished) return;
@@ -79,6 +89,7 @@ export default function TestPage() {
 
   const handleFinishTest = () => {
     setIsFinished(true);
+    setIsReviewMode(false); // Make sure we show the results summary first
     setAnswers(prevAnswers => {
       return questions!.map((q, index) => {
         const userAnswer = prevAnswers[index];
@@ -100,20 +111,23 @@ export default function TestPage() {
   };
   
   const handleReviewAnswers = () => {
-    setIsReviewMode(true);
-    setCurrentQuestionIndex(0);
+    setIsFinished(true); // Keep finished state
+    setIsReviewMode(true); // Enter review mode
   };
 
-  const getOptionClassName = (qIndex: number, oIndex: number) => {
-    if (!isReviewMode) return '';
+  const getOptionLabelClassName = (qIndex: number, oIndex: number) => {
+    if (!isFinished) return ''; // Only apply styles after finishing
     const question = questions![qIndex];
     const answer = answers[qIndex];
 
-    if (oIndex === question.correctAnswerIndex) {
-      return 'border-green-500 bg-green-50';
+    const isCorrect = oIndex === question.correctAnswerIndex;
+    const isSelected = oIndex === answer.selectedIndex;
+
+    if (isCorrect) {
+      return 'bg-green-100 border-green-500';
     }
-    if (oIndex === answer.selectedIndex && answer.status === 'incorrect') {
-      return 'border-red-500 bg-red-50';
+    if (isSelected && answer.status === 'incorrect') {
+      return 'bg-red-100 border-red-500';
     }
     return '';
   };
@@ -133,8 +147,62 @@ export default function TestPage() {
   if (isLoading || !questions) {
     return <div className="flex justify-center items-center min-h-screen"><Loader2 className="mr-2 h-8 w-8 animate-spin" /><p>Cargando test...</p></div>;
   }
+
+  if (isReviewMode) {
+    return (
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-800 py-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto">
+             <div className="flex justify-between items-center mb-8">
+                <h1 className="text-2xl font-bold">Revisión de: {title}</h1>
+                <Button onClick={handleRestartTest}>
+                  <RefreshCw className="mr-2 h-4 w-4" /> Volver a Intentar
+                </Button>
+            </div>
+            <div className="space-y-6">
+              {questions.map((q, qIndex) => (
+                <Card key={qIndex}>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3">
+                      {answers[qIndex].status === 'incorrect' && <XCircle className="h-5 w-5 text-red-500" />}
+                       {answers[qIndex].status === 'correct' && <CheckCircle className="h-5 w-5 text-green-500" />}
+                      <span>{qIndex + 1} - {q.questionText}</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {q.options.map((option, oIndex) => (
+                         <Label
+                          key={oIndex}
+                          className={`flex items-start space-x-3 p-4 border rounded-md 
+                            ${getOptionLabelClassName(qIndex, oIndex)}
+                          `}
+                        >
+                           <span className='font-bold mr-2'>{String.fromCharCode(97 + oIndex)})</span>
+                           <span>{option}</span>
+                        </Label>
+                      ))}
+                    </div>
+                     {q.explanation && (
+                      <div className="mt-4 p-4 bg-blue-50 border border-blue-200 text-blue-800 rounded-md">
+                        <p className="font-semibold">Explicación:</p>
+                        <p>{q.explanation}</p>
+                      </div>
+                    )}
+                  </CardContent>
+                  <CardFooter className="justify-end">
+                      <Button variant="ghost" size="sm">Impugnar Pregunta</Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   
-  if (isFinished && !isReviewMode) {
+  if (isFinished) {
     return (
        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -207,7 +275,6 @@ export default function TestPage() {
               <RadioGroup
                 value={answers[currentQuestionIndex]?.selectedIndex?.toString()}
                 onValueChange={(value) => handleSelectOption(currentQuestionIndex, parseInt(value))}
-                disabled={isReviewMode}
               >
                 <div className="space-y-3">
                   {currentQuestion.options.map((option, oIndex) => (
@@ -216,7 +283,6 @@ export default function TestPage() {
                         htmlFor={`q${currentQuestionIndex}-opt${oIndex}`}
                         className={`flex items-start space-x-3 p-4 border rounded-md cursor-pointer hover:bg-primary/5 transition-colors 
                           ${answers[currentQuestionIndex]?.selectedIndex === oIndex ? 'bg-primary/10 border-primary' : ''}
-                          ${isReviewMode ? getOptionClassName(currentQuestionIndex, oIndex) : ''}
                         `}
                     >
                         <RadioGroupItem value={String(oIndex)} id={`q${currentQuestionIndex}-opt${oIndex}`} />
@@ -225,30 +291,22 @@ export default function TestPage() {
                   ))}
                 </div>
               </RadioGroup>
-              {isReviewMode && currentQuestion.explanation && (
-                <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-md">
-                  <p className="font-semibold">Explicación:</p>
-                  <p>{currentQuestion.explanation}</p>
-                </div>
-              )}
             </div>
-            <div className="flex justify-between mt-8">
+          </CardContent>
+           <CardFooter className="flex justify-between mt-8">
               <Button variant="outline" onClick={() => setCurrentQuestionIndex(p => p - 1)} disabled={currentQuestionIndex === 0}>
                 Anterior
               </Button>
                {currentQuestionIndex < totalQuestions - 1 ? (
                 <Button onClick={() => setCurrentQuestionIndex(p => p + 1)}>Siguiente</Button>
               ) : (
-                isReviewMode ? (
-                  <Button onClick={handleRestartTest}>Finalizar Revisión</Button>
-                ) : (
                   <Button onClick={handleFinishTest}>Finalizar Test</Button>
-                )
               )}
-            </div>
-          </CardContent>
+            </CardFooter>
         </Card>
       </div>
     </div>
   );
 }
+
+    
