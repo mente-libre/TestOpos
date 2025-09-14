@@ -1,9 +1,10 @@
+import Image from 'next/image';
+import logo from '@/app/logo.png';
+
 export function Logo(props: React.HTMLAttributes<HTMLDivElement>) {
     return (
         <div {...props}>
-            <span className="text-2xl font-bold" style={{ color: 'hsl(var(--primary))' }}>
-                TestOpos
-            </span>
+            <Image src={logo} alt="TestOpos logo" width={130} height={32} />
         </div>
     )
 }
