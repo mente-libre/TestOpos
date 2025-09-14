@@ -5,6 +5,7 @@ import {
   GoogleAuthProvider, 
   signInWithPopup,
   onAuthStateChanged,
+  signOut as firebaseSignOut,
   type User
 } from "firebase/auth";
 import app from "./config";
@@ -28,8 +29,10 @@ export const onAuthStateChange = (callback: (user: User | null) => void) => {
 
 export const signOut = async () => {
     try {
-        await auth.signOut();
+        await firebaseSignOut(auth);
     } catch (error) {
         console.error("Error signing out: ", error);
     }
 }
+
+export type { User };

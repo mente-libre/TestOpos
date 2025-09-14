@@ -1,15 +1,23 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FileUp, Bot, BarChart3, Upload } from 'lucide-react';
+import { FileUp, Bot, BarChart3, Upload, User, LogOut } from 'lucide-react';
 import Link from 'next/link';
+import { onAuthStateChange, signOut, type User as FirebaseUser } from '@/lib/firebase/auth';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export default function Home() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChange(setUser);
+    return () => unsubscribe();
+  }, []);
 
   const handleUploadAreaClick = () => {
     fileInputRef.current?.click();
@@ -34,12 +42,31 @@ export default function Home() {
               <a href="#" className="text-secondary hover:text-primary transition-colors">Ayuda</a>
             </nav>
             <div className="flex items-center gap-4">
-              <Link href="/login" passHref>
-                <Button variant="ghost">Iniciar Sesión</Button>
-              </Link>
-              <Link href="/register" passHref>
-                <Button>Registrarse</Button>
-              </Link>
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex items-center gap-2">
+                      <User className="h-5 w-5" />
+                      <span>{user.displayName || 'Mi Cuenta'}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={signOut}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Cerrar Sesión</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <>
+                  <Link href="/login" passHref>
+                    <Button variant="ghost">Iniciar Sesión</Button>
+                  </Link>
+                  <Link href="/register" passHref>
+                    <Button>Registrarse</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
