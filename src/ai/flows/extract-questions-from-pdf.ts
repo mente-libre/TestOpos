@@ -57,21 +57,10 @@ const extractQuestionsFromPdfPrompt = ai.definePrompt({
   input: {schema: ExtractQuestionsFromPdfInputSchema},
   output: {schema: ExtractQuestionsFromPdfOutputSchema},
   prompt: `You are an expert at processing PDF documents for civil service exams.
-  Your task is to extract the questions, their multiple-choice options, and identify the correct answer.
+Your task is to extract questions, their 4 multiple-choice options, and identify the correct answer.
+Return a JSON object with a "questions" array. If no valid questions are found, return an empty array.
 
-  For each question you find, provide:
-  - The question text.
-  - An array of exactly 4 answer options.
-  - The index (0, 1, 2, or 3) of the correct answer.
-
-  Rules:
-  - Ignore headers, footers, page numbers, and any introductory text.
-  - Extract only the question text, without the question number (e.g., "1.", "2)").
-  - Only include questions that have exactly 4 multiple-choice options. If a question has more or fewer than 4 options, skip it.
-  - Analyze the PDF to determine which of the options is the correct one. If the correct answer is marked with an asterisk, in bold, or indicated in a separate answer key section, use that information.
-  - Return a JSON object with a "questions" array. If no valid questions are found, return an empty array.
-
-  PDF Document: {{media url=pdfDataUri}}`,
+PDF Document: {{media url=pdfDataUri}}`,
 });
 
 const extractQuestionsFromPdfFlow = ai.defineFlow(
