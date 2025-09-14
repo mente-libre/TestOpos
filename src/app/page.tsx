@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FileUp, Bot, BarChart3, Upload, User, LogOut, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
+import { FileUp, Bot, BarChart3, Upload, User, LogOut, Loader2, AlertCircle, CheckCircle, Folder } from 'lucide-react';
 import Link from 'next/link';
 import { onAuthStateChange, signOut } from '@/lib/firebase/auth';
 import type { User as FirebaseUser } from 'firebase/auth';
@@ -352,7 +352,7 @@ export default function Home() {
                  </div>
              )}
 
-            <h3 className="text-2xl font-bold mt-12 mb-6">Tus categorías</h3>
+            <h3 className="text-2xl font-bold mt-12 mb-6">Tus carpetas de exámenes</h3>
             {isLoading ? (
               <div className="flex justify-center items-center p-8">
                   <Loader2 className="mr-2 h-8 w-8 animate-spin" />
@@ -360,16 +360,14 @@ export default function Home() {
               </div>
             ) : user ? (
                 categories.length > 0 ? (
-                    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {categories.map(category => (
                           <Link href={`/category/${category.id}`} key={category.id} passHref>
-                             <Card className="hover:shadow-lg hover:-translate-y-1 transition-transform h-full cursor-pointer">
-                                <div className="bg-primary text-primary-foreground font-semibold p-4 rounded-t-lg">
-                                    {category.name}
-                                </div>
-                                <CardContent className="pt-6">
-                                    <div className="text-4xl font-bold text-primary mb-2">{category.examCount}</div>
-                                    <p className="text-muted-foreground">exámenes disponibles</p>
+                             <Card className="group hover:shadow-lg hover:-translate-y-1 transition-transform h-full cursor-pointer">
+                                <CardContent className="pt-6 flex flex-col items-center text-center">
+                                    <Folder className="h-16 w-16 text-primary/70 group-hover:text-primary transition-colors mb-4" />
+                                    <h4 className="font-semibold text-lg">{category.name}</h4>
+                                    <p className="text-sm text-muted-foreground">{category.examCount} {category.examCount === 1 ? 'examen' : 'exámenes'}</p>
                                 </CardContent>
                             </Card>
                           </Link>
