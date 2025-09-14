@@ -1,34 +1,42 @@
-"use server";
+'use server';
 
-import { collection, addDoc, query, where, getDocs, Timestamp } from "firebase/firestore";
-import { db } from "./config";
+import { db } from './config';
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  Timestamp,
+  doc,
+  getDoc,
+} from 'firebase/firestore';
 
-interface Question {
+// Main type for an exam document
+export interface Exam {
+  id: string;
+  userId: string;
+  fileName: string;
+  category: string;
+  questions: Question[];
+  createdAt: Timestamp;
+}
+
+// Type for a single question within an exam
+export interface Question {
   questionText: string;
   options: string[];
   correctAnswerIndex: number;
 }
 
-export interface Exam {
-  id?: string;
-  userId: string;
-  category: string;
-  fileName: string;
-  questions: Question[];
-  createdAt: Timestamp;
-}
-
+// Type for the summarized category data
 export interface Category {
-  id: string;
-  name: string;
-  examCount: number;
+    id: string;
+    name: string;
+    examCount: number;
 }
 
-// A simple user object with just the UID
-interface AppUser {
-    uid: string;
-}
-
+// Constant with category definitions
 const CATEGORY_DEFINITIONS = [
     { id: "madrid", name: "Comunidad de Madrid" },
     { id: "valencia", name: "Comunidad Valenciana" },
@@ -37,49 +45,142 @@ const CATEGORY_DEFINITIONS = [
     { id: "otros", name: "Otras" },
 ];
 
-export const saveExam = async (userId: string, examData: Omit<Exam, "userId" | "createdAt" | "id">) => {
+/**
+ * Saves a new exam document to Firestore for a specific user.
+ * @param userId The ID of the user who owns the exam.
+ * @param examData The data for the exam, excluding id and userId.
+ * @returns An object indicating success or failure.
+ */
+export const saveExam = async (
+  userId: string,
+  examData: Omit<Exam, 'id' | 'userId' | 'createdAt'>
+) => {
   try {
-    const docRef = await addDoc(collection(db, "exams"), {
+    if (!userId) {
+      throw new Error('User ID is required to save an exam.');
+    }
+    
+    await addDoc(collection(db, 'exams'), {
       ...examData,
-      userId: userId,
+      userId,
       createdAt: Timestamp.now(),
     });
-    return { success: true, id: docRef.id };
+    return { success: true };
   } catch (error) {
-    console.error("Error adding document: ", error);
-    return { success: false, error: "No se pudo guardar el examen en la base de datos." };
+    console.error('Error saving exam to Firestore:', error);
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred while saving the exam.';
+    return { success: false, error: errorMessage };
   }
 };
 
-export const getExams = async (user: AppUser) => {
-  try {
-    if (!user || !user.uid) {
-        return { success: true, exams: [], categories: [] };
+/**
+ * Retrieves all exams for a user and groups them by category.
+ * @param userId The ID of the user.
+ * @returns An object with the list of summarized categories or an error.
+ */
+export const getExamsForUser = async (userId: string) => {
+    try {
+        if (!userId) {
+            throw new Error('User ID is required to fetch exams.');
+        }
+
+        const examsRef = collection(db, 'exams');
+        const q = query(examsRef, where('userId', '==', userId));
+        const querySnapshot = await getDocs(q);
+
+        const categoryMap: { [key: string]: number } = {};
+
+        querySnapshot.forEach(doc => {
+            const exam = doc.data() as Omit<Exam, 'id'>;
+            if (exam.category) {
+                if (categoryMap[exam.category]) {
+                    categoryMap[exam.category]++;
+                } else {
+                    categoryMap[exam.category] = 1;
+                }
+            }
+        });
+
+        const categories: Category[] = CATEGORY_DEFINITIONS.map(def => ({
+            id: def.id,
+            name: def.name,
+            examCount: categoryMap[def.id] || 0,
+        })).filter(c => c.examCount > 0);
+        
+        return { success: true, categories };
+
+    } catch (error) {
+        console.error('Error getting exams for user:', error);
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+        return { success: false, error: errorMessage };
     }
-    const q = query(collection(db, "exams"), where("userId", "==", user.uid));
+}
+
+/**
+ * Retrieves all exams belonging to a specific category for a user.
+ * @param userId The ID of the user.
+ * @param categoryId The ID of the category.
+ * @returns An object with the list of exams or an error.
+ */
+export const getExamsForCategory = async (userId: string, categoryId: string) => {
+  try {
+    if (!userId || !categoryId) {
+      throw new Error('User ID and Category ID are required.');
+    }
+
+    const examsRef = collection(db, 'exams');
+    const q = query(
+      examsRef,
+      where('userId', '==', userId),
+      where('category', '==', categoryId)
+    );
     const querySnapshot = await getDocs(q);
-    
-    const exams: Exam[] = [];
-    querySnapshot.forEach((doc) => {
-      exams.push({ id: doc.id, ...doc.data() } as Exam);
-    });
 
-    const counts = exams.reduce((acc, exam) => {
-        acc[exam.category] = (acc[exam.category] || 0) + 1;
-        return acc;
-    }, {} as Record<string, number>);
+    const exams = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Exam[];
 
-    const categories: Category[] = CATEGORY_DEFINITIONS.map(catDef => ({
-        ...catDef,
-        examCount: counts[catDef.id] || 0,
-    })).filter(c => c.examCount > 0);
+    const categoryName = CATEGORY_DEFINITIONS.find(c => c.id === categoryId)?.name || 'Categoría desconocida';
 
-
-    return { success: true, exams, categories };
+    return { success: true, exams, categoryName };
   } catch (error) {
-    console.error("Error getting documents: ", error);
-    return { success: false, error: "No se pudieron obtener los exámenes." };
+    console.error('Error getting exams for category:', error);
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : 'An unknown error occurred while fetching exams for the category.';
+    return { success: false, error: errorMessage };
   }
 };
 
-    
+
+/**
+ * Retrieves a single exam by its ID.
+ * @param examId The ID of the exam to retrieve.
+ * @returns An object with the exam data or an error.
+ */
+export const getExamById = async (examId: string) => {
+  try {
+    if (!examId) {
+      throw new Error('Exam ID is required.');
+    }
+
+    const examRef = doc(db, 'exams', examId);
+    const docSnap = await getDoc(examRef);
+
+    if (!docSnap.exists()) {
+      return { success: false, error: 'No se encontró el examen.' };
+    }
+
+    const exam = { id: docSnap.id, ...docSnap.data() } as Exam;
+    return { success: true, exam };
+  } catch (error) {
+    console.error('Error getting exam by ID:', error);
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : 'An unknown error occurred while fetching the exam.';
+    return { success: false, error: errorMessage };
+  }
+};

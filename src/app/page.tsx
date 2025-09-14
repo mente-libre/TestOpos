@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { onAuthStateChange, signOut, type User as FirebaseUser } from '@/lib/firebase/auth';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { processAndSaveExam } from '@/app/actions';
-import { getExams, type Category } from '@/lib/firebase/firestore';
+import { getExamsForUser, type Category } from '@/lib/firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useRouter } from 'next/navigation';
@@ -50,44 +50,37 @@ export default function Home() {
   const { toast } = useToast();
   const router = useRouter();
 
-  // Effect for handling authentication state changes
+  // Effect for handling authentication state changes and loading user data
   useEffect(() => {
-    const unsubscribe = onAuthStateChange((firebaseUser: FirebaseUser | null) => {
+    const unsubscribe = onAuthStateChange(async (firebaseUser: FirebaseUser | null) => {
+      setIsLoading(true);
       if (firebaseUser) {
+        // Create a simple, serializable user object for React state
         const appUser: AppUser = {
           uid: firebaseUser.uid,
           displayName: firebaseUser.displayName,
           email: firebaseUser.email,
         };
         setUser(appUser);
-      } else {
-        setUser(null);
-      }
-      setIsLoading(false);
-    });
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
-
-  // Effect for loading user data when user logs in or out
-  useEffect(() => {
-    const loadUserData = async () => {
-      if (user) {
-        setIsLoading(true);
-        const result = await getExams({ uid: user.uid });
+        
+        // Fetch user's exams and categories
+        const result = await getExamsForUser(firebaseUser.uid);
         if (result.success && result.categories) {
           setCategories(result.categories);
         } else {
           setCategories([]);
         }
-        setIsLoading(false);
+
       } else {
-        // User logged out, clear their data
-        setCategories([]);
+        setUser(null);
+        setCategories([]); // Clear categories on logout
       }
-    };
-    loadUserData();
-  }, [user]);
+      setIsLoading(false);
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []); // Empty dependency array ensures this runs only once on mount
 
 
   const handleUploadAreaClick = () => {
@@ -141,7 +134,6 @@ export default function Home() {
 
     try {
       const pdfDataUri = await fileToDataUri(selectedFile);
-      // Pass only the necessary user ID to the server action
       const result = await processAndSaveExam(pdfDataUri, selectedFile.name, selectedCategory, user.uid);
 
       if (result.success) {
@@ -153,19 +145,27 @@ export default function Home() {
         });
         // Recargar los exámenes y categorías
         if (user) {
-            const examsResult = await getExams({ uid: user.uid });
+            const examsResult = await getExamsForUser(user.uid);
             if (examsResult.success && examsResult.categories) {
                 setCategories(examsResult.categories);
             }
         }
 
       } else {
-        setError(result.error ?? 'Ha ocurrido un error desconocido.');
+        let errorMessage = result.error ?? 'Ha ocurrido un error desconocido.';
+        if (errorMessage.includes('quota')) {
+            errorMessage = 'Has excedido tu cuota de uso de la API. Por favor, espera un momento y vuelve a intentarlo.'
+        }
+        setError(errorMessage);
         setQuestions(null);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      setError('No se pudo procesar el archivo. Inténtalo de nuevo.');
+      let errorMessage = 'No se pudo procesar el archivo. Inténtalo de nuevo.';
+      if (e.message && e.message.includes('quota')) {
+        errorMessage = 'Has excedido la cuota de la API. Por favor, espera un momento y vuelve a intentarlo.'
+      }
+      setError(errorMessage);
       setQuestions(null);
     } finally {
       setIsProcessing(false);
@@ -174,7 +174,9 @@ export default function Home() {
 
   const handleStartTest = () => {
     if (questions) {
+      // Temporarily store questions for the immediate test session
       sessionStorage.setItem('testQuestions', JSON.stringify(questions));
+      sessionStorage.setItem('testTitle', 'Examen recién subido');
       router.push('/test');
     }
   };
@@ -186,7 +188,7 @@ export default function Home() {
           <div className="flex items-center justify-between h-16">
             <div className="text-2xl font-bold text-primary">Opofy</div>
             <nav className="hidden md:flex items-center space-x-4">
-              <a href="#" className="text-secondary hover:text-primary transition-colors">Inicio</a>
+              <a href="/" className="text-secondary hover:text-primary transition-colors">Inicio</a>
               <a href="#" className="text-secondary hover:text-primary transition-colors">Exámenes</a>
               <a href="#" className="text-secondary hover:text-primary transition-colors">Estadísticas</a>
               <a href="#" className="text-secondary hover:text-primary transition-colors">Ayuda</a>
@@ -360,7 +362,8 @@ export default function Home() {
                 categories.length > 0 ? (
                     <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
                         {categories.map(category => (
-                            <Card key={category.id} className="hover:shadow-lg hover:-translate-y-1 transition-transform">
+                          <Link href={`/category/${category.id}`} key={category.id} passHref>
+                             <Card className="hover:shadow-lg hover:-translate-y-1 transition-transform h-full cursor-pointer">
                                 <div className="bg-primary text-primary-foreground font-semibold p-4 rounded-t-lg">
                                     {category.name}
                                 </div>
@@ -369,6 +372,7 @@ export default function Home() {
                                     <p className="text-muted-foreground">exámenes disponibles</p>
                                 </CardContent>
                             </Card>
+                          </Link>
                         ))}
                     </div>
                 ) : (
