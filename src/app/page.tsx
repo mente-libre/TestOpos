@@ -185,7 +185,7 @@ export default function Home() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-                <Logo className="h-8 w-auto"/>
+                <Logo />
             </div>
             <nav className="hidden md:flex items-center space-x-4">
               <a href="#upload-section" className="text-secondary font-medium hover:text-primary transition-colors">Inicio</a>
@@ -389,7 +389,7 @@ export default function Home() {
 
       <footer className="bg-dark text-white py-8 text-center mt-auto">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <p>© 2024 Opofy - Preparación inteligente para oposiciones</p>
+            <p>© 2024 TestOpos - Preparación inteligente para oposiciones</p>
             <p className="text-sm text-gray-400 mt-2">Una app segura y eficaz para tu preparación</p>
         </div>
       </footer>

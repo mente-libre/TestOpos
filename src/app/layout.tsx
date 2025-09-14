@@ -6,7 +6,7 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Opofy - Tests de Oposiciones con Firebase',
+  title: 'TestOpos - Tests de Oposiciones con IA',
   description: 'Genera tests para oposiciones usando IA',
   icons: {
     icon: '/favicon.ico',
