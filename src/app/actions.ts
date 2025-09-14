@@ -45,9 +45,11 @@ export async function processAndSaveExam(
 
   } catch (error) {
     console.error('Error in processAndSaveExam:', error);
+    // Cast error to get message, but check if it exists
+    const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error inesperado en el servidor al procesar y guardar el examen.';
     return { 
       success: false, 
-      error: 'Ocurrió un error inesperado en el servidor al procesar y guardar el examen.' 
+      error: errorMessage 
     };
   }
 }

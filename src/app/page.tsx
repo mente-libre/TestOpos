@@ -20,6 +20,15 @@ interface Question {
   correctAnswerIndex: number;
 }
 
+// A plain object to store user info, safe for React state
+interface AppUser {
+  uid: string;
+  displayName: string | null;
+  email: string | null;
+  // We need the original FirebaseUser for server actions
+  firebaseUser: FirebaseUser;
+}
+
 const CATEGORY_DEFINITIONS = [
     { id: "madrid", name: "Comunidad de Madrid" },
     { id: "valencia", name: "Comunidad Valenciana" },
@@ -33,7 +42,7 @@ export default function Home() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [user, setUser] = useState<AppUser | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -42,30 +51,43 @@ export default function Home() {
   const { toast } = useToast();
   const router = useRouter();
 
-  // Effect for handling authentication and loading user data
+  // Effect for handling authentication state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChange(async (currentUser) => {
-      // This condition is crucial to prevent infinite loops.
-      // Only proceed if the user's login status has actually changed.
-      if (currentUser?.uid !== user?.uid) {
-        setUser(currentUser);
-        if (currentUser) {
-          const result = await getExams(currentUser);
-          if (result.success && result.categories) {
-            setCategories(result.categories);
-          } else {
-            setCategories([]);
-          }
-        } else {
-          // User logged out, clear their data
-          setCategories([]);
-        }
+    const unsubscribe = onAuthStateChange((firebaseUser) => {
+      if (firebaseUser) {
+        // Create a simple, serializable user object for state
+        const appUser: AppUser = {
+          uid: firebaseUser.uid,
+          displayName: firebaseUser.displayName,
+          email: firebaseUser.email,
+          firebaseUser: firebaseUser,
+        };
+        setUser(appUser);
+      } else {
+        setUser(null);
       }
     });
-
     // Cleanup subscription on unmount
     return () => unsubscribe();
-  }, [user]); // Depend on user to re-evaluate if it changes from other places.
+  }, []);
+
+  // Effect for loading user data when user logs in or out
+  useEffect(() => {
+    const loadUserData = async () => {
+      if (user) {
+        const result = await getExams(user.firebaseUser);
+        if (result.success && result.categories) {
+          setCategories(result.categories);
+        } else {
+          setCategories([]);
+        }
+      } else {
+        // User logged out, clear their data
+        setCategories([]);
+      }
+    };
+    loadUserData();
+  }, [user]);
 
 
   const handleUploadAreaClick = () => {
@@ -119,7 +141,7 @@ export default function Home() {
 
     try {
       const pdfDataUri = await fileToDataUri(selectedFile);
-      const result = await processAndSaveExam(pdfDataUri, selectedFile.name, selectedCategory, user);
+      const result = await processAndSaveExam(pdfDataUri, selectedFile.name, selectedCategory, user.firebaseUser);
 
       if (result.success) {
         setQuestions(result.questions ?? []);
@@ -130,7 +152,7 @@ export default function Home() {
         });
         // Recargar los exámenes y categorías
         if (user) {
-            const examsResult = await getExams(user);
+            const examsResult = await getExams(user.firebaseUser);
             if (examsResult.success && examsResult.categories) {
                 setCategories(examsResult.categories);
             }
