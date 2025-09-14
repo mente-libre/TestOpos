@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -42,24 +42,20 @@ export default function Home() {
   const { toast } = useToast();
   const router = useRouter();
 
-  const loadCategories = useCallback(async (currentUser: FirebaseUser) => {
-      const result = await getExams(currentUser);
-      if (result.success && result.categories) {
-        setCategories(result.categories);
-      }
-  }, []);
-
   useEffect(() => {
-    const unsubscribe = onAuthStateChange((currentUser) => {
+    const unsubscribe = onAuthStateChange(async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        loadCategories(currentUser);
+        const result = await getExams(currentUser);
+        if (result.success && result.categories) {
+          setCategories(result.categories);
+        }
       } else {
         setCategories([]);
       }
     });
     return () => unsubscribe();
-  }, [loadCategories]);
+  }, []);
 
   const handleUploadAreaClick = () => {
     fileInputRef.current?.click();
@@ -122,7 +118,11 @@ export default function Home() {
             description: `Se ha guardado en "${CATEGORY_DEFINITIONS.find(c=>c.id === selectedCategory)?.name}".`,
         });
         if (user) {
-          await loadCategories(user); // Recargar los exámenes y categorías
+          // Recargar los exámenes y categorías
+          const examsResult = await getExams(user);
+          if (examsResult.success && examsResult.categories) {
+            setCategories(examsResult.categories);
+          }
         }
       } else {
         setError(result.error ?? 'Ha ocurrido un error desconocido.');
@@ -343,7 +343,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="bg-dark text-white py-8 text-center">
+      <footer className="bg-dark text-white py-8 text-center mt-auto">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <p>© 2024 Opofy - Preparación inteligente para oposiciones</p>
             <p className="text-sm text-gray-400 mt-2">Una app segura y eficaz para tu preparación</p>
@@ -352,5 +352,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
