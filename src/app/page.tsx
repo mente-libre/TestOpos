@@ -60,6 +60,8 @@ export default function Home() {
 
   const resetToUpload = () => {
     setView('upload');
+    // Optionally reset documents if you want a clean slate
+    // setDocuments([]);
   };
   
   const totalQuestions = documents.reduce((acc, doc) => acc + doc.questions.length, 0);
@@ -96,8 +98,8 @@ export default function Home() {
                     <ul className="space-y-2">
                       {documents.map((doc, index) => (
                         <li key={index} className="text-sm p-3 bg-secondary rounded-md flex items-center justify-between">
-                          <span className="font-medium">{doc.fileName}</span>
-                          <span className="text-muted-foreground">{doc.questions.length} preguntas</span>
+                          <span className="font-medium truncate pr-4">{doc.fileName}</span>
+                          <span className="text-muted-foreground whitespace-nowrap">{doc.questions.length} preguntas</span>
                         </li>
                       ))}
                     </ul>

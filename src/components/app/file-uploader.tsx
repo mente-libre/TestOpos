@@ -1,12 +1,15 @@
 'use client';
 
 import { useState, useRef, type DragEvent } from 'react';
-import { Upload, Loader2, AlertCircle } from 'lucide-react';
+import { Upload, Loader2, AlertCircle, Link } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { getQuestionsFromPdf } from '@/app/actions';
 import type { Document } from '@/app/page';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 type FileUploaderProps = {
   onQuestionsExtracted: (doc: Document) => void;
@@ -16,30 +19,21 @@ export function FileUploader({ onQuestionsExtracted }: FileUploaderProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  const handleFileSelect = async (file: File | null) => {
-    if (!file) return;
-    if (file.type !== 'application/pdf') {
-      setError('Por favor, sube solo archivos PDF.');
-      return;
-    }
-
+  const processPdf = async (pdfDataUri: string, fileName: string) => {
     setIsUploading(true);
     setError(null);
-
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = async () => {
-      const pdfDataUri = reader.result as string;
+    try {
       const result = await getQuestionsFromPdf(pdfDataUri);
 
       if (result.success && result.questions) {
-        onQuestionsExtracted({ fileName: file.name, questions: result.questions });
+        onQuestionsExtracted({ fileName, questions: result.questions });
         toast({
           title: 'Éxito',
-          description: `Se extrajeron ${result.questions.length} preguntas de ${file.name}.`,
+          description: `Se extrajeron ${result.questions.length} preguntas de ${fileName}.`,
         });
       } else {
         setError(result.error || 'Ocurrió un error desconocido.');
@@ -49,17 +43,57 @@ export function FileUploader({ onQuestionsExtracted }: FileUploaderProps) {
           description: result.error || 'No se pudieron extraer las preguntas.',
         });
       }
+    } catch (e) {
+      setError('Ocurrió un error al contactar al servidor.');
+      toast({
+        variant: 'destructive',
+        title: 'Error de Red',
+        description: 'No se pudo conectar con el servidor.',
+      });
+    } finally {
       setIsUploading(false);
+    }
+  };
+
+  const handleFileSelect = async (file: File | null) => {
+    if (!file) return;
+    if (file.type !== 'application/pdf') {
+      setError('Por favor, sube solo archivos PDF.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = async () => {
+      const pdfDataUri = reader.result as string;
+      await processPdf(pdfDataUri, file.name);
     };
     reader.onerror = () => {
       setError('No se pudo leer el archivo.');
-      setIsUploading(false);
       toast({
         variant: 'destructive',
         title: 'Error de Archivo',
         description: 'No se pudo leer el archivo seleccionado.',
       });
     };
+  };
+
+  const handleUrlSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!pdfUrl) {
+      setError('Por favor, introduce una URL.');
+      return;
+    }
+    // Simple validation for a URL
+    try {
+      new URL(pdfUrl);
+    } catch (_) {
+      setError('La URL introducida no es válida.');
+      return;
+    }
+    
+    // We pass the URL directly to the server action
+    await processPdf(pdfUrl, pdfUrl.substring(pdfUrl.lastIndexOf('/') + 1));
   };
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
@@ -84,42 +118,72 @@ export function FileUploader({ onQuestionsExtracted }: FileUploaderProps) {
       <CardHeader>
         <CardTitle>1. Sube un Examen</CardTitle>
         <CardDescription>
-          Arrastra y suelta un PDF o haz clic para seleccionarlo. La IA extraerá las preguntas por ti.
+          Arrastra y suelta un PDF, selecciónalo desde tu equipo o pega una URL. La IA extraerá las preguntas.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div
-          className={cn(
-            'border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all duration-300',
-            'border-border hover:border-primary hover:bg-secondary',
-            isDragging && 'border-primary bg-primary/10 scale-105'
-          )}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
-        >
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".pdf"
-            className="hidden"
-            onChange={(e) => handleFileSelect(e.target.files ? e.target.files[0] : null)}
-            disabled={isUploading}
-          />
-          {isUploading ? (
-            <div className="flex flex-col items-center gap-2">
-              <Loader2 className="h-10 w-10 animate-spin text-primary" />
-              <p className="text-muted-foreground">Procesando tu PDF...</p>
+        <Tabs defaultValue="upload">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="upload"><Upload className="mr-2 h-4 w-4"/> Subir Archivo</TabsTrigger>
+            <TabsTrigger value="url"><Link className="mr-2 h-4 w-4"/>Desde URL</TabsTrigger>
+          </TabsList>
+          <TabsContent value="upload">
+            <div
+              className={cn(
+                'mt-4 border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all duration-300',
+                'border-border hover:border-primary hover:bg-secondary',
+                isDragging && 'border-primary bg-primary/10 scale-105'
+              )}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf"
+                className="hidden"
+                onChange={(e) => handleFileSelect(e.target.files ? e.target.files[0] : null)}
+                disabled={isUploading}
+              />
+              {isUploading ? (
+                <div className="flex flex-col items-center gap-2">
+                  <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                  <p className="text-muted-foreground">Procesando tu PDF...</p>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                  <Upload className="h-10 w-10" />
+                  <p>Arrastra un PDF aquí o haz clic para subir</p>
+                  <p className="text-xs">Tamaño máximo del archivo: 10MB</p>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="flex flex-col items-center gap-2 text-muted-foreground">
-              <Upload className="h-10 w-10" />
-              <p>Arrastra un PDF aquí o haz clic para subir</p>
-              <p className="text-xs">Tamaño máximo del archivo: 10MB</p>
-            </div>
-          )}
-        </div>
+          </TabsContent>
+          <TabsContent value="url">
+            <form onSubmit={handleUrlSubmit} className="mt-4 space-y-4">
+              <Input
+                type="url"
+                placeholder="https://ejemplo.com/examen.pdf"
+                value={pdfUrl}
+                onChange={(e) => setPdfUrl(e.target.value)}
+                disabled={isUploading}
+              />
+              <Button type="submit" className="w-full" disabled={isUploading}>
+                {isUploading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Procesando...
+                  </>
+                ) : (
+                  'Extraer de URL'
+                )}
+              </Button>
+            </form>
+          </TabsContent>
+        </Tabs>
+
         {error && (
           <div className="mt-4 flex items-center gap-2 text-sm text-destructive">
             <AlertCircle className="h-4 w-4" />

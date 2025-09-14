@@ -40,7 +40,7 @@ export function ResultsView({ questions, onRetry, onReset }: ResultsViewProps) {
                   ) : (
                     <XCircle className="h-5 w-5 text-destructive shrink-0" />
                   )}
-                  <span className="flex-1 text-left">Pregunta {index + 1}</span>
+                  <span className="flex-1 text-left truncate">Pregunta {index + 1}</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="space-y-3 pt-3">

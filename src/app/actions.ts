@@ -2,8 +2,37 @@
 
 import { extractQuestionsFromPdf } from '@/ai/flows/extract-questions-from-pdf';
 
-export async function getQuestionsFromPdf(pdfDataUri: string) {
+async function fetchPdfAsDataUri(url: string): Promise<string> {
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch PDF from URL: ${response.statusText}`);
+    }
+    const blob = await response.blob();
+    if (blob.type !== 'application/pdf') {
+        // We'll still try to process it, but this is a warning sign.
+        console.warn(`Expected PDF content-type, but got ${blob.type}`);
+    }
+    const buffer = await blob.arrayBuffer();
+    const base64 = Buffer.from(buffer).toString('base64');
+    return `data:application/pdf;base64,${base64}`;
+}
+
+
+export async function getQuestionsFromPdf(pdfIdentifier: string) {
   try {
+    let pdfDataUri: string;
+
+    if (pdfIdentifier.startsWith('http')) {
+        try {
+            pdfDataUri = await fetchPdfAsDataUri(pdfIdentifier);
+        } catch (fetchError: any) {
+            console.error('Error fetching PDF from URL:', fetchError);
+            return { success: false, error: `No se pudo descargar el PDF de la URL: ${fetchError.message}` };
+        }
+    } else {
+        pdfDataUri = pdfIdentifier;
+    }
+
     const result = await extractQuestionsFromPdf({ pdfDataUri });
     if (result && result.questions) {
       if (result.questions.length === 0) {
