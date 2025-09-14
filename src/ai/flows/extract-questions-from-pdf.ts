@@ -43,7 +43,9 @@ const extractQuestionsFromPdfPrompt = ai.definePrompt({
   output: {schema: ExtractQuestionsFromPdfOutputSchema},
   prompt: `You are an expert at extracting questions from PDF documents.
 
-  Given the following PDF document, extract all the questions and return them as a JSON array of strings.
+  Given the following PDF document, extract all the questions.
+
+  Return the questions in the format specified by the output schema.
 
   PDF Document: {{media url=pdfDataUri}}`,
 });
