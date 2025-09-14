@@ -44,18 +44,21 @@ export default function Home() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChange(async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        const result = await getExams(currentUser);
-        if (result.success && result.categories) {
-          setCategories(result.categories);
+      // Only update state if the user has actually changed
+      if (currentUser?.uid !== user?.uid) {
+        setUser(currentUser);
+        if (currentUser) {
+          const result = await getExams(currentUser);
+          if (result.success && result.categories) {
+            setCategories(result.categories);
+          }
+        } else {
+          setCategories([]);
         }
-      } else {
-        setCategories([]);
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [user]);
 
   const handleUploadAreaClick = () => {
     fileInputRef.current?.click();
