@@ -2,7 +2,6 @@
 
 import { extractQuestionsFromPdf } from '@/ai/flows/extract-questions-from-pdf';
 import { saveExam, type Exam } from '@/lib/firebase/firestore';
-import type { User } from '@/lib/firebase/auth';
 
 interface Question {
   questionText: string;
@@ -14,9 +13,18 @@ export async function processAndSaveExam(
   pdfDataUri: string,
   fileName: string,
   category: string,
-  user: User
+  userId: string
 ) {
   try {
+    // Note: In a real app, you'd get the user from the server-side session here
+    // For now, we trust the userId passed from the client.
+    if (!userId) {
+      return {
+        success: false,
+        error: 'Usuario no autenticado.'
+      };
+    }
+
     // 1. Extract questions from PDF using AI
     const extractionResult = await extractQuestionsFromPdf({ pdfDataUri });
 
@@ -34,7 +42,7 @@ export async function processAndSaveExam(
       questions: extractionResult.questions,
     };
     
-    const saveResult = await saveExam(user, examData);
+    const saveResult = await saveExam(userId, examData);
 
     if (!saveResult.success) {
       return { success: false, error: saveResult.error };

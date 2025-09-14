@@ -25,8 +25,6 @@ interface AppUser {
   uid: string;
   displayName: string | null;
   email: string | null;
-  // We need the original FirebaseUser for server actions
-  firebaseUser: FirebaseUser;
 }
 
 const CATEGORY_DEFINITIONS = [
@@ -43,7 +41,8 @@ export default function Home() {
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [user, setUser] = useState<AppUser | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Start with loading true
+  const [isProcessing, setIsProcessing] = useState(false);
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -55,16 +54,15 @@ export default function Home() {
   useEffect(() => {
     const unsubscribe = onAuthStateChange((firebaseUser) => {
       if (firebaseUser) {
-        // Create a simple, serializable user object for state
         const appUser: AppUser = {
           uid: firebaseUser.uid,
           displayName: firebaseUser.displayName,
           email: firebaseUser.email,
-          firebaseUser: firebaseUser,
         };
         setUser(appUser);
       } else {
         setUser(null);
+        setIsLoading(false);
       }
     });
     // Cleanup subscription on unmount
@@ -75,12 +73,14 @@ export default function Home() {
   useEffect(() => {
     const loadUserData = async () => {
       if (user) {
-        const result = await getExams(user.firebaseUser);
+        setIsLoading(true);
+        const result = await getExams(user); // Pass the simple user object
         if (result.success && result.categories) {
           setCategories(result.categories);
         } else {
           setCategories([]);
         }
+        setIsLoading(false);
       } else {
         // User logged out, clear their data
         setCategories([]);
@@ -135,13 +135,14 @@ export default function Home() {
       return;
     }
     
-    setIsLoading(true);
+    setIsProcessing(true);
     setQuestions(null);
     setError(null);
 
     try {
       const pdfDataUri = await fileToDataUri(selectedFile);
-      const result = await processAndSaveExam(pdfDataUri, selectedFile.name, selectedCategory, user.firebaseUser);
+      // Pass only the necessary user ID to the server action
+      const result = await processAndSaveExam(pdfDataUri, selectedFile.name, selectedCategory, user.uid);
 
       if (result.success) {
         setQuestions(result.questions ?? []);
@@ -152,7 +153,7 @@ export default function Home() {
         });
         // Recargar los exámenes y categorías
         if (user) {
-            const examsResult = await getExams(user.firebaseUser);
+            const examsResult = await getExams(user);
             if (examsResult.success && examsResult.categories) {
                 setCategories(examsResult.categories);
             }
@@ -167,7 +168,7 @@ export default function Home() {
       setError('No se pudo procesar el archivo. Inténtalo de nuevo.');
       setQuestions(null);
     } finally {
-      setIsLoading(false);
+      setIsProcessing(false);
     }
   };
 
@@ -308,9 +309,9 @@ export default function Home() {
                             </SelectContent>
                         </Select>
                     </div>
-                    <Button onClick={handleProcessExam} disabled={isLoading || !user}>
-                      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      {isLoading ? 'Procesando...' : 'Procesar y Guardar'}
+                    <Button onClick={handleProcessExam} disabled={isProcessing || !user}>
+                      {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      {isProcessing ? 'Procesando...' : 'Procesar y Guardar'}
                     </Button>
                 </div>
               </CardContent>
@@ -342,7 +343,7 @@ export default function Home() {
                 </CardContent>
               </Card>
             )}
-             {isLoading && (
+             {isProcessing && (
                  <div className="flex justify-center items-center p-8">
                     <Loader2 className="mr-2 h-8 w-8 animate-spin" />
                     <p>La IA está leyendo y guardando tu examen...</p>
@@ -350,7 +351,12 @@ export default function Home() {
              )}
 
             <h3 className="text-2xl font-bold mt-12 mb-6">Tus categorías</h3>
-            {user ? (
+            {isLoading ? (
+              <div className="flex justify-center items-center p-8">
+                  <Loader2 className="mr-2 h-8 w-8 animate-spin" />
+                  <p>Cargando tus datos...</p>
+              </div>
+            ) : user ? (
                 categories.length > 0 ? (
                     <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
                         {categories.map(category => (

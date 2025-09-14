@@ -2,7 +2,6 @@
 
 import { collection, addDoc, query, where, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "./config";
-import type { User } from "./auth";
 
 interface Question {
   questionText: string;
@@ -25,6 +24,11 @@ export interface Category {
   examCount: number;
 }
 
+// A simple user object with just the UID
+interface AppUser {
+    uid: string;
+}
+
 const CATEGORY_DEFINITIONS = [
     { id: "madrid", name: "Comunidad de Madrid" },
     { id: "valencia", name: "Comunidad Valenciana" },
@@ -33,11 +37,11 @@ const CATEGORY_DEFINITIONS = [
     { id: "otros", name: "Otras" },
 ];
 
-export const saveExam = async (user: User, examData: Omit<Exam, "userId" | "createdAt" | "id">) => {
+export const saveExam = async (userId: string, examData: Omit<Exam, "userId" | "createdAt" | "id">) => {
   try {
     const docRef = await addDoc(collection(db, "exams"), {
       ...examData,
-      userId: user.uid,
+      userId: userId,
       createdAt: Timestamp.now(),
     });
     return { success: true, id: docRef.id };
@@ -47,8 +51,11 @@ export const saveExam = async (user: User, examData: Omit<Exam, "userId" | "crea
   }
 };
 
-export const getExams = async (user: User) => {
+export const getExams = async (user: AppUser) => {
   try {
+    if (!user || !user.uid) {
+        return { success: true, exams: [], categories: [] };
+    }
     const q = query(collection(db, "exams"), where("userId", "==", user.uid));
     const querySnapshot = await getDocs(q);
     
