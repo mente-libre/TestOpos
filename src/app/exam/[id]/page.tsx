@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getExamById, type Exam } from '@/lib/firebase/firestore';
 import { onAuthStateChange, type User } from '@/lib/firebase/auth';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, List, ChevronLeft, PlayCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -90,7 +90,7 @@ export default function ExamPage() {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="mb-6 p-4 bg-light rounded-lg">
+                <div className="mb-6 p-4 bg-light rounded-lg border">
                     <h3 className="font-semibold text-lg mb-3 flex items-center"><List className="h-5 w-5 mr-2"/> Resumen de preguntas</h3>
                     <ul className="list-decimal list-inside space-y-2 text-sm text-muted-foreground max-h-60 overflow-y-auto">
                        {exam.questions.map((q, index) => (
@@ -98,11 +98,13 @@ export default function ExamPage() {
                        ))}
                     </ul>
                 </div>
+            </CardContent>
+            <CardFooter>
                 <Button size="lg" className="w-full" onClick={handleStartTest}>
                     <PlayCircle className="h-5 w-5 mr-2" />
                     Comenzar Test
                 </Button>
-            </CardContent>
+            </CardFooter>
         </Card>
 
       </div>

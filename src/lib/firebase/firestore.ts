@@ -11,6 +11,7 @@ import {
   doc,
   getDoc,
 } from 'firebase/firestore';
+import { madridAdminTest } from '../seed-data';
 
 // Main type for an exam document
 export interface Exam {
@@ -27,6 +28,7 @@ export interface Question {
   questionText: string;
   options: string[];
   correctAnswerIndex: number;
+  explanation?: string;
 }
 
 // Type for the summarized category data
@@ -75,6 +77,7 @@ export const saveExam = async (
 
 /**
  * Retrieves all exams for a user and groups them by category.
+ * If the user has no exams for a certain category, it can seed initial data.
  * @param userId The ID of the user.
  * @returns An object with the list of summarized categories or an error.
  */
@@ -101,6 +104,19 @@ export const getExamsForUser = async (userId: string) => {
             }
         });
 
+        // --- Seed Data Logic ---
+        // If there are no exams for Madrid, add the seed data.
+        if (!categoryMap['madrid'] || categoryMap['madrid'] === 0) {
+            await saveExam(userId, {
+                fileName: madridAdminTest.fileName,
+                category: madridAdminTest.category,
+                questions: madridAdminTest.questions,
+            });
+            // Update the map to reflect the new seeded exam
+            categoryMap['madrid'] = 1;
+        }
+        // --- End of Seed Data Logic ---
+
         const categories: Category[] = CATEGORY_DEFINITIONS.map(def => ({
             id: def.id,
             name: def.name,
@@ -115,6 +131,7 @@ export const getExamsForUser = async (userId: string) => {
         return { success: false, error: errorMessage };
     }
 }
+
 
 /**
  * Retrieves all exams belonging to a specific category for a user.
