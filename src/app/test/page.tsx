@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -30,6 +30,21 @@ export default function TestPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const examId = searchParams.get('examId');
+
+  const handleFinishTest = useCallback(() => {
+    setIsFinished(true);
+    setIsReviewMode(false); // Make sure we show the results summary first
+    setAnswers(prevAnswers => {
+      return questions!.map((q, index) => {
+        const userAnswer = prevAnswers[index];
+        const isCorrect = userAnswer.selectedIndex === q.correctAnswerIndex;
+        return {
+          ...userAnswer,
+          status: userAnswer.selectedIndex === null ? 'unanswered' : (isCorrect ? 'correct' : 'incorrect'),
+        };
+      });
+    });
+  }, [questions]);
 
   useEffect(() => {
     const fetchExam = async () => {
@@ -84,21 +99,6 @@ export default function TestPage() {
       const newAnswers = [...prev];
       newAnswers[questionIndex] = { ...newAnswers[questionIndex], selectedIndex: optionIndex };
       return newAnswers;
-    });
-  };
-
-  const handleFinishTest = () => {
-    setIsFinished(true);
-    setIsReviewMode(false); // Make sure we show the results summary first
-    setAnswers(prevAnswers => {
-      return questions!.map((q, index) => {
-        const userAnswer = prevAnswers[index];
-        const isCorrect = userAnswer.selectedIndex === q.correctAnswerIndex;
-        return {
-          ...userAnswer,
-          status: userAnswer.selectedIndex === null ? 'unanswered' : (isCorrect ? 'correct' : 'incorrect'),
-        };
-      });
     });
   };
 
@@ -308,5 +308,3 @@ export default function TestPage() {
     </div>
   );
 }
-
-    
