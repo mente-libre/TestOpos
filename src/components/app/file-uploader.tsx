@@ -23,11 +23,11 @@ export function FileUploader({ onQuestionsExtracted }: FileUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  const processPdf = async (pdfDataUri: string, fileName: string) => {
+  const processPdf = async (pdfIdentifier: string, fileName: string) => {
     setIsUploading(true);
     setError(null);
     try {
-      const result = await getQuestionsFromPdf(pdfDataUri);
+      const result = await getQuestionsFromPdf(pdfIdentifier);
 
       if (result.success && result.questions) {
         onQuestionsExtracted({ fileName, questions: result.questions });
@@ -36,19 +36,21 @@ export function FileUploader({ onQuestionsExtracted }: FileUploaderProps) {
           description: `Se extrajeron ${result.questions.length} preguntas de ${fileName}.`,
         });
       } else {
-        setError(result.error || 'Ocurrió un error desconocido.');
+        const errorMessage = result.error || 'Ocurrió un error desconocido.';
+        setError(errorMessage);
         toast({
           variant: 'destructive',
           title: 'Error de extracción',
-          description: result.error || 'No se pudieron extraer las preguntas.',
+          description: errorMessage,
         });
       }
     } catch (e) {
-      setError('Ocurrió un error al contactar al servidor.');
+      const errorMessage = 'Ocurrió un error al contactar al servidor.';
+      setError(errorMessage);
       toast({
         variant: 'destructive',
         title: 'Error de Red',
-        description: 'No se pudo conectar con el servidor.',
+        description: errorMessage,
       });
     } finally {
       setIsUploading(false);
