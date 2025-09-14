@@ -9,9 +9,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 interface Question {
-  question: string;
+  questionText: string;
   options: string[];
-  correct: number; // Placeholder
+  correctAnswerIndex: number;
 }
 
 export default function TestPage() {
@@ -22,18 +22,11 @@ export default function TestPage() {
     const storedQuestions = sessionStorage.getItem('testQuestions');
     if (storedQuestions) {
       try {
-        const questionsText: string[] = JSON.parse(storedQuestions);
-        const formattedQuestions: Question[] = questionsText.map(q => ({
-          question: q,
-          options: ['Opción A', 'Opción B', 'Opción C', 'Opción D'], 
-          correct: 0, // Placeholder correct answer
-        }));
-        
+        const questions: Question[] = JSON.parse(storedQuestions);
         setTestData({
           category: 'Examen Personalizado',
-          questions: formattedQuestions,
+          questions: questions,
         });
-
       } catch (error) {
         console.error("Error parsing questions from sessionStorage", error);
         router.push('/');
@@ -70,7 +63,7 @@ export default function TestPage() {
             <div className="space-y-8">
               {testData.questions.map((q, qIndex) => (
                 <div key={qIndex} className="p-6 bg-light rounded-lg border">
-                  <p className="font-semibold mb-4 text-lg">{qIndex + 1}. {q.question}</p>
+                  <p className="font-semibold mb-4 text-lg">{qIndex + 1}. {q.questionText}</p>
                   <RadioGroup>
                     <div className="space-y-3">
                       {q.options.map((option, oIndex) => (

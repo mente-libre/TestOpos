@@ -22,10 +22,25 @@ export type ExtractQuestionsFromPdfInput = z.infer<
   typeof ExtractQuestionsFromPdfInputSchema
 >;
 
+const QuestionSchema = z.object({
+  questionText: z.string().describe('The full text of the question.'),
+  options: z
+    .array(z.string())
+    .length(4)
+    .describe('An array of 4 possible answer strings.'),
+  correctAnswerIndex: z
+    .number()
+    .min(0)
+    .max(3)
+    .describe('The index (0-3) of the correct answer in the options array.'),
+});
+
 const ExtractQuestionsFromPdfOutputSchema = z.object({
   questions: z
-    .array(z.string())
-    .describe('An array of questions extracted from the document. The questions should not include the question number or any answer choices.'),
+    .array(QuestionSchema)
+    .describe(
+      'An array of question objects extracted from the document.'
+    ),
 });
 export type ExtractQuestionsFromPdfOutput = z.infer<
   typeof ExtractQuestionsFromPdfOutputSchema
@@ -42,10 +57,19 @@ const extractQuestionsFromPdfPrompt = ai.definePrompt({
   input: {schema: ExtractQuestionsFromPdfInputSchema},
   output: {schema: ExtractQuestionsFromPdfOutputSchema},
   prompt: `You are an expert at processing PDF documents for civil service exams.
-  Your task is to extract only the questions from the provided PDF.
+  Your task is to extract the questions, their multiple-choice options, and identify the correct answer.
+
+  For each question you find, provide:
+  - The question text.
+  - An array of exactly 4 answer options.
+  - The index (0, 1, 2, or 3) of the correct answer.
+
+  Rules:
   - Ignore headers, footers, page numbers, and any introductory text.
-  - Extract only the question text. Do not include the question number (e.g., "1.", "2)") or any multiple-choice answers.
-  - Return the questions as an array of strings. If no questions are found, return an empty array.
+  - Extract only the question text, without the question number (e.g., "1.", "2)").
+  - Extract the full text for each of the 4 options.
+  - Analyze the PDF to determine which of the options is the correct one. If the correct answer is marked with an asterisk, in bold, or indicated in a separate answer key section, use that information.
+  - Return a JSON object with a "questions" array. If no questions are found, return an empty array.
 
   PDF Document: {{media url=pdfDataUri}}`,
 });

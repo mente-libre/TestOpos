@@ -13,13 +13,19 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useRouter } from 'next/navigation';
 
+interface Question {
+  questionText: string;
+  options: string[];
+  correctAnswerIndex: number;
+}
+
 export default function Home() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [questions, setQuestions] = useState<string[] | null>(null);
+  const [questions, setQuestions] = useState<Question[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   
   const { toast } = useToast();
@@ -263,7 +269,7 @@ export default function Home() {
                 </CardHeader>
                 <CardContent>
                   <ul className="list-decimal list-inside space-y-2 mb-6">
-                    {questions.map((q, index) => <li key={index}>{q}</li>)}
+                    {questions.map((q, index) => <li key={index}>{q.questionText}</li>)}
                   </ul>
                   <Button onClick={handleStartTest}>Comenzar Test</Button>
                 </CardContent>
