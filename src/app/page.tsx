@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -45,7 +45,6 @@ export default function Home() {
   // Effect for handling authentication state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChange(setUser);
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
