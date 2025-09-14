@@ -54,7 +54,6 @@ export async function extractQuestionsFromPdf(
 
 const extractQuestionsFromPdfPrompt = ai.definePrompt({
   name: 'extractQuestionsFromPdfPrompt',
-  input: {schema: ExtractQuestionsFromPdfInputSchema},
   output: {schema: ExtractQuestionsFromPdfOutputSchema},
   prompt: `You are an expert at processing PDF documents for civil service exams.
   Your task is to extract the questions, their multiple-choice options, and identify the correct answer.
@@ -81,7 +80,7 @@ const extractQuestionsFromPdfFlow = ai.defineFlow(
     outputSchema: ExtractQuestionsFromPdfOutputSchema,
   },
   async input => {
-    const {output} = await extractQuestionsFromPdfPrompt(input);
-    return output!;
+    const {output} = await extractQuestionsFromPdfPrompt({pdfDataUri: input.pdfDataUri});
+    return output || {questions: []};
   }
 );
