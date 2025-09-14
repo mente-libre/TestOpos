@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FileUp, Bot, BarChart3, Upload, User, LogOut, Loader2, AlertCircle, CheckCircle, Folder } from 'lucide-react';
+import { FileUp, Bot, BarChart3, Upload, User, LogOut, Loader2, AlertCircle, CheckCircle, Folder, Wand2 } from 'lucide-react';
 import Link from 'next/link';
 import { onAuthStateChange, signOut } from '@/lib/firebase/auth';
 import type { User as FirebaseUser } from 'firebase/auth';
@@ -195,6 +195,7 @@ export default function Home() {
             </div>
             <nav className="hidden md:flex items-center space-x-4">
               <a href="#upload-section" className="text-secondary font-medium hover:text-primary transition-colors">Inicio</a>
+              <Link href="/generate" className="text-secondary font-medium hover:text-primary transition-colors">Generador IA</Link>
               <a href="#upload-section" className="text-secondary font-medium hover:text-primary transition-colors">Exámenes</a>
               <a href="#" className="text-secondary font-medium hover:text-primary transition-colors">Estadísticas</a>
               <a href="#" className="text-secondary font-medium hover:text-primary transition-colors">Ayuda</a>
@@ -235,13 +236,21 @@ export default function Home() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Prepara tus oposiciones con exámenes reales</h1>
             <p className="max-w-3xl mx-auto text-lg text-secondary mb-8">
-              Crea, personaliza y gestiona tests de oposiciones a partir de exámenes en PDF. Prepara tus oposiciones de forma eficaz.
+              Sube tus PDFs o deja que nuestra IA genere nuevos tests para ti. La preparación más completa a tu alcance.
             </p>
-            <Link href={user ? '#upload-section' : '/register'} passHref>
-                <Button size="lg" onClick={() => user && document.getElementById('upload-section')?.scrollIntoView({ behavior: 'smooth' })}>
-                  {user ? 'Empezar a subir' : 'Comenzar ahora'}
-                </Button>
-            </Link>
+             <div className="flex justify-center gap-4">
+                <Link href={user ? '#upload-section' : '/register'} passHref>
+                    <Button size="lg" onClick={() => user && document.getElementById('upload-section')?.scrollIntoView({ behavior: 'smooth' })}>
+                      {user ? 'Empezar a subir' : 'Comenzar ahora'}
+                    </Button>
+                </Link>
+                 <Link href="/generate" passHref>
+                    <Button size="lg" variant="outline" className="bg-white">
+                        <Wand2 className="mr-2 h-5 w-5 text-primary"/>
+                        Generar con IA
+                    </Button>
+                </Link>
+             </div>
           </div>
         </section>
 

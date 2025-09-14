@@ -1,7 +1,8 @@
 'use server';
 
 import { extractQuestionsFromPdf } from '@/ai/flows/extract-questions-from-pdf';
-import { saveExam, type Exam } from '@/lib/firebase/firestore';
+import { generateTestFromExam } from '@/ai/flows/generate-test-from-exam-flow';
+import { saveExam, type Exam, getExamsForCategory } from '@/lib/firebase/firestore';
 
 interface Question {
   questionText: string;
@@ -55,6 +56,50 @@ export async function processAndSaveExam(
     console.error('Error in processAndSaveExam:', error);
     // Cast error to get message, but check if it exists
     const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error inesperado en el servidor al procesar y guardar el examen.';
+    return { 
+      success: false, 
+      error: errorMessage 
+    };
+  }
+}
+
+
+export async function generateNewTest(category: string, topic: string) {
+  try {
+    // 1. Get existing exams from the selected category to use as context
+    const existingExamsResult = await getExamsForCategory(category);
+    if (!existingExamsResult.success || !existingExamsResult.exams || existingExamsResult.exams.length === 0) {
+      return {
+        success: false,
+        error: 'No hay exámenes en esta categoría para usar como base para la generación.'
+      };
+    }
+
+    // 2. Format the existing questions as context for the AI
+    const contextQuestions = existingExamsResult.exams
+      .flatMap(exam => exam.questions)
+      .map(q => `Pregunta: ${q.questionText}\nRespuesta Correcta: ${q.options[q.correctAnswerIndex]}`)
+      .join('\n\n');
+      
+    // 3. Call the AI flow to generate new questions
+    const generationResult = await generateTestFromExam({
+      topic,
+      category,
+      context: contextQuestions
+    });
+
+    if (!generationResult?.questions || generationResult.questions.length === 0) {
+      return { 
+        success: false, 
+        error: 'La IA no pudo generar nuevas preguntas con el contexto actual. Inténtalo de nuevo o con otra categoría.' 
+      };
+    }
+    
+    return { success: true, questions: generationResult.questions };
+
+  } catch (error) {
+    console.error('Error in generateNewTest:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error inesperado en el servidor al generar el nuevo test.';
     return { 
       success: false, 
       error: errorMessage 
