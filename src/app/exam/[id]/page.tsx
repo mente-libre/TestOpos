@@ -77,7 +77,7 @@ export default function ExamPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <Link href={`/category/${exam.category}`} passHref>
+          <Link href={exam.category ? `/category/${exam.category}` : '/'} passHref>
             <Button variant="outline"><ChevronLeft className="h-4 w-4 mr-2" /> Volver a la categoría</Button>
           </Link>
         </div>
