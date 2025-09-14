@@ -42,22 +42,34 @@ export default function Home() {
   const { toast } = useToast();
   const router = useRouter();
 
+  // Effect for handling authentication state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChange(async (currentUser) => {
+    const unsubscribe = onAuthStateChange((currentUser) => {
       setUser(currentUser);
-      if (currentUser) {
-        const result = await getExams(currentUser);
-        if (result.success && result.categories) {
-          setCategories(result.categories);
-        }
-      } else {
-        setCategories([]);
-      }
     });
-
     // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
+
+  // Effect for loading user data when user state changes
+  useEffect(() => {
+    const loadUserData = async () => {
+      if (user) {
+        const result = await getExams(user);
+        if (result.success && result.categories) {
+          setCategories(result.categories);
+        } else {
+          setCategories([]);
+        }
+      } else {
+        // Clear categories when user logs out
+        setCategories([]);
+      }
+    };
+
+    loadUserData();
+  }, [user]);
+
 
   const handleUploadAreaClick = () => {
     fileInputRef.current?.click();
@@ -355,5 +367,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
