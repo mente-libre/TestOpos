@@ -11,6 +11,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { getQuestionsFromPdf } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -22,6 +23,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   
   const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChange(setUser);
@@ -79,6 +81,7 @@ export default function Home() {
 
       if (result.success) {
         setQuestions(result.questions ?? []);
+        // No navegamos aquí todavía, solo mostramos las preguntas
       } else {
         setError(result.error ?? 'Ha ocurrido un error desconocido.');
       }
@@ -88,6 +91,11 @@ export default function Home() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleStartTest = () => {
+    // Aquí podemos pasar las preguntas a la página de test en el futuro
+    router.push('/test');
   };
 
   return (
@@ -247,9 +255,10 @@ export default function Home() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <ul className="list-decimal list-inside space-y-2">
+                  <ul className="list-decimal list-inside space-y-2 mb-6">
                     {questions.map((q, index) => <li key={index}>{q}</li>)}
                   </ul>
+                  <Button onClick={handleStartTest}>Comenzar Test</Button>
                 </CardContent>
               </Card>
             )}
@@ -262,7 +271,6 @@ export default function Home() {
                 </AlertDescription>
               </Alert>
             )}
-
 
             <h3 className="text-2xl font-bold mt-12 mb-6">Tus categorías</h3>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
