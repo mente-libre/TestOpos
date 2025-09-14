@@ -35,8 +35,12 @@ export default function TestPage() {
     setIsFinished(true);
     setIsReviewMode(false); // Make sure we show the results summary first
     setAnswers(prevAnswers => {
-      return questions!.map((q, index) => {
+      // Ensure questions is not null before mapping
+      if (!questions) return prevAnswers;
+      return questions.map((q, index) => {
         const userAnswer = prevAnswers[index];
+        // Ensure userAnswer is not undefined
+        if (!userAnswer) return { selectedIndex: null, status: 'unanswered' };
         const isCorrect = userAnswer.selectedIndex === q.correctAnswerIndex;
         return {
           ...userAnswer,
@@ -60,15 +64,21 @@ export default function TestPage() {
           router.push('/');
         }
       } else {
-        // Fallback for tests started from session storage (before examId was mandatory)
+        // Fallback for tests started from session storage (e.g. after upload)
         const sessionQuestions = sessionStorage.getItem('testQuestions');
         const sessionTitle = sessionStorage.getItem('testTitle');
         if (sessionQuestions && sessionTitle) {
-          const parsedQuestions = JSON.parse(sessionQuestions);
-          setQuestions(parsedQuestions);
-          setTitle(sessionTitle);
-          setAnswers(parsedQuestions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
+          try {
+            const parsedQuestions = JSON.parse(sessionQuestions);
+            setQuestions(parsedQuestions);
+            setTitle(sessionTitle);
+            setAnswers(parsedQuestions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
+          } catch(e) {
+             console.error("Failed to parse questions from session storage", e);
+             router.push('/');
+          }
         } else {
+            // If no examId and no session data, redirect home
             router.push('/');
         }
       }
@@ -116,8 +126,8 @@ export default function TestPage() {
   };
 
   const getOptionLabelClassName = (qIndex: number, oIndex: number) => {
-    if (!isFinished) return ''; // Only apply styles after finishing
-    const question = questions![qIndex];
+    if (!isFinished || !questions) return ''; // Only apply styles after finishing
+    const question = questions[qIndex];
     const answer = answers[qIndex];
 
     const isCorrect = oIndex === question.correctAnswerIndex;
@@ -163,10 +173,10 @@ export default function TestPage() {
               {questions.map((q, qIndex) => (
                 <Card key={qIndex}>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-3">
-                      {answers[qIndex].status === 'incorrect' && <XCircle className="h-5 w-5 text-red-500" />}
-                       {answers[qIndex].status === 'correct' && <CheckCircle className="h-5 w-5 text-green-500" />}
-                      <span>{qIndex + 1} - {q.questionText}</span>
+                    <CardTitle className="flex items-start gap-3">
+                       {answers[qIndex]?.status === 'incorrect' && <XCircle className="h-5 w-5 text-red-500 mt-1 flex-shrink-0" />}
+                       {answers[qIndex]?.status === 'correct' && <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />}
+                      <span className="flex-grow">{qIndex + 1} - {q.questionText}</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
