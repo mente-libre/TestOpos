@@ -78,7 +78,7 @@ export default function CategoryPage() {
                   <CardContent>
                     <p className="text-sm text-muted-foreground">{exam.questions.length} preguntas</p>
                     <p className="text-xs text-muted-foreground mt-2">
-                      Subido el: {new Date(exam.createdAt.seconds * 1000).toLocaleDateString()}
+                      Subido el: {new Date(exam.createdAt as number).toLocaleDateString()}
                     </p>
                   </CardContent>
                 </Card>

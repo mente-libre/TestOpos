@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { db } from './config';
@@ -23,7 +24,7 @@ export interface Exam {
   fileName: string;
   category: string;
   questions: Question[];
-  createdAt: Timestamp;
+  createdAt: Timestamp | number; // Can be a Timestamp from Firestore or a number for client-side
 }
 
 // Type for a single question within an exam
@@ -151,7 +152,7 @@ export const getAllExamsGroupedByCategory = async () => {
 
 
 /**
- * Retrieves all exams belonging to a specific category for a user.
+ * Retrieves all exams belonging to a specific category.
  * This function now fetches all exams in a category, regardless of user.
  * @param categoryId The ID of the category.
  * @returns An object with the list of exams or an error.
@@ -169,10 +170,16 @@ export const getExamsForCategory = async (categoryId: string) => {
     );
     const querySnapshot = await getDocs(q);
 
-    const exams = querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Exam[];
+    const exams = querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      const createdAt = data.createdAt;
+      return {
+        id: doc.id,
+        ...data,
+        // Convert Timestamp to a plain number (milliseconds)
+        createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt,
+      }
+    }) as Exam[];
 
     const categoryName = CATEGORY_DEFINITIONS.find(c => c.id === categoryId)?.name || 'Categoría desconocida';
 
@@ -206,7 +213,16 @@ export const getExamById = async (examId: string) => {
       return { success: false, error: 'No se encontró el examen.' };
     }
 
-    const exam = { id: docSnap.id, ...docSnap.data() } as Exam;
+    const data = docSnap.data();
+    const createdAt = data.createdAt;
+
+    const exam = { 
+        id: docSnap.id, 
+        ...data,
+        // Convert Timestamp to a plain number (milliseconds)
+        createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt
+    } as Exam;
+    
     return { success: true, exam };
   } catch (error) {
     console.error('Error getting exam by ID:', error);
@@ -217,5 +233,3 @@ export const getExamById = async (examId: string) => {
     return { success: false, error: errorMessage };
   }
 };
-
-    
