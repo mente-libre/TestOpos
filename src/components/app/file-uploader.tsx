@@ -23,11 +23,11 @@ export function FileUploader({ onQuestionsExtracted }: FileUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  const processPdf = async (pdfIdentifier: string, fileName: string) => {
+  const processPdf = async (pdfIdentifier: string, fileName: string, isUrl: boolean) => {
     setIsUploading(true);
     setError(null);
     try {
-      const result = await getQuestionsFromPdf(pdfIdentifier);
+      const result = await getQuestionsFromPdf(pdfIdentifier, isUrl);
 
       if (result.success && result.questions) {
         onQuestionsExtracted({ fileName, questions: result.questions });
@@ -68,7 +68,7 @@ export function FileUploader({ onQuestionsExtracted }: FileUploaderProps) {
     reader.readAsDataURL(file);
     reader.onload = async () => {
       const pdfDataUri = reader.result as string;
-      await processPdf(pdfDataUri, file.name);
+      await processPdf(pdfDataUri, file.name, false); // isUrl is false for file uploads
     };
     reader.onerror = () => {
       setError('No se pudo leer el archivo.');
@@ -95,7 +95,7 @@ export function FileUploader({ onQuestionsExtracted }: FileUploaderProps) {
     }
     
     // We pass the URL directly to the server action
-    await processPdf(pdfUrl, pdfUrl.substring(pdfUrl.lastIndexOf('/') + 1));
+    await processPdf(pdfUrl, pdfUrl.substring(pdfUrl.lastIndexOf('/') + 1), true); // isUrl is true for URL submissions
   };
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
