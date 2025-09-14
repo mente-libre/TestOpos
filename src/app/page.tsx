@@ -52,7 +52,7 @@ export default function Home() {
 
   // Effect for handling authentication state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChange((firebaseUser) => {
+    const unsubscribe = onAuthStateChange((firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
         const appUser: AppUser = {
           uid: firebaseUser.uid,
@@ -62,8 +62,8 @@ export default function Home() {
         setUser(appUser);
       } else {
         setUser(null);
-        setIsLoading(false);
       }
+      setIsLoading(false);
     });
     // Cleanup subscription on unmount
     return () => unsubscribe();
@@ -74,7 +74,7 @@ export default function Home() {
     const loadUserData = async () => {
       if (user) {
         setIsLoading(true);
-        const result = await getExams(user); // Pass the simple user object
+        const result = await getExams({ uid: user.uid });
         if (result.success && result.categories) {
           setCategories(result.categories);
         } else {
@@ -153,7 +153,7 @@ export default function Home() {
         });
         // Recargar los exámenes y categorías
         if (user) {
-            const examsResult = await getExams(user);
+            const examsResult = await getExams({ uid: user.uid });
             if (examsResult.success && examsResult.categories) {
                 setCategories(examsResult.categories);
             }
