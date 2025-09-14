@@ -38,9 +38,9 @@ export default function Home() {
     const allQuestions = documents.flatMap((doc) => doc.questions);
     if (allQuestions.length === 0) return;
 
-    // Shuffle and pick 10 questions for the test
+    // Shuffle and pick 90 questions for the test
     const shuffled = allQuestions.sort(() => 0.5 - Math.random());
-    const selectedQuestions = shuffled.slice(0, Math.min(10, shuffled.length));
+    const selectedQuestions = shuffled.slice(0, Math.min(90, shuffled.length));
 
     const formattedTest: TestQuestion[] = selectedQuestions.map((q) => ({
       question: q,
@@ -104,7 +104,7 @@ export default function Home() {
                       ))}
                     </ul>
                     <Button onClick={startTest} className="w-full mt-6" size="lg" disabled={totalQuestions === 0}>
-                      Comenzar Test Aleatorio ({Math.min(10, totalQuestions)} Preguntas)
+                      Comenzar Test Aleatorio ({Math.min(90, totalQuestions)} Preguntas)
                     </Button>
                   </CardContent>
                 </Card>
