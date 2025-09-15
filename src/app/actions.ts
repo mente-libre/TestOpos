@@ -27,7 +27,8 @@ export async function processAndSaveExam(
       };
     }
     
-    // Ensure seed data exists, this is a good place to do it once.
+    // Ensure seed data exists. This is a safe place to run it, as it only seeds
+    // if the data is missing and it's triggered by a user action.
     await ensureSeedData();
     
     // 1. Extract questions from PDF using AI

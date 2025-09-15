@@ -61,31 +61,30 @@ export const ensureSeedData = async () => {
     try {
         console.log('Checking and seeding database with initial exams if necessary...');
         const examsRef = collection(db, 'exams');
+        
+        // A simple check to see if there are any documents at all.
+        // This is much faster than checking for each specific seed exam.
+        const initialCheck = await getCountFromServer(examsRef);
+        if (initialCheck.data().count > 0) {
+             console.log('Database already contains exams. Seeding skipped.');
+             return { success: true, message: 'Seeding skipped, data exists.' };
+        }
+        
+        console.log('Database is empty. Seeding initial exams...');
         const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2];
         let seededCount = 0;
 
         for (const seedExam of seedExams) {
-            // Check if an exam with the same fileName already exists
-            const q = query(examsRef, where('fileName', '==', seedExam.fileName));
-            const querySnapshot = await getDocs(q);
-
-            if (querySnapshot.empty) {
-                // If it doesn't exist, add it
-                await addDoc(examsRef, {
-                    ...seedExam,
-                    userId: 'system', // Mark as a system-generated exam
-                    createdAt: Timestamp.now(),
-                });
-                console.log(`Seeded exam: ${seedExam.fileName}`);
-                seededCount++;
-            }
+            // No need to check for individual existence if the collection is empty
+            await addDoc(examsRef, {
+                ...seedExam,
+                userId: 'system', // Mark as a system-generated exam
+                createdAt: Timestamp.now(),
+            });
+            seededCount++;
         }
         
-        if (seededCount > 0) {
-            console.log(`Seeding complete. Added ${seededCount} new exams.`);
-        } else {
-            console.log('All seed exams already exist. No new data was added.');
-        }
+        console.log(`Seeding complete. Added ${seededCount} new exams.`);
 
         return { success: true };
 

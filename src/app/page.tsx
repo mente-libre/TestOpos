@@ -11,7 +11,7 @@ import { onAuthStateChange, signOut } from '@/lib/firebase/auth';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { processAndSaveExam } from '@/app/actions';
-import { getAllExamsGroupedByCategory, type Category, ensureSeedData } from '@/lib/firebase/firestore';
+import { getAllExamsGroupedByCategory, type Category } from '@/lib/firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useRouter } from 'next/navigation';
@@ -58,8 +58,6 @@ export default function Home() {
     const loadInitialData = async () => {
       setIsLoading(true);
 
-      // Ensure seed data exists, then fetch categories.
-      await ensureSeedData();
       const result = await getAllExamsGroupedByCategory();
       
       if (result.success && result.categories) {
