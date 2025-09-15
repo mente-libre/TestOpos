@@ -95,8 +95,7 @@ export const ensureSeedData = async (): Promise<void> => {
  */
 export const getExamsForCategory = async (categoryId: string | null) => {
   try {
-    // Always ensure seed data exists before any fetch operation.
-    // This is cheap and prevents empty states on first load.
+    // This call ensures data exists, especially for category summary.
     await ensureSeedData();
 
     const examsRef = collection(db, 'exams');
@@ -219,5 +218,3 @@ export const saveExam = async (
     return { success: false, error: errorMessage };
   }
 };
-
-    
