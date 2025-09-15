@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -36,6 +37,21 @@ export default function GeneratePage() {
   const [topic, setTopic] = useState<string>('');
   
   const { toast } = useToast();
+  const router = useRouter();
+
+
+  const handleStartGeneratedTest = () => {
+    if (!questions || questions.length === 0) return;
+
+    try {
+      sessionStorage.setItem('testQuestions', JSON.stringify(questions));
+      sessionStorage.setItem('testTitle', `Test IA: ${topic}`);
+      router.push('/test');
+    } catch (error) {
+      console.error('Failed to save generated test to session storage', error);
+      setError('No se pudo iniciar el test. Por favor, inténtalo de nuevo.');
+    }
+  };
 
   const handleGenerateTest = async () => {
     if (!selectedCategory) {
@@ -159,14 +175,19 @@ export default function GeneratePage() {
             {questions && questions.length > 0 && (
               <Card>
                 <CardHeader>
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div className="flex items-center gap-3">
                         <CheckCircle className="h-6 w-6 text-green-500" />
                         <h3 className="text-xl font-semibold">Test generado sobre "{topic}"</h3>
                     </div>
-                    <Button variant="outline" onClick={handleGenerateTest} disabled={isProcessing}>
-                       <RefreshCw className="mr-2 h-4 w-4" /> Regenerar
-                    </Button>
+                    <div className="flex gap-2 w-full sm:w-auto">
+                        <Button variant="outline" onClick={handleGenerateTest} disabled={isProcessing} className="flex-1">
+                          <RefreshCw className="mr-2 h-4 w-4" /> Regenerar
+                        </Button>
+                        <Button onClick={handleStartGeneratedTest} className="flex-1">
+                          Comenzar Test
+                        </Button>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>

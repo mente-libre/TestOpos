@@ -69,7 +69,25 @@ export default function TestPage() {
   useEffect(() => {
     const fetchExam = async () => {
       setIsLoading(true);
-      if (examId) {
+
+      // First, try to load AI-generated test from session storage
+      const sessionQuestions = sessionStorage.getItem('testQuestions');
+      const sessionTitle = sessionStorage.getItem('testTitle');
+      
+      if (sessionQuestions && sessionTitle) {
+        try {
+          const parsedQuestions = JSON.parse(sessionQuestions);
+          setQuestions(parsedQuestions);
+          setTitle(sessionTitle);
+          setAnswers(parsedQuestions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
+          // Clean up session storage after loading
+          sessionStorage.removeItem('testQuestions');
+          sessionStorage.removeItem('testTitle');
+        } catch(e) {
+           console.error("Failed to parse questions from session storage", e);
+           router.push('/');
+        }
+      } else if (examId) { // If no session test, load from Firestore using examId
         const result = await getExamById(examId);
         if (result.success && result.exam) {
           setQuestions(result.exam.questions);
@@ -79,23 +97,11 @@ export default function TestPage() {
           console.error("Failed to load exam:", result.error);
           router.push('/');
         }
-      } else {
-        const sessionQuestions = sessionStorage.getItem('testQuestions');
-        const sessionTitle = sessionStorage.getItem('testTitle');
-        if (sessionQuestions && sessionTitle) {
-          try {
-            const parsedQuestions = JSON.parse(sessionQuestions);
-            setQuestions(parsedQuestions);
-            setTitle(sessionTitle);
-            setAnswers(parsedQuestions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
-          } catch(e) {
-             console.error("Failed to parse questions from session storage", e);
-             router.push('/');
-          }
-        } else {
-            router.push('/');
-        }
+      } else { // No AI test and no examId
+          console.error("No examId provided and no AI-generated test in session.");
+          router.push('/');
       }
+      
       setIsLoading(false);
     };
     fetchExam();
@@ -375,5 +381,3 @@ function formatTime(seconds: number) {
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
-
-    
