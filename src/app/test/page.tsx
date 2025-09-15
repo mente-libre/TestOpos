@@ -32,9 +32,14 @@ export default function TestPage() {
   const examId = searchParams.get('examId');
 
   const handleFinishTest = useCallback(() => {
+    if (!questions) {
+      // If questions are not loaded, do nothing to prevent errors.
+      // This can happen in a race condition.
+      setIsFinished(true); // Still finish the test visually.
+      return;
+    };
     setIsFinished(true);
     setIsReviewMode(false); // Make sure we show the results summary first
-    if (!questions) return;
     setAnswers(prevAnswers => {
       return questions.map((q, index) => {
         const userAnswer = prevAnswers[index];
