@@ -31,18 +31,18 @@ export default function TestPage() {
   const searchParams = useSearchParams();
   const examId = searchParams.get('examId');
 
-  const finishTest = useCallback((currentQuestions: Question[], currentAnswers: AnswerState[]) => {
-    setIsFinished(true);
-    setIsReviewMode(false); // Make sure we show the results summary first
-    
-    if (!currentQuestions || currentQuestions.length === 0) {
+  const finishTest = useCallback(() => {
+    if (!questions) {
       // If questions are not loaded, do nothing to prevent errors.
       // This can happen in a race condition.
       return;
     };
+    
+    setIsFinished(true);
+    setIsReviewMode(false); // Make sure we show the results summary first
 
     setAnswers(prevAnswers => {
-      return currentQuestions.map((q, index) => {
+      return questions.map((q, index) => {
         const userAnswer = prevAnswers[index];
         if (!userAnswer || userAnswer.selectedIndex === null) {
           return { selectedIndex: null, status: 'unanswered' };
@@ -54,7 +54,7 @@ export default function TestPage() {
         };
       });
     });
-  }, []);
+  }, [questions]);
 
   useEffect(() => {
     const fetchExam = async () => {
@@ -94,12 +94,12 @@ export default function TestPage() {
   }, [examId, router]);
   
   useEffect(() => {
-    if (!isLoading && !isFinished && questions) {
+    if (!isLoading && !isFinished) {
       const timer = setInterval(() => {
         setTimeLeft(prevTime => {
           if (prevTime <= 1) {
             clearInterval(timer);
-            finishTest(questions, answers);
+            finishTest();
             return 0;
           }
           return prevTime - 1;
@@ -107,7 +107,7 @@ export default function TestPage() {
       }, 1000);
       return () => clearInterval(timer);
     }
-  }, [isLoading, isFinished, questions, answers, finishTest]);
+  }, [isLoading, isFinished, finishTest]);
 
   const handleSelectOption = (questionIndex: number, optionIndex: number) => {
     if (isFinished) return;
@@ -119,9 +119,7 @@ export default function TestPage() {
   };
   
   const handleFinishTest = () => {
-    if (questions) {
-      finishTest(questions, answers);
-    }
+    finishTest();
   };
 
   const handleRestartTest = () => {
