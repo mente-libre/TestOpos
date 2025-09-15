@@ -17,10 +17,15 @@ interface AnswerState {
   status: AnswerStatus;
 }
 
-type Results = ReturnType<typeof calculateResults>;
+interface Results {
+  correctCount: number;
+  incorrectCount: number;
+  unansweredCount: number;
+  score: number;
+}
 
-function calculateResults(questions: Question[] | null, answers: AnswerState[]) {
-  if (!questions) {
+function calculateResults(questions: Question[], answers: AnswerState[]): Results | null {
+  if (!questions || questions.length === 0) {
     return null;
   }
   const totalQuestions = questions.length;
@@ -55,6 +60,7 @@ export default function TestPage() {
   const [isFinished, setIsFinished] = useState(false);
   const [isReviewMode, setIsReviewMode] = useState(false);
   const [timeLeft, setTimeLeft] = useState(1200); // 20 minutes in seconds
+  const [finalResults, setFinalResults] = useState<Results | null>(null);
   
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -95,6 +101,15 @@ export default function TestPage() {
     fetchExam();
   }, [examId, router]);
   
+  const finishTest = useCallback(() => {
+    if (questions) {
+      const results = calculateResults(questions, answers);
+      setFinalResults(results);
+    }
+    setIsFinished(true);
+  }, [questions, answers]);
+
+
   useEffect(() => {
     if (isLoading || isFinished) return;
 
@@ -102,7 +117,7 @@ export default function TestPage() {
       setTimeLeft(prevTime => {
         if (prevTime <= 1) {
           clearInterval(timer);
-          setIsFinished(true); // Finish test when timer runs out
+          finishTest();
           return 0;
         }
         return prevTime - 1;
@@ -110,7 +125,7 @@ export default function TestPage() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isLoading, isFinished]);
+  }, [isLoading, isFinished, finishTest]);
 
 
   const handleSelectOption = (questionIndex: number, optionIndex: number) => {
@@ -123,13 +138,14 @@ export default function TestPage() {
   };
   
   const handleFinishTest = () => {
-    setIsFinished(true);
+    finishTest();
   };
 
   const handleRestartTest = () => {
     setIsFinished(false);
     setIsReviewMode(false);
     setCurrentQuestionIndex(0);
+    setFinalResults(null);
     if(questions) {
         setAnswers(questions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
     }
@@ -137,7 +153,6 @@ export default function TestPage() {
   };
   
   const handleReviewAnswers = () => {
-    setIsFinished(true);
     setIsReviewMode(true);
   };
 
@@ -166,16 +181,7 @@ export default function TestPage() {
   
   const totalQuestions = questions?.length || 0;
   
-  const ResultsView = ({ title, results }: { title: string, results: Results | null }) => {
-    if (!results) {
-       return (
-          <div className="flex justify-center items-center min-h-screen">
-            <Loader2 className="mr-2 h-8 w-8 animate-spin" />
-            <p>Calculando resultados...</p>
-          </div>
-        );
-    }
-
+  const ResultsView = ({ title, results }: { title: string, results: Results }) => {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -229,8 +235,15 @@ export default function TestPage() {
   }
   
   if (isFinished) {
+    if (!finalResults) {
+       return (
+          <div className="flex justify-center items-center min-h-screen">
+            <Loader2 className="mr-2 h-8 w-8 animate-spin" />
+            <p>Calculando resultados...</p>
+          </div>
+        );
+    }
     if (isReviewMode) {
-        // Calculate the status of each answer for review
         const reviewedAnswers = questions!.map((q, index) => {
             const userAnswer = index < answers.length ? answers[index] : { selectedIndex: null, status: 'unanswered' };
             const isCorrect = userAnswer.selectedIndex === q.correctAnswerIndex;
@@ -292,7 +305,6 @@ export default function TestPage() {
           </div>
         );
     }
-    const finalResults = calculateResults(questions, answers);
     return <ResultsView title={title} results={finalResults} />;
   }
   
@@ -363,3 +375,5 @@ function formatTime(seconds: number) {
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
+
+    
