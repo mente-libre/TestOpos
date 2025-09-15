@@ -1,5 +1,5 @@
 
-'use server';
+'use client';
 
 import { db } from './config';
 import {
@@ -110,12 +110,12 @@ export const ensureSeedData = async (): Promise<void> => {
  */
 export const getExamsForCategory = async (categoryId: string | null) => {
   try {
-    await ensureSeedData(); // Ensure seed data exists before any read
     
     const examsRef = collection(db, 'exams');
     
     // Scenario 1: Get all categories summary
     if (categoryId === null) {
+        await ensureSeedData(); // Ensure seed data exists before any read
         const querySnapshot = await getDocs(examsRef);
         const categoryCounts: Record<string, number> = {};
 

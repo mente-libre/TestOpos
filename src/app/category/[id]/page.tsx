@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -102,3 +103,5 @@ export default function CategoryPage() {
     </div>
   );
 }
+
+    
