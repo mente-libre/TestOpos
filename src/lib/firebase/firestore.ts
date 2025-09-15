@@ -16,9 +16,6 @@ import {
   orderBy,
 } from 'firebase/firestore';
 import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '../seed-data';
-import { getAuth } from 'firebase/auth';
-import app from './config';
-
 
 // Main type for an exam document
 export interface Exam {
@@ -176,7 +173,7 @@ export const getExamsForCategory = async (categoryId: string | null) => {
 export const getExamById = async (examId: string) => {
   try {
     if (!examId) {
-      throw new Error('Exam ID is required.');
+      return { success: false, error: 'Exam ID is required.' };
     }
 
     const examRef = doc(db, 'exams', examId);
@@ -192,7 +189,7 @@ export const getExamById = async (examId: string) => {
     const exam = { 
         id: docSnap.id, 
         ...data,
-        // Convert Timestamp to a plain number (milliseconds)
+        // Convert Timestamp to a plain number (milliseconds) for client-side use
         createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt
     } as Exam;
     
@@ -237,55 +234,62 @@ export const saveExam = async (
 
 /**
  * Saves a test result to Firestore. This function is designed to be called from a server action
- * and relies on server-side Firebase Auth to get the user ID.
+ * and relies on a placeholder userId for now.
  * @param resultData The data for the test result.
  */
 export const saveTestResult = async (resultData: Omit<TestResult, 'id' | 'createdAt' | 'userId'>) => {
-  // IMPORTANT: This auth object is for server-side use to get the current user.
-  // It's different from the client-side `auth` object.
-  // We're assuming this server action is protected and will only run for authenticated users.
-  // In a real production app, you'd get the user from the session/token.
-  // For this context, we will have to assume there is a current user if this is called.
-  // As we cannot get the user on the server easily without more setup, we will use a placeholder.
   const userId = 'currentUser'; // Placeholder for the current user's ID
 
   if (!userId) {
-    throw new Error('User must be authenticated to save results.');
+     console.error('User must be authenticated to save results.');
+     throw new Error('User must be authenticated to save results.');
   }
 
-  await addDoc(collection(db, 'testResults'), {
-    ...resultData,
-    userId,
-    createdAt: Timestamp.now(),
-  });
+  try {
+     await addDoc(collection(db, 'testResults'), {
+        ...resultData,
+        userId,
+        createdAt: Timestamp.now(),
+    });
+  } catch (error) {
+      console.error('Failed to save test result:', error);
+      throw new Error('Failed to save test result to database.');
+  }
+ 
 };
 
 /**
- * Retrieves all test results for the current user.
+ * Retrieves all test results for the current user placeholder.
  */
 export const getTestResults = async (): Promise<TestResult[]> => {
   const userId = 'currentUser'; // Placeholder for the current user's ID
 
-  if (!userId) {
-    throw new Error('User must be authenticated to retrieve results.');
+   if (!userId) {
+    console.error('User must be authenticated to retrieve results.');
+    return [];
   }
 
-  const resultsRef = collection(db, 'testResults');
-  const q = query(
-    resultsRef, 
-    where('userId', '==', userId), 
-    orderBy('createdAt', 'desc')
-  );
-  
-  const querySnapshot = await getDocs(q);
+  try {
+    const resultsRef = collection(db, 'testResults');
+    const q = query(
+        resultsRef, 
+        where('userId', '==', userId), 
+        orderBy('createdAt', 'desc')
+    );
+    
+    const querySnapshot = await getDocs(q);
 
-  return querySnapshot.docs.map(doc => {
-    const data = doc.data();
-    const createdAt = data.createdAt;
-    return {
-      id: doc.id,
-      ...data,
-      createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt,
-    } as TestResult;
-  });
+    return querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        const createdAt = data.createdAt;
+        return {
+        id: doc.id,
+        ...data,
+        createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt,
+        } as TestResult;
+    });
+  } catch(error) {
+      console.error('Failed to get test results:', error);
+      return [];
+  }
 };
