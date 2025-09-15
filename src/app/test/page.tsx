@@ -32,16 +32,14 @@ export default function TestPage() {
   const examId = searchParams.get('examId');
 
   const finishTest = useCallback(() => {
-    // This guard is crucial. If questions aren't loaded, we can't finish the test.
     if (!questions) {
       return;
     }
     
     setIsFinished(true);
-    setIsReviewMode(false); // Make sure we show the results summary first
+    setIsReviewMode(false);
 
     setAnswers(prevAnswers => {
-      // Use the questions from the state, which are guaranteed to be loaded here.
       return questions.map((q, index) => {
         const userAnswer = prevAnswers[index];
         if (!userAnswer || userAnswer.selectedIndex === null) {
@@ -54,7 +52,7 @@ export default function TestPage() {
         };
       });
     });
-  }, [questions]); // <-- CRITICAL FIX: Add `questions` as a dependency
+  }, [questions]);
 
   useEffect(() => {
     const fetchExam = async () => {
@@ -70,7 +68,6 @@ export default function TestPage() {
           router.push('/');
         }
       } else {
-        // Fallback for tests started from session storage (e.g. after upload)
         const sessionQuestions = sessionStorage.getItem('testQuestions');
         const sessionTitle = sessionStorage.getItem('testTitle');
         if (sessionQuestions && sessionTitle) {
@@ -84,7 +81,6 @@ export default function TestPage() {
              router.push('/');
           }
         } else {
-            // If no examId and no session data, redirect home
             router.push('/');
         }
       }
@@ -131,12 +127,12 @@ export default function TestPage() {
   };
   
   const handleReviewAnswers = () => {
-    setIsFinished(true); // Keep finished state
-    setIsReviewMode(true); // Enter review mode
+    setIsFinished(true);
+    setIsReviewMode(true);
   };
 
   const getOptionLabelClassName = (qIndex: number, oIndex: number) => {
-    if (!isFinished || !questions) return ''; // Only apply styles after finishing
+    if (!isFinished || !questions) return '';
     const question = questions[qIndex];
     const answer = answers[qIndex];
 
@@ -328,3 +324,5 @@ export default function TestPage() {
     </div>
   );
 }
+
+    
