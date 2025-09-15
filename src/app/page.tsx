@@ -51,7 +51,7 @@ export default function Home() {
     const fetchInitialData = async () => {
       setIsLoading(true);
       const result = await loadInitialData();
-      if (result.success && result.categories) {
+      if (result.success) {
         setCategories(result.categories);
       } else {
         setCategories([]);
@@ -302,3 +302,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
