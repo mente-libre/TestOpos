@@ -60,6 +60,7 @@ export default function Home() {
       setCategories(result.categories);
     } else {
       setCategories([]);
+      // Do not show an error to the user, just log it.
       console.error("Failed to fetch initial data:", result.error);
     }
     setIsLoading(false);

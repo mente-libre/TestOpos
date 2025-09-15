@@ -14,9 +14,18 @@ interface Question {
 
 export async function loadInitialData() {
   try {
-    // This function now ONLY reads data. Seeding happens on user interaction.
-    const result = await getExamsForCategory(null); // Pass null to get all categories
-    return { success: true, categories: result.categories };
+    // Attempt to get categories first
+    let initialResult = await getExamsForCategory(null);
+
+    // If no categories exist (which implies no exams), seed the data and refetch
+    if (initialResult.success && initialResult.categories && initialResult.categories.length === 0) {
+      await ensureSeedData();
+      // Refetch after seeding
+      initialResult = await getExamsForCategory(null);
+    }
+    
+    return initialResult;
+
   } catch (error) {
     console.error('Error loading initial data:', error);
     const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error inesperado en el servidor al cargar los datos.';
@@ -37,10 +46,7 @@ export async function processAndSaveExam(
         error: 'Usuario no autenticado.'
       };
     }
-    
-    // Ensure seed data exists on the first user action
-    await ensureSeedData();
-    
+        
     // 1. Extract questions from PDF using AI
     const extractionResult = await extractQuestionsFromPdf({ pdfDataUri });
 
@@ -80,15 +86,12 @@ export async function processAndSaveExam(
 
 export async function generateNewTest(category: string, topic: string) {
   try {
-     // Ensure seed data exists before generating a new test
-    await ensureSeedData();
-    
-    // 1. Get existing exams from the selected category to use as context
+     // 1. Get existing exams from the selected category to use as context
     const existingExamsResult = await getExamsForCategory(category);
     if (!existingExamsResult.success || !existingExamsResult.exams || existingExamsResult.exams.length === 0) {
       return {
         success: false,
-        error: 'No hay exámenes en esta categoría para usar como base para la generación.'
+        error: 'No hay exámenes en esta categoría para usar como base para la generación. Sube primero un examen para esta categoría.'
       };
     }
 

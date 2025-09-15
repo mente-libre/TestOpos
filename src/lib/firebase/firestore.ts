@@ -55,7 +55,6 @@ const CATEGORY_DEFINITIONS = [
 /**
  * Ensures that the initial seed data (demo exams) exists in Firestore.
  * It checks if there are any exams, and if not, adds the seed data.
- * This function should be called before any major data write operation like saving or generating an exam.
  */
 export const ensureSeedData = async (): Promise<void> => {
     try {
@@ -81,7 +80,8 @@ export const ensureSeedData = async (): Promise<void> => {
         }
     } catch (error) {
         console.error('Error in ensureSeedData:', error);
-        // We don't throw here to avoid breaking the parent operation
+        // We don't throw here to avoid breaking the parent operation,
+        // but the failure will be logged.
     }
 }
 
