@@ -11,10 +11,6 @@ interface Question {
   correctAnswerIndex: number;
 }
 
-export async function ensureSeedDataAction() {
-  return await ensureSeedData();
-}
-
 export async function processAndSaveExam(
   pdfDataUri: string,
   fileName: string,
@@ -74,6 +70,9 @@ export async function processAndSaveExam(
 
 export async function generateNewTest(category: string, topic: string) {
   try {
+     // Ensure seed data exists before generating a new test
+    await ensureSeedData();
+    
     // 1. Get existing exams from the selected category to use as context
     const existingExamsResult = await getExamsForCategory(category);
     if (!existingExamsResult.success || !existingExamsResult.exams || existingExamsResult.exams.length === 0) {
@@ -114,3 +113,5 @@ export async function generateNewTest(category: string, topic: string) {
     };
   }
 }
+
+    

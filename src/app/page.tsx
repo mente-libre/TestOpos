@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { onAuthStateChange, signOut } from '@/lib/firebase/auth';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { processAndSaveExam, ensureSeedDataAction } from '@/app/actions';
+import { processAndSaveExam } from '@/app/actions';
 import { getAllExamsGroupedByCategory, type Category } from '@/lib/firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -54,6 +54,7 @@ export default function Home() {
   const router = useRouter();
 
   const fetchCategories = async () => {
+    setIsLoading(true);
     const result = await getAllExamsGroupedByCategory();
     if (result.success && result.categories) {
       setCategories(result.categories);
@@ -65,18 +66,12 @@ export default function Home() {
         description: result.error || "No se pudieron cargar las carpetas de exámenes.",
       });
     }
+    setIsLoading(false);
   };
 
   // Effect for handling auth and data loading
   useEffect(() => {
-    const loadInitialData = async () => {
-      setIsLoading(true);
-      await ensureSeedDataAction(); // Ensure seed data exists
-      await fetchCategories(); // Then fetch categories
-      setIsLoading(false);
-    };
-
-    loadInitialData();
+    fetchCategories(); // Fetch categories on initial load
 
     const unsubscribe = onAuthStateChange(async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
@@ -406,5 +401,7 @@ export default function Home() {
     </div>
   );
 }
+
+    
 
     
