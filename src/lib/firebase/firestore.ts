@@ -87,9 +87,11 @@ export const getExamsForCategory = async (categoryId: string) => {
     const exams = querySnapshot.docs.map(doc => {
       const data = doc.data();
       const createdAt = data.createdAt;
+      // Ensure all data is serializable
+      const plainData = JSON.parse(JSON.stringify(data));
       return {
         id: doc.id,
-        ...data,
+        ...plainData,
         createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt,
       }
     }) as Exam[];
@@ -126,11 +128,14 @@ export const getExamById = async (examId: string) => {
 
     const data = docSnap.data();
     const createdAt = data.createdAt;
+    
+    // Convert the whole object to a plain JSON object to remove any non-serializable types
+    const plainData = JSON.parse(JSON.stringify(data));
 
     const exam = { 
         id: docSnap.id, 
-        ...data,
-        // Convert Timestamp to a plain number (milliseconds) for client-side use
+        ...plainData,
+        // Explicitly convert the top-level timestamp
         createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt
     } as Exam;
     
