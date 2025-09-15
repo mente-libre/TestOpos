@@ -15,7 +15,7 @@ import {
   limit,
   writeBatch,
 } from 'firebase/firestore';
-import { madridAdminTest, estadoConstitutionTest, madridAdminTest2 } from '../seed-data';
+import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '../seed-data';
 
 
 // Main type for an exam document
@@ -68,7 +68,7 @@ export const ensureSeedData = async () => {
         }
         
         console.log('Database is empty. Seeding initial exams...');
-        const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2];
+        const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006];
         
         // Use a batch write for efficiency
         const batch = writeBatch(db);
@@ -250,5 +250,3 @@ export const saveExam = async (
     return { success: false, error: errorMessage };
   }
 };
-
-    

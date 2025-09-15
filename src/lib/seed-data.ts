@@ -387,7 +387,7 @@ export const estadoConstitutionTest: SeedExam = {
                 "No puede ser privado de su nacionalidad.",
                  "Ninguna de las anteriores es correcta."
             ],
-            correctAnswerIndex: 2,
+            correctAnswerIndex: 1,
             explanation: "El artículo 11.2 de la Constitución Española establece que ningún español de origen puede ser privado de su nacionalidad. Sin embargo, la pérdida de nacionalidad puede producirse si el individuo adquiere voluntariamente otra nacionalidad o si lo establece un tratado internacional ratificado por España."
         },
         {
@@ -405,7 +405,7 @@ export const estadoConstitutionTest: SeedExam = {
             questionText: "¿Cuántos senadores elige cada provincia?:",
             options: [ "4", "3", "2", "Ninguna de las anteriores es correcta."],
             correctAnswerIndex: 0,
-            explanation: "ARTÍCULO 69. 2 CE. En cada provincia se elegirán cuatro Senadores por sufragio universal, libre, igual, directo y secreto por los votantes de cada una de ellas, en los términos que señale una ley orgánica."
+            explanation: "ARTÍCulo 69. 2 CE. En cada provincia se elegirán cuatro Senadores por sufragio universal, libre, igual, directo y secreto por los votantes de cada una de ellas, en los términos que señale una ley orgánica."
         },
         {
             questionText: "Constitución. De la organización territorial del Estado. ¿Puede el Estado transferir o delegar en las comunidades autónomas facultades correspondientes a materia de titularidad estatal?:",
