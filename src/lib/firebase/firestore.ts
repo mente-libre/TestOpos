@@ -178,20 +178,3 @@ export async function saveTestResult(result: Omit<TestResult, 'id' | 'createdAt'
     return { success: false, error: errorMessage };
   }
 }
-
-export async function getTestResults(): Promise<TestResult[]> {
-    const userId = 'placeholder-user-id'; // Use the same placeholder
-    const resultsRef = collection(db, 'testResults');
-    const q = query(resultsRef, where('userId', '==', userId), orderBy('createdAt', 'desc'));
-    const querySnapshot = await getDocs(q);
-
-    return querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        const createdAt = data.createdAt;
-        return {
-            id: doc.id,
-            ...data,
-            createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt,
-        } as TestResult
-    });
-}

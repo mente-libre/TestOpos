@@ -3,8 +3,8 @@
 
 import { generateTestFromExam } from '@/ai/flows/generate-test-from-exam-flow';
 import { generateReviewTest as generateReviewTestFlow } from '@/ai/flows/generate-review-test-flow';
-import { saveTestResult, getTestResults, type TestResult, type Question } from '@/lib/firebase/firestore';
-import { ensureSeedData, getCategories } from '@/lib/firebase/firestore-server';
+import { saveTestResult, type TestResult, type Question } from '@/lib/firebase/firestore';
+import { ensureSeedData, getCategories, getTestResults } from '@/lib/firebase/firestore-server';
 
 
 export async function loadInitialData() {

@@ -11,11 +11,12 @@ import {
   doc,
   limit,
   writeBatch,
+  orderBy,
 } from 'firebase/firestore';
 import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '../seed-data';
 import { advoGeneralTest } from '../seed-data-new';
 import { officeTest } from '../seed-data-office';
-import { CATEGORY_DEFINITIONS } from './firestore';
+import { CATEGORY_DEFINITIONS, type TestResult } from './firestore';
 
 
 /**
@@ -94,3 +95,21 @@ export const getCategories = async () => {
     return { success: false, error: errorMessage };
   }
 };
+
+
+export async function getTestResults(): Promise<TestResult[]> {
+    const userId = 'placeholder-user-id'; // Use the same placeholder
+    const resultsRef = collection(db, 'testResults');
+    const q = query(resultsRef, where('userId', '==', userId), orderBy('createdAt', 'desc'));
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        const createdAt = data.createdAt;
+        return {
+            id: doc.id,
+            ...data,
+            createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt,
+        } as TestResult
+    });
+}
