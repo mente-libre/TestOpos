@@ -31,31 +31,26 @@ export default function TestPage() {
   const searchParams = useSearchParams();
   const examId = searchParams.get('examId');
 
-  const finishTest = useCallback((currentQuestions: Question[] | null) => {
-    if (!currentQuestions) {
-      // Si las preguntas no están cargadas, no se puede finalizar.
-      return;
-    }
+  const finishTest = useCallback((currentQuestions: Question[] | null, currentAnswers: AnswerState[]) => {
+    if (!currentQuestions) return; // Guard clause
     
     setIsFinished(true);
     setIsReviewMode(false);
 
-    setAnswers(prevAnswers => {
-      return currentQuestions.map((q, index) => {
-        // Asegurarse de que el índice no esté fuera de los límites de las respuestas
-        const userAnswer = index < prevAnswers.length ? prevAnswers[index] : undefined;
-        
-        if (!userAnswer || userAnswer.selectedIndex === null) {
-          return { selectedIndex: null, status: 'unanswered' };
-        }
-        
-        const isCorrect = userAnswer.selectedIndex === q.correctAnswerIndex;
-        return {
-          ...userAnswer,
-          status: isCorrect ? 'correct' : 'incorrect',
-        };
-      });
+    const finalAnswers = currentQuestions.map((q, index) => {
+      const userAnswer = index < currentAnswers.length ? currentAnswers[index] : undefined;
+      
+      if (!userAnswer || userAnswer.selectedIndex === null) {
+        return { selectedIndex: null, status: 'unanswered' as AnswerStatus };
+      }
+      
+      const isCorrect = userAnswer.selectedIndex === q.correctAnswerIndex;
+      return {
+        ...userAnswer,
+        status: isCorrect ? 'correct' as AnswerStatus : 'incorrect' as AnswerStatus,
+      };
     });
+    setAnswers(finalAnswers);
   }, []);
 
   useEffect(() => {
@@ -99,8 +94,7 @@ export default function TestPage() {
         setTimeLeft(prevTime => {
           if (prevTime <= 1) {
             clearInterval(timer);
-            // Pasar el estado actual de las preguntas a finishTest
-            finishTest(questions);
+            // Don't call finishTest here to avoid server action issues from useEffect
             return 0;
           }
           return prevTime - 1;
@@ -108,10 +102,11 @@ export default function TestPage() {
       }, 1000);
       return () => clearInterval(timer);
     }
-  }, [isLoading, isFinished, finishTest, questions]);
+  }, [isLoading, isFinished]);
+
 
   const handleSelectOption = (questionIndex: number, optionIndex: number) => {
-    if (isFinished) return;
+    if (isFinished || timeLeft <= 0) return;
     setAnswers(prev => {
       const newAnswers = [...prev];
       newAnswers[questionIndex] = { ...newAnswers[questionIndex], selectedIndex: optionIndex };
@@ -120,8 +115,7 @@ export default function TestPage() {
   };
   
   const handleFinishTest = () => {
-    // Pasar el estado actual de las preguntas
-    finishTest(questions);
+    finishTest(questions, answers);
   };
 
   const handleRestartTest = () => {
@@ -135,12 +129,13 @@ export default function TestPage() {
   };
   
   const handleReviewAnswers = () => {
-    setIsFinished(true);
+    // Ensure scores are calculated before review
+    finishTest(questions, answers);
     setIsReviewMode(true);
   };
 
   const getOptionLabelClassName = (qIndex: number, oIndex: number) => {
-    if (!isFinished || !questions || qIndex >= questions.length || qIndex >= answers.length) return '';
+    if (!isReviewMode || !questions || qIndex >= questions.length || qIndex >= answers.length) return '';
     const question = questions[qIndex];
     const answer = answers[qIndex];
 
@@ -157,16 +152,68 @@ export default function TestPage() {
   };
   
   const totalQuestions = questions?.length || 0;
-  const correctCount = answers.filter(a => a.status === 'correct').length;
-  const incorrectCount = answers.filter(a => a.status === 'incorrect').length;
-  const unansweredCount = totalQuestions - correctCount - incorrectCount;
-  const score = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+  
+  const calculateResults = (currentAnswers: AnswerState[]) => {
+      const correctCount = currentAnswers.filter(a => a.status === 'correct').length;
+      const incorrectCount = currentAnswers.filter(a => a.status === 'incorrect').length;
+      const unansweredCount = totalQuestions - correctCount - incorrectCount;
+      const score = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+      return { correctCount, incorrectCount, unansweredCount, score };
+  }
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
+  
+  const ResultsView = ({ title, results: { score, correctCount, incorrectCount, unansweredCount } }: { title: string, results: ReturnType<typeof calculateResults> }) => (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <Card className="max-w-2xl mx-auto text-center">
+            <CardHeader>
+              <CardTitle className="text-2xl">Resultados del Test</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">Has completado el test: {title}</p>
+              <div className="text-6xl font-bold text-primary mb-4">{score}%</div>
+              <div className="grid grid-cols-3 gap-4 text-center my-6">
+                <div>
+                  <div className="flex items-center justify-center gap-2 text-green-600">
+                    <CheckCircle className="h-6 w-6"/>
+                    <span className="text-2xl font-bold">{correctCount}</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">Correctas</p>
+                </div>
+                 <div>
+                  <div className="flex items-center justify-center gap-2 text-red-600">
+                    <XCircle className="h-6 w-6"/>
+                    <span className="text-2xl font-bold">{incorrectCount}</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">Incorrectas</p>
+                </div>
+                 <div>
+                  <div className="flex items-center justify-center gap-2 text-gray-500">
+                    <Eye className="h-6 w-6"/>
+                    <span className="text-2xl font-bold">{unansweredCount}</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">Sin responder</p>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="flex-col sm:flex-row gap-4">
+              <Button variant="outline" className="w-full" onClick={handleReviewAnswers}>
+                <Eye className="mr-2 h-4 w-4" /> Revisar Respuestas
+              </Button>
+              <Button className="w-full" onClick={handleRestartTest}>
+                <RefreshCw className="mr-2 h-4 w-4" /> Volver a Intentar
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
+      </div>
+  );
+
 
   if (isLoading || !questions) {
     return <div className="flex justify-center items-center min-h-screen"><Loader2 className="mr-2 h-8 w-8 animate-spin" /><p>Cargando test...</p></div>;
@@ -227,52 +274,21 @@ export default function TestPage() {
   }
   
   if (isFinished) {
-    return (
-       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <Card className="max-w-2xl mx-auto text-center">
-            <CardHeader>
-              <CardTitle className="text-2xl">Resultados del Test</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-4">Has completado el test: {title}</p>
-              <div className="text-6xl font-bold text-primary mb-4">{score}%</div>
-              <div className="grid grid-cols-3 gap-4 text-center my-6">
-                <div>
-                  <div className="flex items-center justify-center gap-2 text-green-600">
-                    <CheckCircle className="h-6 w-6"/>
-                    <span className="text-2xl font-bold">{correctCount}</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground">Correctas</p>
-                </div>
-                 <div>
-                  <div className="flex items-center justify-center gap-2 text-red-600">
-                    <XCircle className="h-6 w-6"/>
-                    <span className="text-2xl font-bold">{incorrectCount}</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground">Incorrectas</p>
-                </div>
-                 <div>
-                  <div className="flex items-center justify-center gap-2 text-gray-500">
-                    <Eye className="h-6 w-6"/>
-                    <span className="text-2xl font-bold">{unansweredCount}</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground">Sin responder</p>
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter className="flex-col sm:flex-row gap-4">
-              <Button variant="outline" className="w-full" onClick={handleReviewAnswers}>
-                <Eye className="mr-2 h-4 w-4" /> Revisar Respuestas
-              </Button>
-              <Button className="w-full" onClick={handleRestartTest}>
-                <RefreshCw className="mr-2 h-4 w-4" /> Volver a Intentar
-              </Button>
-            </CardFooter>
-          </Card>
-        </div>
-      </div>
-    )
+      const results = calculateResults(answers);
+      return <ResultsView title={title} results={results} />;
+  }
+
+  if (timeLeft <= 0) {
+    const timeUpAnswers = questions.map((q, index) => {
+        const userAnswer = answers[index];
+        if (userAnswer.selectedIndex === null) {
+            return { ...userAnswer, status: 'unanswered' as AnswerStatus };
+        }
+        const isCorrect = userAnswer.selectedIndex === q.correctAnswerIndex;
+        return { ...userAnswer, status: isCorrect ? 'correct' as AnswerStatus : 'incorrect' as AnswerStatus };
+    });
+    const results = calculateResults(timeUpAnswers);
+    return <ResultsView title={title} results={results} />;
   }
 
   const currentQuestion = questions[currentQuestionIndex];
