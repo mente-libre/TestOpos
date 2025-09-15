@@ -3,7 +3,7 @@
 
 import { extractQuestionsFromPdf } from '@/ai/flows/extract-questions-from-pdf';
 import { generateTestFromExam } from '@/ai/flows/generate-test-from-exam-flow';
-import { saveExam, type Exam, getExamsForCategory } from '@/lib/firebase/firestore';
+import { saveExam, type Exam, getExamsForCategory, ensureSeedData } from '@/lib/firebase/firestore';
 
 interface Question {
   questionText: string;
@@ -26,6 +26,9 @@ export async function processAndSaveExam(
         error: 'Usuario no autenticado.'
       };
     }
+    
+    // Ensure seed data exists, this is a good place to do it once.
+    await ensureSeedData();
     
     // 1. Extract questions from PDF using AI
     const extractionResult = await extractQuestionsFromPdf({ pdfDataUri });
@@ -56,7 +59,7 @@ export async function processAndSaveExam(
   } catch (error) {
     console.error('Error in processAndSaveExam:', error);
     // Cast error to get message, but check if it exists
-    const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error inesperado en el servidor al procesar y guardar el examen.';
+    const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error inesperado en el servidor al procesar el examen.';
     return { 
       success: false, 
       error: errorMessage 

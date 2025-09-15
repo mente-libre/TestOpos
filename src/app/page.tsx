@@ -11,7 +11,7 @@ import { onAuthStateChange, signOut } from '@/lib/firebase/auth';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { processAndSaveExam } from '@/app/actions';
-import { getAllExamsGroupedByCategory, ensureSeedData, type Category } from '@/lib/firebase/firestore';
+import { getAllExamsGroupedByCategory, type Category } from '@/lib/firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useRouter } from 'next/navigation';
@@ -58,9 +58,6 @@ export default function Home() {
     const loadInitialData = async () => {
       setIsLoading(true);
       
-      // Ensure seed data exists before fetching categories
-      await ensureSeedData();
-
       const result = await getAllExamsGroupedByCategory();
       if (result.success && result.categories) {
         setCategories(result.categories);
@@ -68,8 +65,8 @@ export default function Home() {
         console.error("Failed to fetch categories:", result.error);
         toast({
           variant: "destructive",
-          title: "Error",
-          description: "No se pudieron cargar las carpetas de exámenes.",
+          title: "Error de Carga",
+          description: result.error || "No se pudieron cargar las carpetas de exámenes.",
         });
       }
 
@@ -147,8 +144,8 @@ export default function Home() {
       const pdfDataUri = await fileToDataUri(selectedFile);
       const result = await processAndSaveExam(pdfDataUri, selectedFile.name, selectedCategory, user.uid);
 
-      if (result.success) {
-        setQuestions(result.questions ?? []);
+      if (result.success && result.questions) {
+        setQuestions(result.questions);
         setError(null);
         toast({
             title: '¡Examen guardado!',
@@ -161,8 +158,9 @@ export default function Home() {
         }
 
       } else {
-        let errorMessage = result.error ?? 'Ha ocurrido un error desconocido.';
-        if (errorMessage.includes('quota')) {
+        // This is the crucial part: handle the error from the server action
+        let errorMessage = result.error ?? 'Ha ocurrido un error desconocido durante el procesamiento.';
+         if (errorMessage.includes('quota')) {
             errorMessage = 'Has excedido tu cuota de uso de la API. Por favor, espera un momento y vuelve a intentarlo.'
         }
         setError(errorMessage);
