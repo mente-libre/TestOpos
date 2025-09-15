@@ -54,6 +54,7 @@ const CATEGORY_DEFINITIONS = [
 /**
  * Ensures that the initial seed data (demo exams) exists in Firestore.
  * It checks for each seed exam and adds it only if it doesn't already exist.
+ * This function is heavy and should be called sparingly, ideally in a background or setup process.
  * @returns An object indicating success.
  */
 export const ensureSeedData = async () => {
@@ -102,8 +103,6 @@ export const ensureSeedData = async () => {
  */
 export const getAllExamsGroupedByCategory = async (): Promise<{ success: boolean; categories?: Category[]; error?: string; }> => {
     try {
-        await ensureSeedData(); // Ensure data exists before counting
-
         const examsRef = collection(db, 'exams');
         
         // Create an array of promises for all the count queries
@@ -247,4 +246,3 @@ export const saveExam = async (
     return { success: false, error: errorMessage };
   }
 };
-
