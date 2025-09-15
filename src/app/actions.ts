@@ -31,6 +31,9 @@ export async function processAndSaveExam(
       };
     }
     
+    // Ensure seed data exists on the first user action
+    await ensureSeedData();
+    
     // 1. Extract questions from PDF using AI
     const extractionResult = await extractQuestionsFromPdf({ pdfDataUri });
 

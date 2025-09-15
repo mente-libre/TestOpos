@@ -58,9 +58,6 @@ export default function Home() {
     const loadInitialData = async () => {
       setIsLoading(true);
       
-      // Ensure seed data exists before fetching categories by calling the server action
-      await ensureSeedDataAction();
-
       const result = await getAllExamsGroupedByCategory();
       
       if (result.success && result.categories) {
