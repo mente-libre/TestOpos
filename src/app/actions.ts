@@ -125,5 +125,3 @@ export async function generateNewTest(category: string, topic: string) {
     };
   }
 }
-
-    

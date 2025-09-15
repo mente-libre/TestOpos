@@ -59,6 +59,9 @@ export default function Home() {
     if (result.success && result.categories) {
       setCategories(result.categories);
     } else {
+      // If there's an error fetching, it could be that there are no exams yet.
+      // We'll show an empty state, not an error.
+      setCategories([]);
       console.error("Failed to fetch categories:", result.error);
     }
     setIsLoading(false);
@@ -397,9 +400,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
-
-    
-
-    
