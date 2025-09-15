@@ -60,17 +60,14 @@ export default function Home() {
       setCategories(result.categories);
     } else {
       console.error("Failed to fetch categories:", result.error);
-      toast({
-        variant: "destructive",
-        title: "Error de Carga",
-        description: result.error || "No se pudieron cargar las carpetas de exámenes.",
-      });
+      // Don't show a toast on initial load for a cleaner experience
     }
     setIsLoading(false);
   };
 
   // Effect for handling auth and data loading
   useEffect(() => {
+    // Fetch categories on initial load and whenever the user logs in/out
     fetchCategories();
 
     const unsubscribe = onAuthStateChange(async (firebaseUser: FirebaseUser | null) => {
@@ -87,7 +84,7 @@ export default function Home() {
     });
     
     return () => unsubscribe();
-  }, [toast]);
+  }, []); // Empty dependency array ensures this runs once on mount
 
   const handleUploadAreaClick = () => {
     fileInputRef.current?.click();
@@ -149,10 +146,9 @@ export default function Home() {
             title: '¡Examen guardado!',
             description: `Se ha guardado en "${CATEGORY_DEFINITIONS.find(c=>c.id === selectedCategory)?.name}".`,
         });
-        // Recargar las categorías
+        // Recargar las categorías para mostrar los nuevos datos
         await fetchCategories();
       } else {
-        // This is the crucial part: handle the error from the server action
         let errorMessage = result.error ?? 'Ha ocurrido un error desconocido durante el procesamiento.';
          if (errorMessage.includes('quota')) {
             errorMessage = 'Has excedido tu cuota de uso de la API. Por favor, espera un momento y vuelve a intentarlo.'
