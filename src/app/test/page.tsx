@@ -31,27 +31,30 @@ export default function TestPage() {
   const searchParams = useSearchParams();
   const examId = searchParams.get('examId');
 
-  const handleFinishTest = useCallback(() => {
-    if (!questions) {
-      // If questions are not loaded, do nothing to prevent errors.
-      // This can happen in a race condition.
-      setIsFinished(true); // Still finish the test visually.
-      return;
-    };
+  const finishTest = useCallback((currentQuestions: Question[], currentAnswers: AnswerState[]) => {
     setIsFinished(true);
     setIsReviewMode(false); // Make sure we show the results summary first
+    
+    if (!currentQuestions || currentQuestions.length === 0) {
+      // If questions are not loaded, do nothing to prevent errors.
+      // This can happen in a race condition.
+      return;
+    };
+
     setAnswers(prevAnswers => {
-      return questions.map((q, index) => {
+      return currentQuestions.map((q, index) => {
         const userAnswer = prevAnswers[index];
-        if (!userAnswer) return { selectedIndex: null, status: 'unanswered' };
+        if (!userAnswer || userAnswer.selectedIndex === null) {
+          return { selectedIndex: null, status: 'unanswered' };
+        }
         const isCorrect = userAnswer.selectedIndex === q.correctAnswerIndex;
         return {
           ...userAnswer,
-          status: userAnswer.selectedIndex === null ? 'unanswered' : (isCorrect ? 'correct' : 'incorrect'),
+          status: isCorrect ? 'correct' : 'incorrect',
         };
       });
     });
-  }, [questions]);
+  }, []);
 
   useEffect(() => {
     const fetchExam = async () => {
@@ -91,12 +94,12 @@ export default function TestPage() {
   }, [examId, router]);
   
   useEffect(() => {
-    if (!isLoading && !isFinished) {
+    if (!isLoading && !isFinished && questions) {
       const timer = setInterval(() => {
         setTimeLeft(prevTime => {
           if (prevTime <= 1) {
             clearInterval(timer);
-            handleFinishTest();
+            finishTest(questions, answers);
             return 0;
           }
           return prevTime - 1;
@@ -104,7 +107,7 @@ export default function TestPage() {
       }, 1000);
       return () => clearInterval(timer);
     }
-  }, [isLoading, isFinished, handleFinishTest]);
+  }, [isLoading, isFinished, questions, answers, finishTest]);
 
   const handleSelectOption = (questionIndex: number, optionIndex: number) => {
     if (isFinished) return;
@@ -113,6 +116,12 @@ export default function TestPage() {
       newAnswers[questionIndex] = { ...newAnswers[questionIndex], selectedIndex: optionIndex };
       return newAnswers;
     });
+  };
+  
+  const handleFinishTest = () => {
+    if (questions) {
+      finishTest(questions, answers);
+    }
   };
 
   const handleRestartTest = () => {
