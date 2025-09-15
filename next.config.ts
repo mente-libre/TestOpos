@@ -30,6 +30,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  webpack: (config, { isServer }) => {
+    // Silences the warning from handlebars used by genkit.
+    // This can be removed if/when genkit updates its dependency.
+    config.ignoreWarnings = [
+      {
+        module: /handlebars\/lib\/index\.js/,
+      },
+    ];
+    return config;
+  },
 };
 
 export default nextConfig;
