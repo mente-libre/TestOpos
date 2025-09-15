@@ -20,13 +20,25 @@ interface AnswerState {
 type Results = ReturnType<typeof calculateResults>;
 
 function calculateResults(questions: Question[] | null, answers: AnswerState[]) {
-  const totalQuestions = questions?.length || 0;
-  if (totalQuestions === 0) {
+  if (!questions) {
     return { correctCount: 0, incorrectCount: 0, unansweredCount: 0, score: 0 };
   }
+  const totalQuestions = questions.length;
 
-  const correctCount = answers.filter(a => a.status === 'correct').length;
-  const incorrectCount = answers.filter(a => a.status === 'incorrect').length;
+  let correctCount = 0;
+  let incorrectCount = 0;
+
+  questions.forEach((q, index) => {
+    const userAnswer = answers[index];
+    if (userAnswer && userAnswer.selectedIndex !== null) {
+      if (userAnswer.selectedIndex === q.correctAnswerIndex) {
+        correctCount++;
+      } else {
+        incorrectCount++;
+      }
+    }
+  });
+  
   const unansweredCount = totalQuestions - correctCount - incorrectCount;
   const score = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
 
@@ -43,35 +55,10 @@ export default function TestPage() {
   const [isFinished, setIsFinished] = useState(false);
   const [isReviewMode, setIsReviewMode] = useState(false);
   const [timeLeft, setTimeLeft] = useState(1200); // 20 minutes in seconds
-  const [finalResults, setFinalResults] = useState<Results | null>(null);
   
   const router = useRouter();
   const searchParams = useSearchParams();
   const examId = searchParams.get('examId');
-
-  const finishTest = useCallback(() => {
-    if (!questions || isFinished) return;
-
-    setIsFinished(true);
-    setIsReviewMode(false);
-
-    const finalAnswers = questions.map((q, index) => {
-      const userAnswer = index < answers.length ? answers[index] : undefined;
-      
-      if (!userAnswer || userAnswer.selectedIndex === null) {
-        return { selectedIndex: null, status: 'unanswered' as AnswerStatus };
-      }
-      
-      const isCorrect = userAnswer.selectedIndex === q.correctAnswerIndex;
-      return {
-        ...userAnswer,
-        status: isCorrect ? 'correct' as AnswerStatus : 'incorrect' as AnswerStatus,
-      };
-    });
-    setAnswers(finalAnswers);
-    setFinalResults(calculateResults(questions, finalAnswers));
-  }, [questions, answers, isFinished]);
-
 
   useEffect(() => {
     const fetchExam = async () => {
@@ -114,7 +101,7 @@ export default function TestPage() {
         setTimeLeft(prevTime => {
           if (prevTime <= 1) {
             clearInterval(timer);
-            finishTest();
+            setIsFinished(true); // Finish test when timer runs out
             return 0;
           }
           return prevTime - 1;
@@ -122,7 +109,7 @@ export default function TestPage() {
       }, 1000);
       return () => clearInterval(timer);
     }
-  }, [isLoading, isFinished, finishTest]);
+  }, [isLoading, isFinished]);
 
 
   const handleSelectOption = (questionIndex: number, optionIndex: number) => {
@@ -135,14 +122,13 @@ export default function TestPage() {
   };
   
   const handleFinishTest = () => {
-    finishTest();
+    setIsFinished(true);
   };
 
   const handleRestartTest = () => {
     setIsFinished(false);
     setIsReviewMode(false);
     setCurrentQuestionIndex(0);
-    setFinalResults(null);
     if(questions) {
         setAnswers(questions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
     }
@@ -150,9 +136,7 @@ export default function TestPage() {
   };
   
   const handleReviewAnswers = () => {
-    if (!isFinished) {
-        finishTest();
-    }
+    setIsFinished(true);
     setIsReviewMode(true);
   };
 
@@ -163,11 +147,17 @@ export default function TestPage() {
 
     const isCorrect = oIndex === question.correctAnswerIndex;
     const isSelected = oIndex === answer.selectedIndex;
+    
+    let status: AnswerStatus = 'unanswered';
+     if (isSelected) {
+        status = isCorrect ? 'correct' : 'incorrect';
+    }
+
 
     if (isCorrect) {
       return 'bg-green-100 border-green-500';
     }
-    if (isSelected && answer.status === 'incorrect') {
+    if (isSelected && status === 'incorrect') {
       return 'bg-red-100 border-red-500';
     }
     return '';
@@ -175,7 +165,17 @@ export default function TestPage() {
   
   const totalQuestions = questions?.length || 0;
   
-  const ResultsView = ({ title, results }: { title: string, results: Results }) => (
+  const ResultsView = ({ title, results }: { title: string, results: Results | null }) => {
+    if (!results) {
+       return (
+          <div className="flex justify-center items-center min-h-screen">
+            <Loader2 className="mr-2 h-8 w-8 animate-spin" />
+            <p>Calculando resultados...</p>
+          </div>
+        );
+    }
+
+    return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <Card className="max-w-2xl mx-auto text-center">
@@ -220,15 +220,25 @@ export default function TestPage() {
           </Card>
         </div>
       </div>
-  );
-
+    );
+  }
 
   if (isLoading || !questions) {
     return <div className="flex justify-center items-center min-h-screen"><Loader2 className="mr-2 h-8 w-8 animate-spin" /><p>Cargando test...</p></div>;
   }
   
-  if (finalResults) {
+  if (isFinished) {
     if (isReviewMode) {
+        // Calculate the status of each answer for review
+        const reviewedAnswers = questions.map((q, index) => {
+            const userAnswer = index < answers.length ? answers[index] : { selectedIndex: null, status: 'unanswered' };
+            const isCorrect = userAnswer.selectedIndex === q.correctAnswerIndex;
+            return {
+                ...userAnswer,
+                status: userAnswer.selectedIndex !== null ? (isCorrect ? 'correct' : 'incorrect') : 'unanswered'
+            };
+        });
+
         return (
           <div className="min-h-screen bg-gray-100 dark:bg-gray-800 py-12">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -244,8 +254,8 @@ export default function TestPage() {
                     <Card key={qIndex}>
                       <CardHeader>
                         <CardTitle className="flex items-start gap-3">
-                           {answers[qIndex]?.status === 'incorrect' && <XCircle className="h-5 w-5 text-red-500 mt-1 flex-shrink-0" />}
-                           {answers[qIndex]?.status === 'correct' && <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />}
+                           {reviewedAnswers[qIndex]?.status === 'incorrect' && <XCircle className="h-5 w-5 text-red-500 mt-1 flex-shrink-0" />}
+                           {reviewedAnswers[qIndex]?.status === 'correct' && <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />}
                           <span className="flex-grow">{qIndex + 1} - {q.questionText}</span>
                         </CardTitle>
                       </CardHeader>
@@ -281,19 +291,9 @@ export default function TestPage() {
           </div>
         );
     }
+    const finalResults = calculateResults(questions, answers);
     return <ResultsView title={title} results={finalResults} />;
   }
-  
-  if (timeLeft <= 0 && !finalResults) {
-    // Timer has run out but results are not yet calculated. Show loading.
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Loader2 className="mr-2 h-8 w-8 animate-spin" />
-        <p>Calculando resultados...</p>
-      </div>
-    );
-  }
-
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -358,5 +358,3 @@ function formatTime(seconds: number) {
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
-
-    
