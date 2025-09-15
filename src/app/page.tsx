@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FileUp, Bot, BarChart3, Upload, User, LogOut, Loader2, AlertCircle, CheckCircle, Folder, Wand2 } from 'lucide-react';
+import { FileUp, Bot, BarChart3, Upload, User, LogOut, Loader2, AlertCircle, CheckCircle, Folder, Wand2, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { onAuthStateChange, signOut } from '@/lib/firebase/auth';
 import type { User as FirebaseUser } from 'firebase/auth';
@@ -16,6 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/ui/logo';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 interface Question {
   questionText: string;
@@ -186,18 +187,19 @@ export default function Home() {
             <div className="flex items-center">
                 <Logo />
             </div>
-            <nav className="hidden md:flex items-center space-x-4">
-              <a href="#upload-section" className="text-secondary font-medium hover:text-primary transition-colors">Inicio</a>
-              <Link href="/generate" className="text-secondary font-medium hover:text-primary transition-colors">Generador IA</Link>
-              <a href="#upload-section" className="text-secondary font-medium hover:text-primary transition-colors">Exámenes</a>
-              <a href="#" className="text-secondary font-medium hover:text-primary transition-colors">Estadísticas</a>
-              <a href="#" className="text-secondary font-medium hover:text-primary transition-colors">Ayuda</a>
-            </nav>
+             <nav className="hidden md:flex items-center space-x-4">
+                <a href="#upload-section" className="text-secondary font-medium hover:text-primary transition-colors">Inicio</a>
+                <Link href="/generate" className="text-secondary font-medium hover:text-primary transition-colors">Generador IA</Link>
+                <a href="#upload-section" className="text-secondary font-medium hover:text-primary transition-colors">Exámenes</a>
+                <a href="#" className="text-secondary font-medium hover:text-primary transition-colors">Estadísticas</a>
+                <a href="#" className="text-secondary font-medium hover:text-primary transition-colors">Ayuda</a>
+              </nav>
+
             <div className="flex items-center gap-4">
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex items-center gap-2">
+                    <Button variant="ghost" className="hidden md:flex items-center gap-2">
                       <User className="h-5 w-5" />
                       <span>{user.displayName || 'Mi Cuenta'}</span>
                     </Button>
@@ -210,15 +212,53 @@ export default function Home() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <>
+                <div className="hidden md:flex items-center gap-2">
                   <Link href="/login" passHref>
                     <Button variant="outline">Iniciar Sesión</Button>
                   </Link>
                   <Link href="/register" passHref>
                     <Button>Registrarse</Button>
                   </Link>
-                </>
+                </div>
               )}
+               <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="md:hidden">
+                    <Menu className="h-6 w-6" />
+                    <span className="sr-only">Abrir menú</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right">
+                   <div className="flex flex-col h-full">
+                    <div className="flex-grow">
+                        <nav className="grid gap-4 text-lg font-medium mt-8">
+                           <a href="#upload-section" className="flex items-center gap-2 text-secondary hover:text-primary transition-colors">Inicio</a>
+                            <Link href="/generate" className="flex items-center gap-2 text-secondary hover:text-primary transition-colors">Generador IA</Link>
+                            <a href="#upload-section" className="flex items-center gap-2 text-secondary hover:text-primary transition-colors">Exámenes</a>
+                            <a href="#" className="flex items-center gap-2 text-secondary hover:text-primary transition-colors">Estadísticas</a>
+                            <a href="#" className="flex items-center gap-2 text-secondary hover:text-primary transition-colors">Ayuda</a>
+                        </nav>
+                    </div>
+                    <div className="mt-auto">
+                        {user ? (
+                             <Button variant="ghost" onClick={signOut} className="w-full justify-start gap-2">
+                                <LogOut className="h-5 w-5" />
+                                <span>Cerrar Sesión</span>
+                            </Button>
+                        ) : (
+                            <div className="grid gap-2">
+                                <Link href="/login" passHref>
+                                    <Button variant="outline" className="w-full">Iniciar Sesión</Button>
+                                </Link>
+                                <Link href="/register" passHref>
+                                    <Button className="w-full">Registrarse</Button>
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
         </div>
@@ -231,7 +271,7 @@ export default function Home() {
             <p className="max-w-3xl mx-auto text-lg text-secondary mb-8">
               Sube tus PDFs o deja que nuestra IA genere nuevos tests para ti. La preparación más completa a tu alcance.
             </p>
-             <div className="flex justify-center gap-4">
+             <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <Link href={user ? '#upload-section' : '/register'} passHref>
                     <Button size="lg" onClick={() => user && document.getElementById('upload-section')?.scrollIntoView({ behavior: 'smooth' })}>
                       {user ? 'Empezar a subir' : 'Comenzar ahora'}
@@ -398,3 +438,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
