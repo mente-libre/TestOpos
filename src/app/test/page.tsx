@@ -31,8 +31,9 @@ export default function TestPage() {
   const searchParams = useSearchParams();
   const examId = searchParams.get('examId');
 
-  const finishTest = useCallback(() => {
-    if (!questions) {
+  const finishTest = useCallback((currentQuestions: Question[] | null) => {
+    if (!currentQuestions) {
+      // Si las preguntas no están cargadas, no se puede finalizar.
       return;
     }
     
@@ -40,11 +41,14 @@ export default function TestPage() {
     setIsReviewMode(false);
 
     setAnswers(prevAnswers => {
-      return questions.map((q, index) => {
-        const userAnswer = prevAnswers[index];
+      return currentQuestions.map((q, index) => {
+        // Asegurarse de que el índice no esté fuera de los límites de las respuestas
+        const userAnswer = index < prevAnswers.length ? prevAnswers[index] : undefined;
+        
         if (!userAnswer || userAnswer.selectedIndex === null) {
           return { selectedIndex: null, status: 'unanswered' };
         }
+        
         const isCorrect = userAnswer.selectedIndex === q.correctAnswerIndex;
         return {
           ...userAnswer,
@@ -52,7 +56,7 @@ export default function TestPage() {
         };
       });
     });
-  }, [questions]);
+  }, []);
 
   useEffect(() => {
     const fetchExam = async () => {
@@ -95,7 +99,8 @@ export default function TestPage() {
         setTimeLeft(prevTime => {
           if (prevTime <= 1) {
             clearInterval(timer);
-            finishTest();
+            // Pasar el estado actual de las preguntas a finishTest
+            finishTest(questions);
             return 0;
           }
           return prevTime - 1;
@@ -103,7 +108,7 @@ export default function TestPage() {
       }, 1000);
       return () => clearInterval(timer);
     }
-  }, [isLoading, isFinished, finishTest]);
+  }, [isLoading, isFinished, finishTest, questions]);
 
   const handleSelectOption = (questionIndex: number, optionIndex: number) => {
     if (isFinished) return;
@@ -115,14 +120,17 @@ export default function TestPage() {
   };
   
   const handleFinishTest = () => {
-    finishTest();
+    // Pasar el estado actual de las preguntas
+    finishTest(questions);
   };
 
   const handleRestartTest = () => {
     setIsFinished(false);
     setIsReviewMode(false);
     setCurrentQuestionIndex(0);
-    setAnswers(questions!.map(() => ({ selectedIndex: null, status: 'unanswered' })));
+    if(questions) {
+        setAnswers(questions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
+    }
     setTimeLeft(1200);
   };
   
@@ -132,7 +140,7 @@ export default function TestPage() {
   };
 
   const getOptionLabelClassName = (qIndex: number, oIndex: number) => {
-    if (!isFinished || !questions) return '';
+    if (!isFinished || !questions || qIndex >= questions.length || qIndex >= answers.length) return '';
     const question = questions[qIndex];
     const answer = answers[qIndex];
 
@@ -151,7 +159,7 @@ export default function TestPage() {
   const totalQuestions = questions?.length || 0;
   const correctCount = answers.filter(a => a.status === 'correct').length;
   const incorrectCount = answers.filter(a => a.status === 'incorrect').length;
-  const unansweredCount = answers.filter(a => a.status === 'unanswered').length;
+  const unansweredCount = totalQuestions - correctCount - incorrectCount;
   const score = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
 
   const formatTime = (seconds: number) => {
@@ -324,5 +332,3 @@ export default function TestPage() {
     </div>
   );
 }
-
-    
