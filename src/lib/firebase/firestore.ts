@@ -51,9 +51,9 @@ const CATEGORY_DEFINITIONS = [
 ];
 
 /**
- * Ensures that the initial seed data (demo exams) exists in Firestore.
- * This is only called if the exams collection is empty.
- * @returns An object indicating success or failure.
+ * Ensures that the initial seed data (demo exams) exists in Firestore and returns the seeded categories.
+ * This is called only if the exams collection is empty or doesn't exist.
+ * @returns An object indicating success and the newly created categories.
  */
 export const ensureSeedData = async () => {
     try {
@@ -69,39 +69,41 @@ export const ensureSeedData = async () => {
             });
         }
         console.log('Database seeded successfully.');
-        return { success: true };
+        
+        // After seeding, return the new category counts
+        const categories: Category[] = [];
+        for (const def of CATEGORY_DEFINITIONS) {
+             const q = query(examsRef, where('category', '==', def.id));
+             const snapshot = await getCountFromServer(q);
+             const count = snapshot.data().count;
+             if (count > 0) {
+                 categories.push({
+                     id: def.id,
+                     name: def.name,
+                     examCount: count,
+                 });
+             }
+        }
+        return { success: true, categories };
+
     } catch (error) {
         console.error('Error ensuring seed data:', error);
-        return { success: false, error: 'Failed to seed database.' };
+        return { success: false, error: 'Failed to seed database.', categories: [] };
     }
 }
 
 
 /**
  * Retrieves all exams and groups them by category.
- * If no exams are found, it seeds the database and tries again.
+ * If no exams are found or the collection doesn't exist, it seeds the database.
  * This version is optimized to perform count queries instead of fetching all documents.
  * @returns An object with the list of summarized categories or an error.
  */
-export const getAllExamsGroupedByCategory = async () => {
+export const getAllExamsGroupedByCategory = async (): Promise<{ success: boolean; categories?: Category[]; error?: string; }> => {
     try {
         const examsRef = collection(db, 'exams');
-        
-        // This query will fail with NOT_FOUND if the collection doesn't exist.
-        const totalExamsSnapshot = await getCountFromServer(examsRef);
-        const totalExams = totalExamsSnapshot.data().count;
-
-        if (totalExams === 0) {
-             // If there are no exams, seed the database and recall the function
-            const seedResult = await ensureSeedData();
-            if (seedResult.success) {
-                return getAllExamsGroupedByCategory(); // Recursive call after seeding
-            } else {
-                return { success: false, error: seedResult.error || "Failed to initialize database." };
-            }
-        }
-
         const categories: Category[] = [];
+
         for (const def of CATEGORY_DEFINITIONS) {
             const q = query(examsRef, where('category', '==', def.id));
             const snapshot = await getCountFromServer(q);
@@ -114,24 +116,19 @@ export const getAllExamsGroupedByCategory = async () => {
                 });
             }
         }
+
+        // If after all checks, categories are still empty, it means we need to seed.
+        if (categories.length === 0) {
+            console.log('No exams found in any category. Seeding database...');
+            return await ensureSeedData();
+        }
         
         return { success: true, categories };
 
     } catch (error) {
-        // Specifically check for the NOT_FOUND error from Firestore
-        if (error instanceof FirestoreError && error.code === 'not-found') {
-            console.log('Exams collection not found. Seeding database...');
-            const seedResult = await ensureSeedData();
-            if (seedResult.success) {
-                return getAllExamsGroupedByCategory(); // Recursive call after seeding
-            } else {
-                return { success: false, error: seedResult.error || "Failed to initialize database." };
-            }
-        }
-
-        console.error('Error getting all exams:', error);
-        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
-        return { success: false, error: errorMessage };
+        // If ANY error occurs (including NOT_FOUND), assume seeding is needed.
+        console.error('Error getting all exams, attempting to seed database:', error);
+        return await ensureSeedData();
     }
 }
 
@@ -246,5 +243,3 @@ export const saveExam = async (
     return { success: false, error: errorMessage };
   }
 };
-
-    
