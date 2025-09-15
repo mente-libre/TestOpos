@@ -52,44 +52,45 @@ const CATEGORY_DEFINITIONS = [
 ];
 
 /**
- * Ensures that the initial seed data (demo exams) exists in Firestore and returns the seeded categories.
- * This is called only if the exams collection is empty or doesn't exist.
- * @returns An object indicating success and the newly created categories.
+ * Ensures that the initial seed data (demo exams) exists in Firestore.
+ * It checks for each seed exam and adds it only if it doesn't already exist.
+ * @returns An object indicating success.
  */
 export const ensureSeedData = async () => {
     try {
-        console.log('Seeding database with initial exams...');
+        console.log('Checking and seeding database with initial exams if necessary...');
         const examsRef = collection(db, 'exams');
         const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2];
+        let seededCount = 0;
 
         for (const seedExam of seedExams) {
-            await addDoc(examsRef, {
-                ...seedExam,
-                userId: 'system', // Mark as a system-generated exam
-                createdAt: Timestamp.now(),
-            });
+            // Check if an exam with the same fileName already exists
+            const q = query(examsRef, where('fileName', '==', seedExam.fileName));
+            const querySnapshot = await getDocs(q);
+
+            if (querySnapshot.empty) {
+                // If it doesn't exist, add it
+                await addDoc(examsRef, {
+                    ...seedExam,
+                    userId: 'system', // Mark as a system-generated exam
+                    createdAt: Timestamp.now(),
+                });
+                console.log(`Seeded exam: ${seedExam.fileName}`);
+                seededCount++;
+            }
         }
-        console.log('Database seeded successfully.');
         
-        // After seeding, return the new category counts
-        const categories: Category[] = [];
-        for (const def of CATEGORY_DEFINITIONS) {
-             const q = query(examsRef, where('category', '==', def.id));
-             const snapshot = await getCountFromServer(q);
-             const count = snapshot.data().count;
-             if (count > 0) {
-                 categories.push({
-                     id: def.id,
-                     name: def.name,
-                     examCount: count,
-                 });
-             }
+        if (seededCount > 0) {
+            console.log(`Seeding complete. Added ${seededCount} new exams.`);
+        } else {
+            console.log('All seed exams already exist. No new data was added.');
         }
-        return { success: true, categories };
+
+        return { success: true };
 
     } catch (error) {
         console.error('Error ensuring seed data:', error);
-        return { success: false, error: 'Failed to seed database.', categories: [] };
+        return { success: false, error: 'Failed to seed database.' };
     }
 }
 
@@ -102,6 +103,8 @@ export const ensureSeedData = async () => {
  */
 export const getAllExamsGroupedByCategory = async (): Promise<{ success: boolean; categories?: Category[]; error?: string; }> => {
     try {
+        await ensureSeedData(); // Ensure data exists before counting
+
         const examsRef = collection(db, 'exams');
         const categories: Category[] = [];
 
@@ -117,20 +120,10 @@ export const getAllExamsGroupedByCategory = async (): Promise<{ success: boolean
                 });
             }
         }
-
-        // If after all checks, categories are still empty, it means we need to seed.
-        if (categories.length === 0) {
-            console.log('No exams found in any category. Seeding database...');
-            return await ensureSeedData();
-        }
         
         return { success: true, categories };
 
     } catch (error) {
-        if ((error as FirestoreError).code === 'not-found') {
-            console.log('Exams collection not found, seeding database...');
-            return await ensureSeedData();
-        }
         console.error("Error getting exam categories:", error);
         return { success: false, error: (error as FirestoreError).message };
     }
