@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -50,8 +50,7 @@ function calculateResults(questions: Question[], answers: AnswerState[]): Result
   return { correctCount, incorrectCount, unansweredCount, score };
 }
 
-
-export default function TestPage() {
+function TestPageContent() {
   const [title, setTitle] = useState<string>('Cargando...');
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -373,6 +372,20 @@ export default function TestPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+
+export default function TestPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader2 className="mr-2 h-8 w-8 animate-spin" />
+        <p>Cargando test...</p>
+      </div>
+    }>
+      <TestPageContent />
+    </Suspense>
   );
 }
 
