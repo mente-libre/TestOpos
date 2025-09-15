@@ -13,7 +13,6 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateTestFromExamInputSchema = z.object({
-  topic: z.string().describe('The specific topic for the new test (e.g., "La Constitución Española").'),
   category: z.string().describe('The general category of the exam (e.g., "madrid", "estado").'),
   context: z.string().describe('A string containing questions and answers from existing exams to provide context.'),
 });
@@ -39,7 +38,7 @@ const GenerateTestFromExamOutputSchema = z.object({
   questions: z
     .array(QuestionSchema)
     .describe(
-      'An array of 10 new question objects generated based on the context.'
+      'An array of 25 new question objects generated based on the context.'
     ),
 });
 export type GenerateTestFromExamOutput = z.infer<
@@ -56,9 +55,9 @@ const generateTestFromExamPrompt = ai.definePrompt({
   name: 'generateTestFromExamPrompt',
   input: {schema: GenerateTestFromExamInputSchema},
   output: {schema: GenerateTestFromExamOutputSchema},
-  prompt: `Eres un experto creando tests para oposiciones en España. Tu tarea es generar 10 preguntas **nuevas y originales** sobre el tema "{{topic}}" para la categoría "{{category}}".
+  prompt: `Eres un experto creando tests para oposiciones en España. Tu tarea es generar 25 preguntas **nuevas, originales y variadas** para la categoría de oposición "{{category}}".
 
-Usa las siguientes preguntas y respuestas existentes como **inspiración y guía de estilo**, pero **no las copies**. El objetivo es crear un test completamente nuevo que evalúe conocimientos similares.
+Usa las siguientes preguntas y respuestas existentes como **inspiración y guía de estilo**, pero **no las copies**. El objetivo es crear un test completamente nuevo que evalúe conocimientos generales dentro de esa categoría.
 
 Contexto de preguntas existentes:
 ---

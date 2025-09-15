@@ -32,7 +32,7 @@ export async function loadInitialData() {
   }
 }
 
-export async function generateNewTest(category: string, topic: string) {
+export async function generateNewTest(category: string) {
   try {
      // 1. Get existing exams from the selected category to use as context
     const existingExamsResult = await getExamsForCategory(category);
@@ -46,7 +46,7 @@ export async function generateNewTest(category: string, topic: string) {
           error: 'No hay exámenes en esta categoría para usar como base para la generación. Prueba con otra categoría o espera a que se carguen los datos iniciales.'
         };
       }
-      return generateNewTest(category, topic); // Retry with seeded data
+      return generateNewTest(category); // Retry with seeded data
     }
 
     // 2. Format the existing questions as context for the AI
@@ -57,7 +57,6 @@ export async function generateNewTest(category: string, topic: string) {
       
     // 3. Call the AI flow to generate new questions
     const generationResult = await generateTestFromExam({
-      topic,
       category,
       context: contextQuestions
     });

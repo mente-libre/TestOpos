@@ -12,7 +12,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
 import { Logo } from '@/components/ui/logo';
-import { Input } from '@/components/ui/input';
 
 interface Question {
   questionText: string;
@@ -23,10 +22,7 @@ interface Question {
 
 const CATEGORY_DEFINITIONS = [
     { id: "madrid", name: "Comunidad de Madrid" },
-    { id: "valencia", name: "Comunidad Valenciana" },
-    { id: "andalucia", name: "Andalucía" },
     { id: "estado", name: "Administración del Estado" },
-    { id: "otros", name: "Otras" },
 ];
 
 export default function GeneratePage() {
@@ -34,7 +30,6 @@ export default function GeneratePage() {
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [topic, setTopic] = useState<string>('');
   
   const { toast } = useToast();
   const router = useRouter();
@@ -44,8 +39,9 @@ export default function GeneratePage() {
     if (!questions || questions.length === 0) return;
 
     try {
+      const categoryName = CATEGORY_DEFINITIONS.find(c => c.id === selectedCategory)?.name || 'General';
       sessionStorage.setItem('testQuestions', JSON.stringify(questions));
-      sessionStorage.setItem('testTitle', `Test IA: ${topic}`);
+      sessionStorage.setItem('testTitle', `Test IA: ${categoryName}`);
       router.push('/test');
     } catch (error) {
       console.error('Failed to save generated test to session storage', error);
@@ -58,24 +54,21 @@ export default function GeneratePage() {
       setError('Por favor, selecciona una categoría para usar como base.');
       return;
     }
-     if (!topic) {
-      setError('Por favor, especifica un tema para el nuevo test.');
-      return;
-    }
     
     setIsProcessing(true);
     setQuestions(null);
     setError(null);
 
     try {
-      const result = await generateNewTest(selectedCategory, topic);
+      const result = await generateNewTest(selectedCategory);
 
       if (result.success && result.questions) {
         setQuestions(result.questions);
         setError(null);
+        const categoryName = CATEGORY_DEFINITIONS.find(c => c.id === selectedCategory)?.name;
         toast({
             title: '¡Test generado con IA!',
-            description: `Se han creado ${result.questions.length} preguntas nuevas sobre "${topic}".`,
+            description: `Se han creado ${result.questions.length} preguntas nuevas para "${categoryName}".`,
         });
       } else {
         let errorMessage = result.error ?? 'Ha ocurrido un error desconocido durante la generación.';
@@ -126,9 +119,9 @@ export default function GeneratePage() {
                 <CardTitle>Configura tu nuevo test</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid sm:grid-cols-2 gap-6">
+                <div className="grid gap-6">
                     <div>
-                        <label htmlFor="examCategory" className="block text-sm font-medium text-gray-700 mb-2">1. Elige una categoría como inspiración</label>
+                        <label htmlFor="examCategory" className="block text-sm font-medium text-gray-700 mb-2">Elige una categoría como inspiración</label>
                         <Select onValueChange={setSelectedCategory} value={selectedCategory}>
                             <SelectTrigger id="examCategory">
                                 <SelectValue placeholder="Selecciona una categoría" />
@@ -140,19 +133,10 @@ export default function GeneratePage() {
                             </SelectContent>
                         </Select>
                     </div>
-                     <div>
-                        <label htmlFor="topic" className="block text-sm font-medium text-gray-700 mb-2">2. Indica el tema principal</label>
-                        <Input 
-                            id="topic"
-                            placeholder="Ej: La Constitución, Ley 39/2015"
-                            value={topic}
-                            onChange={(e) => setTopic(e.target.value)}
-                        />
-                    </div>
                 </div>
                 <Button onClick={handleGenerateTest} disabled={isProcessing} className="w-full">
                   {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {isProcessing ? 'Generando con IA...' : 'Generar 10 preguntas nuevas'}
+                  {isProcessing ? 'Generando con IA...' : 'Generar Test'}
                 </Button>
               </CardContent>
             </Card>
@@ -178,7 +162,7 @@ export default function GeneratePage() {
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div className="flex items-center gap-3">
                         <CheckCircle className="h-6 w-6 text-green-500" />
-                        <h3 className="text-xl font-semibold">Test generado sobre "{topic}"</h3>
+                        <h3 className="text-xl font-semibold">Test generado para "{CATEGORY_DEFINITIONS.find(c => c.id === selectedCategory)?.name}"</h3>
                     </div>
                     <div className="flex gap-2 w-full sm:w-auto">
                         <Button variant="outline" onClick={handleGenerateTest} disabled={isProcessing} className="flex-1">
