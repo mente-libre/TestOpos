@@ -7,8 +7,10 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getExamById, type Question } from '@/lib/firebase/firestore';
-import { Loader2, CheckCircle, XCircle, RefreshCw, Eye } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, RefreshCw, Eye, Wand2 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { generateReviewTest } from '@/app/actions';
+import { useToast } from '@/hooks/use-toast';
 
 type AnswerStatus = 'unanswered' | 'correct' | 'incorrect';
 
@@ -54,6 +56,7 @@ function TestPageContent() {
   const [title, setTitle] = useState<string>('Cargando...');
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isGeneratingReview, setIsGeneratingReview] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<AnswerState[]>([]);
   const [isFinished, setIsFinished] = useState(false);
@@ -62,6 +65,7 @@ function TestPageContent() {
   const [finalResults, setFinalResults] = useState<Results | null>(null);
   
   const router = useRouter();
+  const { toast } = useToast();
   const searchParams = useSearchParams();
   const examId = searchParams.get('examId');
 
@@ -147,19 +151,48 @@ function TestPageContent() {
   };
 
   const handleRestartTest = () => {
-    setIsFinished(false);
-    setIsReviewMode(false);
-    setCurrentQuestionIndex(0);
-    setFinalResults(null);
-    if(questions) {
-        setAnswers(questions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
-    }
-    setTimeLeft(1200);
+    window.location.reload(); // Simple way to restart the same test
   };
   
   const handleReviewAnswers = () => {
     setIsReviewMode(true);
   };
+
+  const handleGenerateReview = async () => {
+    if (!questions) return;
+    setIsGeneratingReview(true);
+
+    const failedQuestions = questions.filter((q, index) => {
+        const answer = answers[index];
+        return answer && answer.selectedIndex !== null && answer.selectedIndex !== q.correctAnswerIndex;
+    });
+
+    try {
+        const result = await generateReviewTest(failedQuestions);
+        if (result.success && result.questions) {
+            sessionStorage.setItem('testQuestions', JSON.stringify(result.questions));
+            sessionStorage.setItem('testTitle', `Test de Repaso IA: ${title}`);
+            router.push('/test');
+            // We push to the same page, the useEffect will pick up the new session storage
+            window.location.reload(); 
+        } else {
+            toast({
+                variant: "destructive",
+                title: "Error al generar el repaso",
+                description: result.error || "No se pudo crear el test de repaso."
+            })
+        }
+    } catch (e) {
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Ha ocurrido un problema al conectar con el servicio de IA."
+        })
+    } finally {
+        setIsGeneratingReview(false);
+    }
+  };
+
 
   const getOptionLabelClassName = (qIndex: number, oIndex: number) => {
     if (!isReviewMode || !questions || qIndex >= questions.length || qIndex >= answers.length) return '';
@@ -222,6 +255,16 @@ function TestPageContent() {
               </div>
             </CardContent>
             <CardFooter className="flex-col sm:flex-row gap-4">
+                {results.incorrectCount > 0 && (
+                    <Button variant="outline" className="w-full" onClick={handleGenerateReview} disabled={isGeneratingReview}>
+                        {isGeneratingReview ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                            <Wand2 className="mr-2 h-4 w-4" />
+                        )}
+                        Generar Test de Repaso con IA
+                    </Button>
+                )}
               <Button variant="outline" className="w-full" onClick={handleReviewAnswers}>
                 <Eye className="mr-2 h-4 w-4" /> Revisar Respuestas
               </Button>
@@ -331,7 +374,7 @@ function TestPageContent() {
               </div>
             </div>
             <div className="mt-4">
-                <Progress value={(currentQuestionIndex + 1) / totalQuestions * 100} />
+                <Progress value={((currentQuestionIndex + 1) / totalQuestions) * 100} />
                 <p className="text-sm text-muted-foreground mt-2 text-center">{`Pregunta ${currentQuestionIndex + 1} de ${totalQuestions}`}</p>
             </div>
           </CardHeader>

@@ -2,13 +2,8 @@
 'use server';
 
 import { generateTestFromExam } from '@/ai/flows/generate-test-from-exam-flow';
-import { saveExam, type Exam, getExamsForCategory, ensureSeedData } from '@/lib/firebase/firestore';
-
-interface Question {
-  questionText: string;
-  options: string[];
-  correctAnswerIndex: number;
-}
+import { generateReviewTest as generateReviewTestFlow } from '@/ai/flows/generate-review-test-flow';
+import { saveExam, type Exam, getExamsForCategory, ensureSeedData, type Question } from '@/lib/firebase/firestore';
 
 
 export async function loadInitialData() {
@@ -73,6 +68,42 @@ export async function generateNewTest(category: string) {
   } catch (error) {
     console.error('Error in generateNewTest:', error);
     const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error inesperado en el servidor al generar el nuevo test.';
+    return { 
+      success: false, 
+      error: errorMessage 
+    };
+  }
+}
+
+export async function generateReviewTest(failedQuestions: Question[]) {
+  try {
+    if (!failedQuestions || failedQuestions.length === 0) {
+      return {
+        success: false,
+        error: 'No se proporcionaron preguntas para el repaso.'
+      };
+    }
+
+    // Format the failed questions as context for the AI
+    const context = failedQuestions
+      .map(q => `Pregunta fallada: ${q.questionText}\nRespuesta correcta: ${q.options[q.correctAnswerIndex]}`)
+      .join('\n---\n');
+
+    // Call the new AI flow
+    const generationResult = await generateReviewTestFlow({ context });
+
+    if (!generationResult?.questions || generationResult.questions.length === 0) {
+      return { 
+        success: false, 
+        error: 'La IA no pudo generar un test de repaso. Inténtalo de nuevo.' 
+      };
+    }
+    
+    return { success: true, questions: generationResult.questions };
+
+  } catch (error) {
+    console.error('Error in generateReviewTest:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error inesperado al generar el test de repaso.';
     return { 
       success: false, 
       error: errorMessage 
