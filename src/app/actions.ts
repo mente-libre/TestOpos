@@ -10,7 +10,13 @@ import { ensureSeedData, getCategories } from '@/lib/firebase/firestore-server';
 export async function loadInitialData() {
   try {
     // Attempt to seed data first. This is idempotent.
-    await ensureSeedData();
+    const { hasWritten } = await ensureSeedData();
+
+    // If data was just written, we need to give Firestore a moment to be consistent.
+    // This is a simple workaround for eventual consistency.
+    if (hasWritten) {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
 
     // Fetch categories. Now it should be populated.
     const initialResult = await getCategories();

@@ -20,15 +20,15 @@ import { CATEGORY_DEFINITIONS } from './firestore';
 
 /**
  * Ensures that the initial seed data (demo exams) exists in Firestore.
- * It checks if a specific seed exam exists, and if not, adds all seed data.
- * This function is intended to be called from the server.
+ * It checks for each seed exam and adds it if it's missing.
+ * This function is intended to be called from the server and is idempotent.
+ * @returns An object indicating if a write operation was performed.
  */
-export const ensureSeedData = async (): Promise<void> => {
+export const ensureSeedData = async (): Promise<{ hasWritten: boolean }> => {
     try {
         const examsRef = collection(db, 'exams');
         const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, officeTest];
         
-        // Let's check for each seed exam and add it if it's missing.
         const batch = writeBatch(db);
         let batchHasWrites = false;
 
@@ -51,11 +51,14 @@ export const ensureSeedData = async (): Promise<void> => {
             await batch.commit();
             console.log(`Seeding complete. Batch committed.`);
         }
+        
+        return { hasWritten: batchHasWrites };
 
     } catch (error) {
         console.error('Error in ensureSeedData:', error);
         // We don't throw here to avoid breaking the parent operation,
         // but the failure will be logged.
+        return { hasWritten: false };
     }
 }
 
@@ -91,4 +94,3 @@ export const getCategories = async () => {
     return { success: false, error: errorMessage };
   }
 };
-
