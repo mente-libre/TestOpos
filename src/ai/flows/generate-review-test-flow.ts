@@ -11,6 +11,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { QuestionSchema } from './types';
 
 const GenerateReviewTestInputSchema = z.object({
   context: z.string().describe('A string containing the questions and correct answers that the user previously failed, to provide context for generating new review questions.'),
@@ -18,20 +19,6 @@ const GenerateReviewTestInputSchema = z.object({
 type GenerateReviewTestInput = z.infer<
   typeof GenerateReviewTestInputSchema
 >;
-
-const QuestionSchema = z.object({
-  questionText: z.string().describe('The full text of the question.'),
-  options: z
-    .array(z.string())
-    .length(4)
-    .describe('An array of 4 possible answer strings.'),
-  correctAnswerIndex: z
-    .number()
-    .min(0)
-    .max(3)
-    .describe('The index (0-3) of the correct answer in the options array.'),
-  explanation: z.string().optional().describe('An optional explanation for the correct answer.'),
-});
 
 const GenerateReviewTestOutputSchema = z.object({
   questions: z

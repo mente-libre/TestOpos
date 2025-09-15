@@ -1,9 +1,13 @@
 import type {Metadata, Viewport} from 'next';
 import { Toaster } from "@/components/ui/toaster"
 import './globals.css';
-import { Inter } from 'next/font/google';
+import { Inter as FontSans } from 'next/font/google';
+import { cn } from '@/lib/utils';
 
-const inter = Inter({ subsets: ['latin'] });
+const fontSans = FontSans({ 
+  subsets: ['latin'],
+  variable: '--font-sans',
+});
 
 export const metadata: Metadata = {
   title: 'TestOpos - Tests de Oposiciones con IA',
@@ -24,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
-      <body className={`${inter.className} antialiased`}>
+    <html lang="es" suppressHydrationWarning>
+      <body className={cn("antialiased", fontSans.variable)}>
         {children}
         <Toaster />
       </body>

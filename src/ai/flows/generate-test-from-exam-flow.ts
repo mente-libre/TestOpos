@@ -11,6 +11,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { QuestionSchema } from './types';
 
 const GenerateTestFromExamInputSchema = z.object({
   category: z.string().describe('The general category of the exam (e.g., "madrid", "estado").'),
@@ -19,20 +20,6 @@ const GenerateTestFromExamInputSchema = z.object({
 type GenerateTestFromExamInput = z.infer<
   typeof GenerateTestFromExamInputSchema
 >;
-
-const QuestionSchema = z.object({
-  questionText: z.string().describe('The full text of the question.'),
-  options: z
-    .array(z.string())
-    .length(4)
-    .describe('An array of 4 possible answer strings.'),
-  correctAnswerIndex: z
-    .number()
-    .min(0)
-    .max(3)
-    .describe('The index (0-3) of the correct answer in the options array.'),
-  explanation: z.string().optional().describe('An optional explanation for the correct answer.'),
-});
 
 const GenerateTestFromExamOutputSchema = z.object({
   questions: z
