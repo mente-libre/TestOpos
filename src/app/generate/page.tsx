@@ -72,8 +72,8 @@ export default function GeneratePage() {
         });
       } else {
         let errorMessage = result.error ?? 'Ha ocurrido un error desconocido durante la generación.';
-         if (errorMessage.includes('quota')) {
-            errorMessage = 'Has excedido tu cuota de uso de la API. Por favor, espera un momento y vuelve a intentarlo.'
+         if (errorMessage.includes('quota') || (result.error && result.error.includes('429'))) {
+            errorMessage = 'Has alcanzado el límite de peticiones a la IA por ahora. El plan gratuito tiene restricciones de uso. Por favor, espera unos minutos y vuelve a intentarlo.'
         }
         setError(errorMessage);
         setQuestions(null);
@@ -81,8 +81,8 @@ export default function GeneratePage() {
     } catch (e: any) {
       console.error(e);
       let errorMessage = 'No se pudo generar el test. Inténtalo de nuevo.';
-      if (e.message && e.message.includes('quota')) {
-        errorMessage = 'Has excedido la cuota de la API. Por favor, espera un momento y vuelve a intentarlo.'
+      if (e.message && (e.message.includes('quota') || e.message.includes('429'))) {
+        errorMessage = 'Has alcanzado el límite de peticiones a la IA por ahora. El plan gratuito tiene restricciones de uso. Por favor, espera unos minutos y vuelve a intentarlo.'
       }
       setError(errorMessage);
       setQuestions(null);
