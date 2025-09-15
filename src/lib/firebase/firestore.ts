@@ -54,7 +54,7 @@ const CATEGORY_DEFINITIONS = [
 /**
  * Ensures that the initial seed data (demo exams) exists in Firestore.
  * It checks for each seed exam and adds it only if it doesn't already exist.
- * This function is heavy and should be called sparingly, ideally in a background or setup process.
+ * This should be called strategically (e.g. once, not on every page load).
  * @returns An object indicating success.
  */
 export const ensureSeedData = async () => {
@@ -91,7 +91,8 @@ export const ensureSeedData = async () => {
 
     } catch (error) {
         console.error('Error ensuring seed data:', error);
-        return { success: false, error: 'Failed to seed database.' };
+        const errorMessage = error instanceof Error ? error.message : 'Failed to seed database.';
+        return { success: false, error: errorMessage };
     }
 }
 
@@ -131,7 +132,8 @@ export const getAllExamsGroupedByCategory = async (): Promise<{ success: boolean
 
     } catch (error) {
         console.error("Error getting exam categories:", error);
-        return { success: false, error: (error as FirestoreError).message };
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred while fetching categories.';
+        return { success: false, error: errorMessage };
     }
 }
 

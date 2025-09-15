@@ -28,6 +28,7 @@ export async function processAndSaveExam(
     }
     
     // Ensure seed data exists. This is a good place to do it as it's a user action that implies DB write.
+    // This is non-blocking for the user, but ensures demos are available.
     await ensureSeedData();
 
     // 1. Extract questions from PDF using AI
