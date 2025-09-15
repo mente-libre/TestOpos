@@ -213,7 +213,7 @@ export default function Home() {
               </div>
             ) : (
                 categories.length > 0 ? (
-                    <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {categories.map(category => (
                           <Link href={`/category/${category.id}`} key={category.id} passHref>
                              <Card className="group hover:shadow-lg hover:-translate-y-1 transition-transform h-full cursor-pointer">
