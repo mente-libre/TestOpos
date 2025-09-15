@@ -11,7 +11,7 @@ import {
   Timestamp,
   doc,
   getDoc,
-  getCountFromServer,
+  limit,
   FirestoreError,
 } from 'firebase/firestore';
 import { madridAdminTest, estadoConstitutionTest, madridAdminTest2 } from '../seed-data';
@@ -60,9 +60,9 @@ export const ensureSeedData = async () => {
     try {
         const examsRef = collection(db, 'exams');
         
-        // A simple check to see if there are any documents at all.
-        const initialCheck = await getCountFromServer(examsRef);
-        if (initialCheck.data().count > 0) {
+        // Use a simple query with a limit to check for existence, which doesn't require a composite index.
+        const initialCheck = await getDocs(query(examsRef, limit(1)));
+        if (!initialCheck.empty) {
              return { success: true, message: 'Seeding skipped, data exists.' };
         }
         
