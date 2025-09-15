@@ -582,7 +582,7 @@ export const estadoConstitutionTest: SeedExam = {
                 "Sufragio activo y pasivo en elecciones europeas.",
                 "Ninguna de las anteriores es correcta."
             ],
-            correctAnswerIndex: 0,
+            correctAnswerIndex: 1,
             explanation: "ARTÍCULO 13.2 CE. Solamente los españoles serán titulares de los derechos reconocidos en el artículo 23, salvo lo que, atendiendo a criterios de reciprocidad, pueda establecerse por tratado o ley para el derecho de sufragio activo y pasivo en las elecciones municipales."
         },
         {
@@ -671,224 +671,156 @@ export const madridAdminTest2: SeedExam = {
     category: "madrid",
     questions: [
         {
-            questionText: "Los Derechos fundamentales y las Libertades Públicas, se recogen en:",
-            options: [
-                "En el Capítulo III, Sección primera del Título I de la Constitución española de 1978.",
-                "En el Capítulo III, Sección segunda del Título II de la Constitución española de 1978.",
-                "En el Capítulo II, Sección primera del Título I de la Constitución española de 1978.",
-                "Una opción adicional para completar"
-            ],
-            correctAnswerIndex: 2,
+            questionText: "¿Cuántos artículos tiene la Constitución?",
+            options: [ "159", "169", "171", "165" ],
+            correctAnswerIndex: 1
         },
         {
-            questionText: "Señale cuál de las siguientes respuestas es la correcta de acuerdo con lo dispuesto en la Constitución española de 1978:",
-            options: [
-                "Cualquier ciudadano podrá recabar la tutela ante los Tribunales del derecho a la producción",
-                "Los miembros de las Fuerzas Armadas podrán recabar la tutela del derecho de petición, en",
-                "Cualquier ciudadano podrá recabar la tutela del derecho a la protección de la salud de la",
-                "Opción vacía"
-            ],
-            correctAnswerIndex: 1,
+            questionText: "¿Reconoce la Constitución el derecho a la propiedad privada?",
+            options: [ "No", "Sí, y a la comunal", "Sí, y a la herencia", "Sí, y a la herencia y legados" ],
+            correctAnswerIndex: 2
         },
         {
-            questionText: "Señale la respuesta correcta, de conformidad con lo dispuesto en la Constitución española de 1978:",
-            options: [
-                "El mandato de los Senadores termina exclusivamente cuatro años después de su elección.",
-                "Las poblaciones de Ceuta y Melilla elegirán cada una de ellas un Senador.",
-                "La elección al Senado se verificará en cada circunscripción atendiendo a criterios de",
-                "Respuesta no especificada"
-            ],
-            correctAnswerIndex: 3,
+            questionText: "El Estatuto de Autonomía de Madrid se aprobó como:",
+            options: [ "Ley 5/1985", "Ley Orgánica 5/1985", "Ley Orgánica 3/1983", "Decreto Ley 3/1985" ],
+            correctAnswerIndex: 2
         },
         {
-            questionText: "Cuando se habla de la delegación legislativa en la Constitución española de 1978 ¿cuál de las siguientes afirmaciones es la correcta?",
-            options: [
-                "Las Cortes Generales sólo podrá delegar en el Gobierno la potestad de dictar normas con",
-                "La delegación legislativa deberá otorgarse en todo caso mediante una Ley de bases.",
-                "No podrá entenderse concedida de modo implícito o por tiempo indeterminado.",
-                "La delegación legislativa se agota en el momento de la entrada en vigor de la norma"
-            ],
-            correctAnswerIndex: 2,
+            questionText: "La Asamblea de Madrid es elegida:",
+            options: [ "Por 3 años", "Por 4 años", "Por 5 años", "Por 6 años" ],
+            correctAnswerIndex: 1
         },
         {
-            questionText: "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978.",
-            options: [
-                "La CE reconoce la iniciativa popular para la presentación de proyectos de Ley.",
-                "Para el ejercicio de dicha iniciativa popular se exigirán no menos de 500.000 firmas",
-                "Tendrá que ser una Ley orgánica la que regule las formas de ejercicio y requisitos de la",
-                "Respuesta no especificada"
-            ],
-            correctAnswerIndex: 2,
+            questionText: "La Ley del Gobierno y Administración de la Comunidad de Madrid es:",
+            options: [ "La Ley 13/1983, de 1 de diciembre", "La Ley 1/1983, de 13 de diciembre", "La Ley 1/1985, de 13 de diciembre", "La Ley 13/1985, de 1 de diciembre" ],
+            correctAnswerIndex: 1
         },
         {
-            questionText: "Señale la respuesta correcta de acuerdo con lo dispuesto en la Constitución española de 1978:",
-            options: [
-                "Los Poderes del Estado emanan del pueblo español.",
-                "La soberanía nacional reside en las Cortes Generales como representantes que son del",
-                "La forma política del Estado español es la democracia.",
-                "España se constituye en un Estado liberal y democrático de Derecho."
-            ],
-            correctAnswerIndex: 0,
+            questionText: "En su condición de Presidente del Consejo de Gobierno, el Presidente de la Comunidad de Madrid podrá delegar:",
+            options: [ "Exclusivamente funciones ejecutivas", "Exclusivamente funciones de delegación", "Exclusivamente en los Vicepresidentes", "Ninguna de las contestaciones anteriores es correcta" ],
+            correctAnswerIndex: 3
         },
         {
-            questionText: "La dignidad de la persona, los derechos inviolables que le son inherentes, el libre desarrollo de la personalidad, el respeto a la ley y a los derechos de los demás, son de conformidad con lo dispuesto en el artículo 10 de la Constitución española de 1978:",
-            options: [
-                "El fundamento del orden político y de la paz social.",
-                "Los principios ordenadores del ordenamiento jurídico español.",
-                "Los principios que deberán regir la actuación de los poderes públicos.",
-                "Una opción adicional para completar"
-            ],
-            correctAnswerIndex: 0,
+            questionText: "En el sistema de fuentes del ordenamiento jurídico, la costumbre sólo regirá en defecto de Ley aplicable:",
+            options: [ "En todo caso", "Siempre que no sea contraria a la moral", "Siempre que no sea contraria a la moral o al orden público", "Siempre que no sea contraria a la moral o al orden público, y que resulte probada" ],
+            correctAnswerIndex: 3
         },
         {
-            questionText: "La Constitución española de 1978 reconoce el derecho a expresar y difundir libremente los pensamientos, ideas y opiniones. Señale cuál de las siguientes respuestas es la incorrecta:",
-            options: [
-                "Este derecho se encuadra, de acuerdo con la propia Constitución, dentro de los denominados",
-                "Su ejercicio no podrá verse restringido mediante ningún tipo de censura previa.",
-                "Al tratarse de un derecho fundamental, su ejercicio no podrá ser sometido a límite alguno.",
-                "Una opción adicional para completar"
-            ],
-            correctAnswerIndex: 2,
+            questionText: "Las disposiciones legislativas provisionales dictadas por el Gobierno tomarán la forma de:",
+            options: [ "Leyes de bases", "Leyes ordinarias", "Decretos-Leyes", "Decretos Legislativos" ],
+            correctAnswerIndex: 2
         },
         {
-            questionText: "¿Cuál de las siguientes extensiones en un fichero informático corresponde a una hoja de cálculo?",
-            options: [
-                "WWW",
-                "JPG",
-                "MPG",
-                "XLS"
-            ],
-            correctAnswerIndex: 0, // Incorrecta, debería ser 3. Se cambia para ser usable.
-        },
-    ]
-};
-
-export const madridAdminTest3: SeedExam = {
-    fileName: "Test Auxiliar Administrativo 3 (Demo)",
-    category: "madrid",
-    questions: [
-        {
-            "questionText": "Los Derechos fundamentales y las Libertades Públicas, se recogen en:",
-            "options": [
-                "En el Capítulo III, Sección primera del Título I de la Constitución española de 1978.",
-                "En el Capítulo III, Sección segunda del Título II de la Constitución española de 1978.",
-                "En el Capítulo II, Sección primera del Título I de la Constitución española de 1978.",
-                "Respuesta no especificada"
-            ],
-            "correctAnswerIndex": 2
+            questionText: "Los actos de las AA.PP. sujetos al Derecho Administrativo:",
+            options: [ "Se presumirán válidos desde la fecha en que se dicten", "Se presumirán válidos y producirán efectos desde la fecha en que se dicten", "Se presumirán válidos y producirán efectos desde la fecha en que se dicten, salvo que en ellos se disponga otra cosa", "Se presumirán válidos y producirán efectos desde la fecha en que se dicten, aunque en ellos se disponga otra cosa" ],
+            correctAnswerIndex: 2
         },
         {
-            "questionText": "Señale cuál de las siguientes respuestas es la correcta de acuerdo con lo dispuesto en la Constitución española de 1978:",
-            "options": [
-                "Cualquier ciudadano podrá recabar la tutela ante los Tribunales del derecho a la producción",
-                "Los miembros de las Fuerzas Armadas podrán recabar la tutela del derecho de petición, en",
-                "Cualquier ciudadano podrá recabar la tutela del derecho a la protección de la salud de la",
-                "Ninguna de las anteriores"
-            ],
-            "correctAnswerIndex": 1
+            questionText: "Si el vicio de un acto anulable consiste en la falta de alguna autorización:",
+            options: [ "La convalidación no podrá realizarse", "Podrá ser convalidado el acto mediante el otorgamiento de la misma", "Podrá ser convalidado el acto mediante el otorgamiento de la misma por el órgano superior jerárquico", "Podrá ser convalidado el acto mediante el otorgamiento de la misma por el órgano competente" ],
+            correctAnswerIndex: 3
         },
         {
-            "questionText": "Cuando se habla de la delegación legislativa en la Constitución española de 1978 ¿cuál de las siguientes aﬁrmaciones es la correcta?",
-            "options": [
-                "Las Cortes Generales sólo podrá delegar en el Gobierno la potestad de dictar normas con",
-                "La delegación legislativa deberá otorgarse en todo caso mediante una Ley de bases.",
-                "No podrá entenderse concedida de modo implícito o por tiempo indeterminado.",
-                "La delegación legislativa se agota en el momento de la entrada en vigor de la norma"
-            ],
-            "correctAnswerIndex": 2
+            questionText: "La Ley del Procedimiento Administrativo Común de las Administraciones Públicas es la:",
+            options: [ "Ley 30/1994", "Ley 39/2015", "Ley 37/2015", "Ley 40/2015" ],
+            correctAnswerIndex: 1
         },
         {
-            "questionText": "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978.",
-            "options": [
-                "La CE reconoce la iniciativa popular para la presentación de proyectos de Ley.",
-                "Para el ejercicio de dicha iniciativa popular se exigirán no menos de 500.000 ﬁrmas",
-                "Tendrá que ser una Ley orgánica la que regule las formas de ejercicio y requisitos de la",
-                "Respuesta no especificada"
-            ],
-            "correctAnswerIndex": 2
+            questionText: "El procedimiento administrativo no estará sometido al principio de:",
+            options: [ "Simultaneidad", "Publicidad", "Transparencia", "Celeridad" ],
+            correctAnswerIndex: 0
         },
         {
-            "questionText": "Señale la respuesta correcta de acuerdo con lo dispuesto en la Constitución española de 1978:",
-            "options": [
-                "Los Poderes del Estado emanan del pueblo español.",
-                "La soberanía nacional reside en las Cortes Generales como representantes que son del",
-                "La forma política del Estado español es la democracia.",
-                "España se constituye en un Estado liberal y democrático de Derecho."
-            ],
-            "correctAnswerIndex": 0
+            questionText: "El orden jurisdiccional contencioso-administrativo no se halla integrado por:",
+            options: [ "Salas de lo Contencioso-administrativo de las Tribunales Superiores de Justicia", "Salas de lo Contencioso-administrativo de la Audiencia Nacional", "Salas de lo Contencioso-administrativo de las Audiencias Provinciales", "Sala de lo Contencioso-administrativo del Tribunal Supremo" ],
+            correctAnswerIndex: 2
         },
         {
-            "questionText": "La dignidad de la persona, los derechos inviolables que le son inherentes, el libre desarrollo de la personalidad, el respeto a la ley y a los derechos de los demás, son de conformidad con lo dispuesto en el artículo 10 de la Constitución española de 1978:",
-            "options": [
-                "El fundamento del orden político y de la paz social.",
-                "Los principios ordenadores del ordenamiento jurídico español.",
-                "Los principios que deberán regir la actuación de los poderes públicos.",
-                "Respuesta no especificada"
-            ],
-            "correctAnswerIndex": 0
+            questionText: "Luego que sea firme una sentencia, el Secretario judicial lo comunicará al órgano que hubiera realizado la actividad objeto del recurso:",
+            options: [ "En el plazo de diez días", "En el plazo de cinco días", "En el plazo de quince días", "En el plazo de veinte días" ],
+            correctAnswerIndex: 0
         },
         {
-            "questionText": "La Constitución española de 1978 reconoce el derecho a expresar y difundir libremente los pensamientos, ideas y opiniones. Señale cuál de las siguientes respuestas es la incorrecta:",
-            "options": [
-                "Este derecho se encuadra, de acuerdo con la propia Constitución, dentro de los denominados",
-                "Su ejercicio no podrá verse restringido mediante ningún tipo de censura previa.",
-                "Al tratarse de un derecho fundamental, su ejercicio no podrá ser sometido a límite alguno.",
-                "Respuesta no especificada"
-            ],
-            "correctAnswerIndex": 2
+            questionText: "La Ley de transparencia, acceso a la información pública y buen gobierno (en adelante Ley de Transparencia) es:",
+            options: [ "La Ley 17/2012", "La Ley 19/2014", "La Ley 19/2013", "La Ley 17/2014" ],
+            correctAnswerIndex: 2
         },
         {
-            "questionText": "Respecto del Ministerio Fiscal, y de acuerdo con lo dispuesto en la Constitución española de 1978, ¿cuál de las siguientes aﬁrmaciones es incorrecta?",
-            "options": [
-                "El Ministerio Fiscal ejerce sus funciones por medio de órganos propios conforme a los",
-                "Además de los principios señalados en la respuesta A, también ejercerá sus funciones de",
-                "El Ministerio Fiscal tiene como misión, entre otras, la de velar por la independencia de los",
-                "El Fiscal General del Estado será nombrado por el Rey, a propuesta del Consejo General del"
-            ],
-            "correctAnswerIndex": 3
+            questionText: "La adaptación a la normativa europea expresada en el Reglamento General de Protección de Datos ha requerido la elaboración de una nueva ley orgánica que sustituya a la Ley Orgánica 15/1999, de 13 de diciembre, de Protección de Datos de Carácter Personal que es:",
+            options: [ "La Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales", "La Ley Orgánica 1/2019, de 15 de enero, de Protección de Datos Personales y garantía de los derechos digitales", "La Ley Orgánica 5/2019, de 13 de febrero, de Protección de Datos Personales y garantía de los derechos digitales", "La Ley Orgánica 8/2019, de 25 de mayo, de Protección de Datos Personales y garantía de los derechos digitales" ],
+            correctAnswerIndex: 0
         },
         {
-            "questionText": "El Gobierno, de acuerdo con lo dispuesto en la Constitución española de 1978:",
-            "options": [
-                "Dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado.",
-                "Dirige la política interior y exterior, la Administración civil y militar pero no la defensa del Estado.",
-                "Dirige la política interior y exterior, la Administración civil y la defensa del Estado, pero no la militar.",
-                "Dirige la política exterior, la Administración civil y militar y la defensa del Estado, coordina"
-            ],
-            "correctAnswerIndex": 0
+            questionText: "Los contratos del sector público están regulados actualmente por:",
+            options: [ "La Ley de Contratos del Estado", "La Ley de Contratos del Sector Público", "La Ley de Contratos de las Administraciones Públicas", "La Ley de Contratos de los Entes Públicos" ],
+            correctAnswerIndex: 1
         },
         {
-            "questionText": "¿Cuál de las siguientes aﬁrmaciones es la correcta de conformidad con lo dispuesto en la Constitución española de 1978?",
-            "options": [
-                "Los Estatutos de las distintas Comunidades Autónomas no podrán presentar diferencia alguna",
-                "Los Estatutos de las distintas Comunidades Autónomas podrán presentar diferencias que",
-                "Las diferencias entre los Estatutos de las distintas Comunidades Autónomas no podrán implicar, en ningún caso, privilegios económicos o sociales.",
-                "Las diferencias entre los Estatutos de las distintas Comunidades Autónomas no podrán implicar, en ningún caso, privilegios económicos."
-            ],
-            "correctAnswerIndex": 2
+            questionText: "Están sujetos a regulación armonizada los contratos de obras, de concesión de obras y de concesión de servicios cuyo valor estimado sea:",
+            options: [ "Superior a 5.648.000 euros", "Inferior a 5.748.000 euros", "Igual o superior a 5.848.000 euros", "Igual o superior a 5.548.000 euros" ],
+            correctAnswerIndex: 3
         },
         {
-            "questionText": "Según lo dispuesto en el artículo 149.3 de la Constitución española de 1978, señale la respuesta correcta:",
-            "options": [
-                "Las materias no atribuidas expresamente al Estado por la Constitución corresponderán a las",
-                "La competencia sobre las materias que no se hayan asumido por los Estatutos de Autonomía",
-                "El Derecho estatal será, en todo caso, supletorio del Derecho de las Comunidades Autónomas.",
-                "Ninguna de las anteriores respuestas es correcta."
-            ],
-            "correctAnswerIndex": 2
+            questionText: "Son funcionarios interinos los que son nombrados como tales por razones:",
+            options: [ "Organizativas y de necesidad", "De necesidad y urgencia", "Expresamente justificadas de necesidad y urgencia", "Expresamente motivadas por necesidad y urgencia" ],
+            correctAnswerIndex: 2
         },
         {
-            "questionText": "En la Comunidad de Madrid, ¿a quién le corresponde la potestad de establecer y exigir tributos de conformidad con su Estatuto de Autonomía?",
-            "options": [
-                "Al Presidente de la Comunidad de Madrid.",
-                "A la Asamblea.",
-                "Al Consejero de Hacienda.",
-                "Respuesta no especificada"
-            ],
-            "correctAnswerIndex": 1
+            questionText: "En la carrera horizontal de los funcionarios de carrera, los ascensos serán:",
+            options: [ "Consecutivos, única y exclusivamente", "Consecutivos y no consecutivos", "Consecutivos con carácter general, salvo en aquellos supuestos excepcionales en los que se prevea otra posibilidad", "Ninguna de las anteriores contestaciones es correcta" ],
+            correctAnswerIndex: 2
+        },
+        {
+            questionText: "En aquellos Regímenes de la Seguridad Social en que así resulte necesario podrán establecerse sistemas especiales exclusivamente en materia de:",
+            options: [ "Encuadramiento", "Encuadramiento o recaudación", "Encuadramiento, afiliación o recaudación", "Encuadramiento, afiliación, forma de cotización o recaudación" ],
+            correctAnswerIndex: 3
+        },
+        {
+            questionText: "La incapacidad temporal del Régimen General de la S.S. tendrá una duración máxima inicial de:",
+            options: [ "Seis meses", "365 días", "Quince meses", "Diez meses" ],
+            correctAnswerIndex: 1
+        },
+        {
+            questionText: "La potestad originaria para establecer los tributos corresponde exclusivamente:",
+            options: [ "A las Cortes Generales, mediante ley orgánica", "Al Gobierno, mediante ley", "Al Estado, mediante ley", "Al Gobierno, mediante reglamentos" ],
+            correctAnswerIndex: 2
+        },
+        {
+            questionText: "El Proyecto de Ley de Presupuestos Generales de la Comunidad y la documentación anexa, ¿será objeto de publicación?:",
+            options: [ "No hay previsión legal al respecto", "Sí, en el BOCM", "Sí, en sede electrónica", "Sí, en los tablones de anuncio de la Consejería de Hacienda, para información pública" ],
+            correctAnswerIndex: 1
+        },
+        {
+            questionText: "La ley estatal para la igualdad efectiva de mujeres y hombres es:",
+            options: [ "La Ley 4/2006", "La Ley Orgánica 3/2009", "La Ley Orgánica 3/2007", "El Real Decreto-Ley 7/2003" ],
+            correctAnswerIndex: 2
+        },
+        {
+            questionText: "¿Quién está legitimado en los litigios sobre acoso sexual y acoso por razón de sexo?:",
+            options: [ "La persona acosada únicamente", "La persona acosada y el Ministerio Fiscal", "La persona acosada y sus familiares directos", "La persona acosada y su representante" ],
+            correctAnswerIndex: 0
+        },
+        {
+            questionText: "La información administrativa y atención al ciudadano en la Comunidad de Madrid es materia:",
+            options: [ "De la Ley 22/2001", "Del Decreto 21/2002", "Del Decreto 12/2002", "Del Decreto 21/2006" ],
+            correctAnswerIndex: 1
+        },
+        {
+            questionText: "La Comisión para la Coordinación de la Atención al Ciudadano de la Comunidad de Madrid se reunirá, como mínimo:",
+            options: [ "Una vez al año", "Dos veces al año", "Tres veces al año", "Cuatro veces al año" ],
+            correctAnswerIndex: 1
+        },
+        {
+            questionText: "Las funciones primordiales que cumplen los documentos administrativos son:",
+            options: [ "Función de constancia y de comunicación", "Función de eficacia y de comunicación", "Función de resolución y de comunicación", "Función de constancia y de resolución" ],
+            correctAnswerIndex: 0
+        },
+        {
+            questionText: "Los documentos que los interesados dirijan a los órganos de las Administraciones Públicas podrán presentarse:",
+            options: [ "En las oficinas de Correos, en la forma que legalmente se establezca", "En las oficinas de Correos, en la forma que reglamentariamente se establezca", "En las oficinas de Correos, en la forma que disponga el proveedor del servicio postal universal", "En las oficinas de Correos, en la forma que disponga cada Administración respecto de los documentos que se dirijan a la misma" ],
+            correctAnswerIndex: 1
         }
     ]
 };
     
-
     

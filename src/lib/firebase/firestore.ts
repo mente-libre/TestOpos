@@ -1,3 +1,4 @@
+
 'use server';
 
 import { db } from './config';
@@ -13,7 +14,7 @@ import {
   getCountFromServer,
   FirestoreError,
 } from 'firebase/firestore';
-import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest3 } from '../seed-data';
+import { madridAdminTest, estadoConstitutionTest, madridAdminTest2 } from '../seed-data';
 
 
 // Main type for an exam document
@@ -59,7 +60,7 @@ export const ensureSeedData = async () => {
     try {
         console.log('Seeding database with initial exams...');
         const examsRef = collection(db, 'exams');
-        const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest3];
+        const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2];
 
         for (const seedExam of seedExams) {
             await addDoc(examsRef, {
@@ -126,9 +127,12 @@ export const getAllExamsGroupedByCategory = async (): Promise<{ success: boolean
         return { success: true, categories };
 
     } catch (error) {
-        // If ANY error occurs (including NOT_FOUND), assume seeding is needed.
-        console.error('Error getting all exams, attempting to seed database:', error);
-        return await ensureSeedData();
+        if ((error as FirestoreError).code === 'not-found') {
+            console.log('Exams collection not found, seeding database...');
+            return await ensureSeedData();
+        }
+        console.error("Error getting exam categories:", error);
+        return { success: false, error: (error as FirestoreError).message };
     }
 }
 
