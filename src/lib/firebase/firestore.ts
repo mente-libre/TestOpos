@@ -247,7 +247,6 @@ export const saveTestResult = async (resultData: Omit<TestResult, 'id' | 'create
   // In a real production app, you'd get the user from the session/token.
   // For this context, we will have to assume there is a current user if this is called.
   // As we cannot get the user on the server easily without more setup, we will use a placeholder.
-  // A more robust solution would involve passing the user's token and verifying it.
   const userId = 'currentUser'; // Placeholder for the current user's ID
 
   if (!userId) {
