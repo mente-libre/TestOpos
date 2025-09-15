@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { db } from './config';
@@ -12,7 +13,7 @@ import {
   doc,
   getDoc,
   limit,
-  FirestoreError,
+  writeBatch,
 } from 'firebase/firestore';
 import { madridAdminTest, estadoConstitutionTest, madridAdminTest2 } from '../seed-data';
 
@@ -69,13 +70,19 @@ export const ensureSeedData = async () => {
         console.log('Database is empty. Seeding initial exams...');
         const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2];
         
-        for (const seedExam of seedExams) {
-            await addDoc(examsRef, {
-                ...seedExam,
+        // Use a batch write for efficiency
+        const batch = writeBatch(db);
+        
+        seedExams.forEach(seedExam => {
+            const newExamRef = doc(examsRef); // Create a new document reference with a unique ID
+            batch.set(newExamRef, {
+                 ...seedExam,
                 userId: 'system', // Mark as a system-generated exam
                 createdAt: Timestamp.now(),
             });
-        }
+        });
+        
+        await batch.commit();
         
         console.log(`Seeding complete. Added ${seedExams.length} new exams.`);
 
