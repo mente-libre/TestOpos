@@ -30,22 +30,21 @@ export default function Home() {
   
   const router = useRouter();
 
-  const fetchInitialData = async () => {
-    setIsLoading(true);
-    const result = await loadInitialData();
-    if (result.success && result.categories) {
-      setCategories(result.categories);
-    } else {
-      setCategories([]);
-      // Do not show an error to the user, just log it.
-      console.error("Failed to fetch initial data:", result.error);
-    }
-    setIsLoading(false);
-  };
-  
-
   // Effect for handling auth and data loading
   useEffect(() => {
+    const fetchInitialData = async () => {
+      setIsLoading(true);
+      const result = await loadInitialData();
+      if (result.success && result.categories) {
+        setCategories(result.categories);
+      } else {
+        setCategories([]);
+        // Do not show an error to the user, just log it.
+        console.error("Failed to fetch initial data:", result.error);
+      }
+      setIsLoading(false);
+    };
+
     const unsubscribe = onAuthStateChange(async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
         const appUser: AppUser = {
@@ -54,11 +53,13 @@ export default function Home() {
           email: firebaseUser.email,
         };
         setUser(appUser);
+        // Load data only after a user is confirmed
+        await fetchInitialData();
       } else {
         setUser(null);
+        // If no user, also attempt to load data (for public view)
+        await fetchInitialData();
       }
-      // Load data after auth state is determined
-      await fetchInitialData();
     });
     
     return () => unsubscribe();

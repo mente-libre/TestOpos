@@ -38,11 +38,6 @@ export async function generateNewTest(category: string) {
      // This is a placeholder as we cannot call client-side firestore from a server action directly
      // For a real app, we would pass the context from the client to this action.
      // For now, we simulate fetching some questions.
-    const { getExamsForCategory: getExamsFromClient } = await import('@/lib/firebase/firestore');
-    // NOTE: This call will fail if not initiated from a client component context.
-    // The architecture should be: client fetches context -> client calls server action with context.
-    // Let's create a dummy context for now as we can't call getExamsFromClient here.
-
     const contextQuestions = "Pregunta de ejemplo: ¿Cuál es la capital de España?\nRespuesta Correcta: Madrid";
       
     // 3. Call the AI flow to generate new questions
