@@ -157,7 +157,7 @@ export default function Home() {
             </p>
              <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <Link href="#exams-section" passHref>
-                    <Button size="lg" onClick={() => document.getElementById('exams-section')?.scrollIntoView({ behavior: 'smooth' })}>
+                    <Button size="lg">
                       Ver Exámenes
                     </Button>
                 </Link>
