@@ -32,16 +32,16 @@ export default function TestPage() {
   const examId = searchParams.get('examId');
 
   const finishTest = useCallback(() => {
+    // This guard is crucial. If questions aren't loaded, we can't finish the test.
     if (!questions) {
-      // If questions are not loaded, do nothing to prevent errors.
-      // This can happen in a race condition.
       return;
-    };
+    }
     
     setIsFinished(true);
     setIsReviewMode(false); // Make sure we show the results summary first
 
     setAnswers(prevAnswers => {
+      // Use the questions from the state, which are guaranteed to be loaded here.
       return questions.map((q, index) => {
         const userAnswer = prevAnswers[index];
         if (!userAnswer || userAnswer.selectedIndex === null) {
@@ -54,7 +54,7 @@ export default function TestPage() {
         };
       });
     });
-  }, [questions]);
+  }, [questions]); // <-- CRITICAL FIX: Add `questions` as a dependency
 
   useEffect(() => {
     const fetchExam = async () => {
