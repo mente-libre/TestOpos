@@ -1064,4 +1064,18 @@ const rawAdvoGeneralTest = {
             "respuesta_correcta": "a"
         }
     ]
-}
+};
+
+export const advoGeneralTest: SeedExam = {
+    fileName: rawAdvoGeneralTest.fileName,
+    category: rawAdvoGeneralTest.category,
+    questions: rawAdvoGeneralTest.questions.map(q => {
+        return {
+            questionText: q.enunciado,
+            options: Object.values(q.opciones),
+            correctAnswerIndex: optionMap[q.respuesta_correcta],
+        };
+    })
+};
+
+    
