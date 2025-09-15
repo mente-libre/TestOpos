@@ -11,6 +11,7 @@ import {
   writeBatch,
 } from 'firebase/firestore';
 import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '../seed-data';
+import { advoGeneralTest } from '../seed-data-new';
 
 
 /**
@@ -27,7 +28,7 @@ export const ensureSeedData = async (): Promise<void> => {
 
         if (seedCheckSnapshot.empty) {
             console.log('Seed data not found. Seeding initial exams...');
-            const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006];
+            const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest];
             const batch = writeBatch(db);
 
             seedExams.forEach(seedExam => {
@@ -41,6 +42,23 @@ export const ensureSeedData = async (): Promise<void> => {
 
             await batch.commit();
             console.log(`Seeding complete. Added ${seedExams.length} new exams.`);
+        } else {
+             // Check if the NEW exam exists
+            const newExamCheckQuery = query(examsRef, where("fileName", "==", advoGeneralTest.fileName), limit(1));
+            const newExamCheckSnapshot = await getDocs(newExamCheckQuery);
+
+            if (newExamCheckSnapshot.empty) {
+                console.log('Adding new ADVO General exam...');
+                const batch = writeBatch(db);
+                const newExamRef = doc(examsRef);
+                batch.set(newExamRef, {
+                    ...advoGeneralTest,
+                    userId: 'system',
+                    createdAt: Timestamp.now(),
+                });
+                await batch.commit();
+                console.log('New ADVO General exam added.');
+            }
         }
     } catch (error) {
         console.error('Error in ensureSeedData:', error);
