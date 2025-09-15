@@ -99,34 +99,30 @@ export const ensureSeedData = async () => {
 
 /**
  * Retrieves all exams and groups them by category.
- * This version is optimized to perform count queries in parallel to avoid timeouts.
+ * This version fetches all exams and processes them in memory to avoid complex queries that need indexes.
  * @returns An object with the list of summarized categories or an error.
  */
 export const getAllExamsGroupedByCategory = async (): Promise<{ success: boolean; categories?: Category[]; error?: string; }> => {
     try {
         const examsRef = collection(db, 'exams');
+        const querySnapshot = await getDocs(examsRef);
+
+        const categoryCounts: Record<string, number> = {};
+
+        querySnapshot.forEach(doc => {
+            const exam = doc.data();
+            if (exam.category) {
+                categoryCounts[exam.category] = (categoryCounts[exam.category] || 0) + 1;
+            }
+        });
         
-        // Create an array of promises for all the count queries
-        const countPromises = CATEGORY_DEFINITIONS.map(def => {
-            const q = query(examsRef, where('category', '==', def.id));
-            return getCountFromServer(q).then(snapshot => ({
+        const categories = CATEGORY_DEFINITIONS
+            .map(def => ({
                 id: def.id,
                 name: def.name,
-                count: snapshot.data().count,
-            }));
-        });
-
-        // Execute all promises in parallel
-        const results = await Promise.all(countPromises);
-
-        // Filter out categories with no exams and map to the final structure
-        const categories = results
-            .filter(result => result.count > 0)
-            .map(result => ({
-                id: result.id,
-                name: result.name,
-                examCount: result.count,
-            }));
+                examCount: categoryCounts[def.id] || 0,
+            }))
+            .filter(category => category.examCount > 0);
         
         return { success: true, categories };
 

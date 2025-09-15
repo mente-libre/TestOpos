@@ -3,7 +3,7 @@
 
 import { extractQuestionsFromPdf } from '@/ai/flows/extract-questions-from-pdf';
 import { generateTestFromExam } from '@/ai/flows/generate-test-from-exam-flow';
-import { saveExam, type Exam, getExamsForCategory, ensureSeedData } from '@/lib/firebase/firestore';
+import { saveExam, type Exam, getExamsForCategory } from '@/lib/firebase/firestore';
 
 interface Question {
   questionText: string;
@@ -27,10 +27,6 @@ export async function processAndSaveExam(
       };
     }
     
-    // Ensure seed data exists. This is a good place to do it as it's a user action that implies DB write.
-    // This is non-blocking for the user, but ensures demos are available.
-    await ensureSeedData();
-
     // 1. Extract questions from PDF using AI
     const extractionResult = await extractQuestionsFromPdf({ pdfDataUri });
 
