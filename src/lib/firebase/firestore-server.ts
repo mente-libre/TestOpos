@@ -82,8 +82,7 @@ export const getCategories = async () => {
         id: def.id,
         name: def.name,
         examCount: categoryCounts[def.id] || 0,
-      }))
-      .filter(category => category.examCount > 0);
+      }));
 
     return { success: true, categories };
   } catch (error) {
@@ -92,3 +91,4 @@ export const getCategories = async () => {
     return { success: false, error: errorMessage };
   }
 };
+
