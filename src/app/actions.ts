@@ -113,19 +113,4 @@ export async function generateNewTest(category: string, topic: string) {
     };
   }
 }
-
-/**
- * Server action to ensure seed data is present in the database.
- * This is safe to call multiple times.
- */
-export async function ensureSeedDataAction() {
-  try {
-    await ensureSeedData();
-    return { success: true };
-  } catch (error) {
-    console.error('Error in ensureSeedDataAction:', error);
-    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred while seeding data.';
-    return { success: false, error: errorMessage };
-  }
-}
     

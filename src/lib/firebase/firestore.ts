@@ -99,10 +99,14 @@ export const ensureSeedData = async () => {
 /**
  * Retrieves all exams and groups them by category.
  * This version fetches all exams and processes them in memory to avoid complex queries that need indexes.
+ * It now also ensures seed data exists before fetching.
  * @returns An object with the list of summarized categories or an error.
  */
 export const getAllExamsGroupedByCategory = async (): Promise<{ success: boolean; categories?: Category[]; error?: string; }> => {
     try {
+        // Ensure seed data exists before fetching categories.
+        await ensureSeedData();
+
         const examsRef = collection(db, 'exams');
         const querySnapshot = await getDocs(examsRef);
 
