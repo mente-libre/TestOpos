@@ -51,21 +51,11 @@ export interface TestResult {
   correctCount: number;
   incorrectCount: number;
   unansweredCount: number;
-
   totalQuestions: number;
   createdAt: Timestamp | number;
 }
 
-
-// Constant with category definitions
-export const CATEGORY_DEFINITIONS = [
-    { id: "madrid", name: "Comunidad de Madrid" },
-    { id: "valencia", name: "Comunidad Valenciana" },
-    { id: "andalucia", name: "Andalucía" },
-    { id: "estado", name: "Administración del Estado" },
-    { id: "otros", name: "Otras" },
-];
-
+// Note: CATEGORY_DEFINITIONS has been moved to firestore-server.ts to be centralized.
 
 /**
  * Retrieves all exams for a specific category.
@@ -84,19 +74,19 @@ export const getExamsForCategory = async (categoryId: string) => {
     );
     const querySnapshot = await getDocs(q);
 
+    const categoryDoc = await getDoc(doc(db, 'categories', categoryId));
+    const categoryName = categoryDoc.exists() ? categoryDoc.data().name : 'Categoría desconocida';
+
+
     const exams = querySnapshot.docs.map(doc => {
       const data = doc.data();
-      const createdAt = data.createdAt;
-      // Ensure all data is serializable
+      // Ensure all data is serializable using JSON stringify/parse
       const plainData = JSON.parse(JSON.stringify(data));
       return {
         id: doc.id,
         ...plainData,
-        createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt,
       }
     }) as Exam[];
-
-    const categoryName = CATEGORY_DEFINITIONS.find(c => c.id === categoryId)?.name || 'Categoría desconocida';
 
     return { success: true, exams, categoryName };
 
@@ -127,7 +117,6 @@ export const getExamById = async (examId: string) => {
     }
 
     const data = docSnap.data();
-    const createdAt = data.createdAt;
     
     // Convert the whole object to a plain JSON object to remove any non-serializable types
     const plainData = JSON.parse(JSON.stringify(data));
@@ -135,8 +124,6 @@ export const getExamById = async (examId: string) => {
     const exam = { 
         id: docSnap.id, 
         ...plainData,
-        // Explicitly convert the top-level timestamp
-        createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt
     } as Exam;
     
     return { success: true, exam };

@@ -4,7 +4,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getExamsForCategory, type Exam } from '@/lib/firebase/firestore';
-import { onAuthStateChange, type User } from '@/lib/firebase/auth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, Loader2, Home, ChevronLeft } from 'lucide-react';
@@ -71,7 +70,7 @@ export default function CategoryPage() {
         </div>
         <h1 className="text-3xl font-bold mb-8">Exámenes de: {categoryName}</h1>
         {exams.length > 0 ? (
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {exams.map((exam) => (
                <Link href={`/exam/${exam.id}`} key={exam.id} passHref>
                 <Card className="hover:shadow-lg hover:-translate-y-1 transition-transform cursor-pointer h-full">

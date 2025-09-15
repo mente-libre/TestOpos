@@ -12,12 +12,21 @@ import {
   limit,
   writeBatch,
   orderBy,
+  getCountFromServer,
 } from 'firebase/firestore';
 import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '../seed-data';
 import { advoGeneralTest } from '../seed-data-new';
 import { officeTest } from '../seed-data-office';
-import { CATEGORY_DEFINITIONS, type TestResult } from './firestore';
+import { type TestResult } from './firestore';
 
+// Constant with category definitions, now centralized on the server
+export const CATEGORY_DEFINITIONS = [
+    { id: "madrid", name: "Comunidad de Madrid" },
+    { id: "valencia", name: "Comunidad Valenciana" },
+    { id: "andalucia", name: "Andalucía" },
+    { id: "estado", name: "Administración del Estado" },
+    { id: "otros", name: "Otras" },
+];
 
 /**
  * Ensures that the initial seed data (demo exams) exists in Firestore.
@@ -65,30 +74,29 @@ export const ensureSeedData = async (): Promise<{ hasWritten: boolean }> => {
 
 /**
  * Retrieves a summary of all categories with the count of exams in each.
- * This function is intended to be called from the server.
+ * This function is intended to be called from the server and is highly efficient.
  * @returns An object with the list of categories or an error.
  */
 export const getCategories = async () => {
   try {
     const examsRef = collection(db, 'exams');
-    const querySnapshot = await getDocs(examsRef);
-    const categoryCounts: Record<string, number> = {};
 
-    querySnapshot.forEach(doc => {
-      const exam = doc.data();
-      if (exam.category) {
-        categoryCounts[exam.category] = (categoryCounts[exam.category] || 0) + 1;
-      }
-    });
-
-    const categories = CATEGORY_DEFINITIONS
-      .map(def => ({
+    // Create an array of promises for each category count
+    const countPromises = CATEGORY_DEFINITIONS.map(async (def) => {
+      const q = query(examsRef, where('category', '==', def.id));
+      const snapshot = await getCountFromServer(q);
+      return {
         id: def.id,
         name: def.name,
-        examCount: categoryCounts[def.id] || 0,
-      }));
+        examCount: snapshot.data().count,
+      };
+    });
 
+    // Resolve all promises in parallel
+    const categories = await Promise.all(countPromises);
+    
     return { success: true, categories };
+
   } catch (error) {
     console.error('Error in getCategories:', error);
     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';

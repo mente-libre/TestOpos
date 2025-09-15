@@ -16,7 +16,7 @@ const GenerateTestFromExamInputSchema = z.object({
   category: z.string().describe('The general category of the exam (e.g., "madrid", "estado").'),
   context: z.string().describe('A string containing questions and answers from existing exams to provide context.'),
 });
-export type GenerateTestFromExamInput = z.infer<
+type GenerateTestFromExamInput = z.infer<
   typeof GenerateTestFromExamInputSchema
 >;
 
@@ -41,7 +41,7 @@ const GenerateTestFromExamOutputSchema = z.object({
       'An array of 25 new question objects generated based on the context.'
     ),
 });
-export type GenerateTestFromExamOutput = z.infer<
+type GenerateTestFromExamOutput = z.infer<
   typeof GenerateTestFromExamOutputSchema
 >;
 

@@ -15,7 +15,7 @@ import {z} from 'genkit';
 const GenerateReviewTestInputSchema = z.object({
   context: z.string().describe('A string containing the questions and correct answers that the user previously failed, to provide context for generating new review questions.'),
 });
-export type GenerateReviewTestInput = z.infer<
+type GenerateReviewTestInput = z.infer<
   typeof GenerateReviewTestInputSchema
 >;
 
@@ -40,7 +40,7 @@ const GenerateReviewTestOutputSchema = z.object({
       'An array of 10 new question objects generated based on the topics of the failed questions.'
     ),
 });
-export type GenerateReviewTestOutput = z.infer<
+type GenerateReviewTestOutput = z.infer<
   typeof GenerateReviewTestOutputSchema
 >;
 
