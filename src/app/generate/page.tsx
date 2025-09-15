@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
 import { Logo } from '@/components/ui/logo';
+import { CATEGORY_DEFINITIONS } from '@/lib/firebase/firestore';
 
 interface Question {
   questionText: string;
@@ -19,11 +20,6 @@ interface Question {
   correctAnswerIndex: number;
   explanation?: string;
 }
-
-const CATEGORY_DEFINITIONS = [
-    { id: "madrid", name: "Comunidad de Madrid" },
-    { id: "estado", name: "Administración del Estado" },
-];
 
 export default function GeneratePage() {
   const [isProcessing, setIsProcessing] = useState(false);

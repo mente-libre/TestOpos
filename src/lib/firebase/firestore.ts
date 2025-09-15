@@ -55,7 +55,14 @@ export interface TestResult {
   createdAt: Timestamp | number;
 }
 
-// Note: CATEGORY_DEFINITIONS has been moved to firestore-server.ts to be centralized.
+// Centralized category definitions, safe for client and server use
+export const CATEGORY_DEFINITIONS = [
+    { id: "madrid", name: "Comunidad de Madrid" },
+    { id: "valencia", name: "Comunidad Valenciana" },
+    { id: "andalucia", name: "Andalucía" },
+    { id: "estado", name: "Administración del Estado" },
+    { id: "otros", name: "Otras" },
+];
 
 /**
  * Retrieves all exams for a specific category.
@@ -74,8 +81,7 @@ export const getExamsForCategory = async (categoryId: string) => {
     );
     const querySnapshot = await getDocs(q);
 
-    const categoryDoc = await getDoc(doc(db, 'categories', categoryId));
-    const categoryName = categoryDoc.exists() ? categoryDoc.data().name : 'Categoría desconocida';
+    const categoryName = CATEGORY_DEFINITIONS.find(c => c.id === categoryId)?.name || 'Categoría desconocida';
 
 
     const exams = querySnapshot.docs.map(doc => {

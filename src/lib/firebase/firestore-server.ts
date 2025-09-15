@@ -17,16 +17,7 @@ import {
 import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '../seed-data';
 import { advoGeneralTest } from '../seed-data-new';
 import { officeTest } from '../seed-data-office';
-import { type TestResult } from './firestore';
-
-// Constant with category definitions, now centralized on the server
-export const CATEGORY_DEFINITIONS = [
-    { id: "madrid", name: "Comunidad de Madrid" },
-    { id: "valencia", name: "Comunidad Valenciana" },
-    { id: "andalucia", name: "Andalucía" },
-    { id: "estado", name: "Administración del Estado" },
-    { id: "otros", name: "Otras" },
-];
+import { type TestResult, CATEGORY_DEFINITIONS } from './firestore';
 
 /**
  * Ensures that the initial seed data (demo exams) exists in Firestore.
