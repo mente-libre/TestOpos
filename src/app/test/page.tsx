@@ -21,7 +21,7 @@ type Results = ReturnType<typeof calculateResults>;
 
 function calculateResults(questions: Question[] | null, answers: AnswerState[]) {
   if (!questions) {
-    return { correctCount: 0, incorrectCount: 0, unansweredCount: 0, score: 0 };
+    return null;
   }
   const totalQuestions = questions.length;
 
@@ -96,19 +96,20 @@ export default function TestPage() {
   }, [examId, router]);
   
   useEffect(() => {
-    if (!isLoading && !isFinished) {
-      const timer = setInterval(() => {
-        setTimeLeft(prevTime => {
-          if (prevTime <= 1) {
-            clearInterval(timer);
-            setIsFinished(true); // Finish test when timer runs out
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
-      return () => clearInterval(timer);
-    }
+    if (isLoading || isFinished) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft(prevTime => {
+        if (prevTime <= 1) {
+          clearInterval(timer);
+          setIsFinished(true); // Finish test when timer runs out
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, [isLoading, isFinished]);
 
 
@@ -223,14 +224,14 @@ export default function TestPage() {
     );
   }
 
-  if (isLoading || !questions) {
+  if (isLoading) {
     return <div className="flex justify-center items-center min-h-screen"><Loader2 className="mr-2 h-8 w-8 animate-spin" /><p>Cargando test...</p></div>;
   }
   
   if (isFinished) {
     if (isReviewMode) {
         // Calculate the status of each answer for review
-        const reviewedAnswers = questions.map((q, index) => {
+        const reviewedAnswers = questions!.map((q, index) => {
             const userAnswer = index < answers.length ? answers[index] : { selectedIndex: null, status: 'unanswered' };
             const isCorrect = userAnswer.selectedIndex === q.correctAnswerIndex;
             return {
@@ -250,7 +251,7 @@ export default function TestPage() {
                     </Button>
                 </div>
                 <div className="space-y-6">
-                  {questions.map((q, qIndex) => (
+                  {questions!.map((q, qIndex) => (
                     <Card key={qIndex}>
                       <CardHeader>
                         <CardTitle className="flex items-start gap-3">
@@ -293,6 +294,10 @@ export default function TestPage() {
     }
     const finalResults = calculateResults(questions, answers);
     return <ResultsView title={title} results={finalResults} />;
+  }
+  
+  if (!questions) {
+     return <div className="flex justify-center items-center min-h-screen"><Loader2 className="mr-2 h-8 w-8 animate-spin" /><p>Cargando test...</p></div>;
   }
 
   const currentQuestion = questions[currentQuestionIndex];
