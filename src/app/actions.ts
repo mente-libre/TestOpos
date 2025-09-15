@@ -107,7 +107,7 @@ export async function generateReviewTest(failedQuestions: Question[]) {
   }
 }
 
-export async function saveFinishedTest(result: Omit<TestResult, 'id' | 'createdAt' | 'userId'>) {
+export async function saveFinishedTest(result: Omit<TestResult, 'id' | 'createdAt'>) {
     try {
         await saveTestResult(result);
         return { success: true };
@@ -128,3 +128,5 @@ export async function loadStatistics() {
         return { success: false, error: "No se pudieron cargar las estadísticas." };
     }
 }
+
+    

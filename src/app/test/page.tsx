@@ -136,13 +136,14 @@ function TestPageContent() {
 
       // Save results to Firestore
       if(results) {
-        const resultToSave: Omit<TestResult, 'id' | 'createdAt' | 'userId'> = {
+        const resultToSave: Omit<TestResult, 'id' | 'createdAt'> = {
             testTitle: title,
             score: results.score,
             correctCount: results.correctCount,
             incorrectCount: results.incorrectCount,
             unansweredCount: results.unansweredCount,
             totalQuestions: questions.length,
+            userId: 'placeholder-user-id' // Add placeholder userId
         };
         saveFinishedTest(resultToSave); // Fire-and-forget, don't block UI
       }
@@ -486,5 +487,7 @@ function formatTime(seconds: number) {
 
     
 
+
+    
 
     
