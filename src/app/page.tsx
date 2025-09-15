@@ -53,24 +53,26 @@ export default function Home() {
   const { toast } = useToast();
   const router = useRouter();
 
+  const fetchCategories = async () => {
+    const result = await getAllExamsGroupedByCategory();
+    if (result.success && result.categories) {
+      setCategories(result.categories);
+    } else {
+      console.error("Failed to fetch categories:", result.error);
+      toast({
+        variant: "destructive",
+        title: "Error de Carga",
+        description: result.error || "No se pudieron cargar las carpetas de exámenes.",
+      });
+    }
+  };
+
   // Effect for handling auth and data loading
   useEffect(() => {
     const loadInitialData = async () => {
       setIsLoading(true);
-      
-      const result = await getAllExamsGroupedByCategory();
-      
-      if (result.success && result.categories) {
-        setCategories(result.categories);
-      } else {
-        console.error("Failed to fetch categories:", result.error);
-        toast({
-          variant: "destructive",
-          title: "Error de Carga",
-          description: result.error || "No se pudieron cargar las carpetas de exámenes.",
-        });
-      }
-
+      await ensureSeedDataAction(); // Ensure seed data exists
+      await fetchCategories(); // Then fetch categories
       setIsLoading(false);
     };
 
@@ -153,11 +155,7 @@ export default function Home() {
             description: `Se ha guardado en "${CATEGORY_DEFINITIONS.find(c=>c.id === selectedCategory)?.name}".`,
         });
         // Recargar las categorías
-        const examsResult = await getAllExamsGroupedByCategory();
-        if (examsResult.success && examsResult.categories) {
-            setCategories(examsResult.categories);
-        }
-
+        await fetchCategories();
       } else {
         // This is the crucial part: handle the error from the server action
         let errorMessage = result.error ?? 'Ha ocurrido un error desconocido durante el procesamiento.';
@@ -408,3 +406,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
