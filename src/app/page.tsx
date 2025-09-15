@@ -75,7 +75,7 @@ export default function Home() {
              <nav className="hidden md:flex items-center space-x-4">
                 <a href="#exams-section" className="text-secondary font-medium hover:text-primary transition-colors">Exámenes</a>
                 <Link href="/generate" className="text-secondary font-medium hover:text-primary transition-colors">Generador IA</Link>
-                <a href="#" className="text-secondary font-medium hover:text-primary transition-colors">Estadísticas</a>
+                <Link href="/stats" className="text-secondary font-medium hover:text-primary transition-colors">Estadísticas</Link>
                 <a href="#" className="text-secondary font-medium hover:text-primary transition-colors">Ayuda</a>
               </nav>
 
@@ -118,7 +118,7 @@ export default function Home() {
                         <nav className="grid gap-4 text-lg font-medium mt-8">
                            <a href="#exams-section" className="flex items-center gap-2 text-secondary hover:text-primary transition-colors">Exámenes</a>
                             <Link href="/generate" className="flex items-center gap-2 text-secondary hover:text-primary transition-colors">Generador IA</Link>
-                            <a href="#" className="flex items-center gap-2 text-secondary hover:text-primary transition-colors">Estadísticas</a>
+                            <Link href="/stats" className="flex items-center gap-2 text-secondary hover:text-primary transition-colors">Estadísticas</Link>
                             <a href="#" className="flex items-center gap-2 text-secondary hover:text-primary transition-colors">Ayuda</a>
                         </nav>
                     </div>

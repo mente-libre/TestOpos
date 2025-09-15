@@ -3,7 +3,7 @@
 
 import { generateTestFromExam } from '@/ai/flows/generate-test-from-exam-flow';
 import { generateReviewTest as generateReviewTestFlow } from '@/ai/flows/generate-review-test-flow';
-import { saveExam, type Exam, getExamsForCategory, ensureSeedData, type Question } from '@/lib/firebase/firestore';
+import { saveExam, type Exam, getExamsForCategory, ensureSeedData, type Question, saveTestResult, getTestResults, type TestResult } from '@/lib/firebase/firestore';
 
 
 export async function loadInitialData() {
@@ -109,4 +109,26 @@ export async function generateReviewTest(failedQuestions: Question[]) {
       error: errorMessage 
     };
   }
+}
+
+export async function saveFinishedTest(result: Omit<TestResult, 'id' | 'createdAt' | 'userId'>) {
+    try {
+        await saveTestResult(result);
+        return { success: true };
+    } catch(error) {
+        console.error("Error saving test results", error);
+        // We don't want to bother the user with this, just log it.
+        // The results page will still work, just this attempt won't be saved.
+        return { success: false, error: "No se pudo guardar el resultado del test." };
+    }
+}
+
+export async function loadStatistics() {
+    try {
+        const results = await getTestResults();
+        return { success: true, stats: results };
+    } catch (error) {
+        console.error("Error loading statistics", error);
+        return { success: false, error: "No se pudieron cargar las estadísticas." };
+    }
 }

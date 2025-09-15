@@ -7,11 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { getExamById, type Question } from '@/lib/firebase/firestore';
-import { Loader2, CheckCircle, XCircle, RefreshCw, Eye, Wand2 } from 'lucide-react';
+import { getExamById, type Question, type TestResult } from '@/lib/firebase/firestore';
+import { Loader2, CheckCircle, XCircle, RefreshCw, Eye, Wand2, Home } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
-import { generateReviewTest } from '@/app/actions';
+import { generateReviewTest, saveFinishedTest } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
+import Link from 'next/link';
 
 type AnswerStatus = 'unanswered' | 'correct' | 'incorrect';
 
@@ -73,36 +74,46 @@ function TestPageContent() {
   useEffect(() => {
     const fetchExam = async () => {
       setIsLoading(true);
+      let loaded = false;
 
       // First, try to load AI-generated test from session storage
-      const sessionQuestions = sessionStorage.getItem('testQuestions');
-      const sessionTitle = sessionStorage.getItem('testTitle');
-      
-      if (sessionQuestions && sessionTitle) {
-        try {
-          const parsedQuestions = JSON.parse(sessionQuestions);
-          setQuestions(parsedQuestions);
-          setTitle(sessionTitle);
-          setAnswers(parsedQuestions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
-          // Clean up session storage after loading
-          sessionStorage.removeItem('testQuestions');
-          sessionStorage.removeItem('testTitle');
-        } catch(e) {
-           console.error("Failed to parse questions from session storage", e);
-           router.push('/');
+      try {
+        const sessionQuestions = sessionStorage.getItem('testQuestions');
+        const sessionTitle = sessionStorage.getItem('testTitle');
+        
+        if (sessionQuestions && sessionTitle) {
+            const parsedQuestions = JSON.parse(sessionQuestions);
+            if (parsedQuestions && parsedQuestions.length > 0) {
+              setQuestions(parsedQuestions);
+              setTitle(sessionTitle);
+              setAnswers(parsedQuestions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
+              // Clean up session storage after loading
+              sessionStorage.removeItem('testQuestions');
+              sessionStorage.removeItem('testTitle');
+              loaded = true;
+            }
         }
-      } else if (examId) { // If no session test, load from Firestore using examId
+      } catch(e) {
+         console.error("Failed to parse questions from session storage", e);
+         // If parsing fails, fall through to loading by ID or redirecting.
+      }
+       
+      // If no session test, load from Firestore using examId
+      if (!loaded && examId) {
         const result = await getExamById(examId);
         if (result.success && result.exam) {
           setQuestions(result.exam.questions);
           setTitle(result.exam.fileName);
           setAnswers(result.exam.questions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
+          loaded = true;
         } else {
           console.error("Failed to load exam:", result.error);
-          router.push('/');
         }
-      } else { // No AI test and no examId
-          console.error("No examId provided and no AI-generated test in session.");
+      } 
+      
+      // No AI test and no examId, or loading failed
+      if (!loaded) {
+          console.error("No valid test found to load.");
           router.push('/');
       }
       
@@ -112,15 +123,30 @@ function TestPageContent() {
     // We only run this on initial component mount
     fetchExam();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [examId]);
   
   const finishTest = useCallback(() => {
+    if (isFinished) return;
+
     if (questions) {
       const results = calculateResults(questions, answers);
       setFinalResults(results);
+
+      // Save results to Firestore
+      if(results) {
+        const resultToSave: Omit<TestResult, 'id' | 'createdAt' | 'userId'> = {
+            testTitle: title,
+            score: results.score,
+            correctCount: results.correctCount,
+            incorrectCount: results.incorrectCount,
+            unansweredCount: results.unansweredCount,
+            totalQuestions: questions.length,
+        };
+        saveFinishedTest(resultToSave); // Fire-and-forget, don't block UI
+      }
     }
     setIsFinished(true);
-  }, [questions, answers]);
+  }, [questions, answers, title, isFinished]);
 
 
   useEffect(() => {
@@ -155,16 +181,9 @@ function TestPageContent() {
   };
 
   const handleRestartTest = () => {
-    if (examId) {
-        router.push(`/test?examId=${examId}`);
-    } else {
-        // This is likely an AI generated test, which can't be easily restarted
-        // without regenerating. For now, go home. A better UX could be to
-        // prompt the user to regenerate.
-        router.push('/');
-    }
-    // A full reload can also work if we want to re-fetch from session storage if available
-    // window.location.reload(); 
+    // A full reload is the most reliable way to restart, especially for AI tests.
+    // It will either re-fetch from Firestore if `examId` is present, or go home if not.
+    window.location.reload(); 
   };
   
   const handleReviewAnswers = () => {
@@ -195,7 +214,6 @@ function TestPageContent() {
             sessionStorage.setItem('testQuestions', JSON.stringify(result.questions));
             sessionStorage.setItem('testTitle', `Test de Repaso IA: ${title}`);
             router.push('/test');
-            // We push to the same page, the useEffect will pick up the new session storage
             // A reload is needed to re-trigger the useEffect in the Suspense boundary
             window.location.reload(); 
         } else {
@@ -330,9 +348,11 @@ function TestPageContent() {
               <div className="max-w-4xl mx-auto">
                  <div className="flex justify-between items-center mb-8">
                     <h1 className="text-2xl font-bold">Revisión de: {title}</h1>
-                    <Button onClick={handleRestartTest}>
-                      <RefreshCw className="mr-2 h-4 w-4" /> Volver a Intentar
-                    </Button>
+                     <Link href="/" passHref>
+                        <Button variant="outline">
+                            <Home className="mr-2 h-4 w-4" /> Volver al inicio
+                        </Button>
+                    </Link>
                 </div>
                 <div className="space-y-6">
                   {questions!.map((q, qIndex) => (

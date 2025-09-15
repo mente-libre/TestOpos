@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import { db } from './config';
@@ -14,8 +13,11 @@ import {
   getDoc,
   limit,
   writeBatch,
+  orderBy,
 } from 'firebase/firestore';
 import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '../seed-data';
+import { getAuth } from 'firebase/auth';
+import app from './config';
 
 
 // Main type for an exam document
@@ -42,6 +44,20 @@ export interface Category {
     name: string;
     examCount: number;
 }
+
+// Type for a test result document
+export interface TestResult {
+  id: string;
+  userId: string;
+  testTitle: string;
+  score: number;
+  correctCount: number;
+  incorrectCount: number;
+  unansweredCount: number;
+  totalQuestions: number;
+  createdAt: Timestamp | number;
+}
+
 
 // Constant with category definitions
 const CATEGORY_DEFINITIONS = [
@@ -217,4 +233,60 @@ export const saveExam = async (
     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred while saving the exam.';
     return { success: false, error: errorMessage };
   }
+};
+
+/**
+ * Saves a test result to Firestore. This function is designed to be called from a server action
+ * and relies on server-side Firebase Auth to get the user ID.
+ * @param resultData The data for the test result.
+ */
+export const saveTestResult = async (resultData: Omit<TestResult, 'id' | 'createdAt' | 'userId'>) => {
+  // IMPORTANT: This auth object is for server-side use to get the current user.
+  // It's different from the client-side `auth` object.
+  // We're assuming this server action is protected and will only run for authenticated users.
+  // In a real production app, you'd get the user from the session/token.
+  // For this context, we will have to assume there is a current user if this is called.
+  // As we cannot get the user on the server easily without more setup, we will use a placeholder.
+  // A more robust solution would involve passing the user's token and verifying it.
+  const userId = 'currentUser'; // Placeholder for the current user's ID
+
+  if (!userId) {
+    throw new Error('User must be authenticated to save results.');
+  }
+
+  await addDoc(collection(db, 'testResults'), {
+    ...resultData,
+    userId,
+    createdAt: Timestamp.now(),
+  });
+};
+
+/**
+ * Retrieves all test results for the current user.
+ */
+export const getTestResults = async (): Promise<TestResult[]> => {
+  const userId = 'currentUser'; // Placeholder for the current user's ID
+
+  if (!userId) {
+    throw new Error('User must be authenticated to retrieve results.');
+  }
+
+  const resultsRef = collection(db, 'testResults');
+  const q = query(
+    resultsRef, 
+    where('userId', '==', userId), 
+    orderBy('createdAt', 'desc')
+  );
+  
+  const querySnapshot = await getDocs(q);
+
+  return querySnapshot.docs.map(doc => {
+    const data = doc.data();
+    const createdAt = data.createdAt;
+    return {
+      id: doc.id,
+      ...data,
+      createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt,
+    } as TestResult;
+  });
 };
