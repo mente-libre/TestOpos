@@ -11,6 +11,18 @@ interface Question {
   correctAnswerIndex: number;
 }
 
+
+export async function loadInitialData() {
+  try {
+    const result = await ensureSeedData();
+    return result;
+  } catch (error) {
+    console.error('Error loading initial data:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error inesperado en el servidor al cargar los datos.';
+    return { success: false, error: errorMessage };
+  }
+}
+
 export async function processAndSaveExam(
   pdfDataUri: string,
   fileName: string,
@@ -113,4 +125,5 @@ export async function generateNewTest(category: string, topic: string) {
     };
   }
 }
+
     

@@ -53,59 +53,34 @@ const CATEGORY_DEFINITIONS = [
 ];
 
 /**
- * Ensures that the initial seed data (demo exams) exists in Firestore.
+ * Ensures that the initial seed data (demo exams) exists in Firestore and returns all categories.
  * It checks if there are any exams, and if not, adds the seed data.
- * @returns An object indicating success.
+ * @returns An object indicating success and the list of categories.
  */
-export const ensureSeedData = async () => {
+export const ensureSeedData = async (): Promise<{ success: boolean; categories?: Category[]; error?: string; }> => {
     try {
         const examsRef = collection(db, 'exams');
         
-        // Use a simple query with a limit to check for existence, which doesn't require a composite index.
+        // 1. Check if seeding is needed
         const initialCheck = await getDocs(query(examsRef, limit(1)));
-        if (!initialCheck.empty) {
-             return { success: true, message: 'Seeding skipped, data exists.' };
-        }
-        
-        console.log('Database is empty. Seeding initial exams...');
-        const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006];
-        
-        // Use a batch write for efficiency
-        const batch = writeBatch(db);
-        
-        seedExams.forEach(seedExam => {
-            const newExamRef = doc(examsRef); // Create a new document reference with a unique ID
-            batch.set(newExamRef, {
-                 ...seedExam,
-                userId: 'system', // Mark as a system-generated exam
-                createdAt: Timestamp.now(),
+        if (initialCheck.empty) {
+            console.log('Database is empty. Seeding initial exams...');
+            const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006];
+            const batch = writeBatch(db);
+            seedExams.forEach(seedExam => {
+                const newExamRef = doc(examsRef);
+                batch.set(newExamRef, {
+                    ...seedExam,
+                    userId: 'system',
+                    createdAt: Timestamp.now(),
+                });
             });
-        });
-        
-        await batch.commit();
-        
-        console.log(`Seeding complete. Added ${seedExams.length} new exams.`);
+            await batch.commit();
+            console.log(`Seeding complete. Added ${seedExams.length} new exams.`);
+        }
 
-        return { success: true, message: 'Database seeded successfully.' };
-
-    } catch (error) {
-        console.error('Error ensuring seed data:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Failed to seed database.';
-        return { success: false, error: errorMessage };
-    }
-}
-
-
-/**
- * Retrieves all exams and groups them by category.
- * This version fetches all exams and processes them in memory to avoid complex queries that need indexes.
- * @returns An object with the list of summarized categories or an error.
- */
-export const getAllExamsGroupedByCategory = async (): Promise<{ success: boolean; categories?: Category[]; error?: string; }> => {
-    try {
-        const examsRef = collection(db, 'exams');
+        // 2. Fetch and group all exams by category
         const querySnapshot = await getDocs(examsRef);
-
         const categoryCounts: Record<string, number> = {};
 
         querySnapshot.forEach(doc => {
@@ -126,15 +101,8 @@ export const getAllExamsGroupedByCategory = async (): Promise<{ success: boolean
         return { success: true, categories };
 
     } catch (error) {
-        console.error("Error getting exam categories:", error);
-        
-        let errorMessage = error instanceof Error ? error.message : 'An unknown error occurred while fetching categories.';
-        
-        // Provide a more helpful error message if an index is missing.
-        if (errorMessage.includes('NOT_FOUND') || errorMessage.includes('requires an index')) {
-            errorMessage = 'La consulta a la base de datos ha fallado. Esto suele ocurrir porque falta un índice en Firestore. Por favor, revisa los logs del servidor para encontrar un enlace para crear el índice necesario y vuelve a intentarlo.';
-        }
-
+        console.error('Error in ensureSeedData:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Failed to process initial data.';
         return { success: false, error: errorMessage };
     }
 }
@@ -250,3 +218,5 @@ export const saveExam = async (
     return { success: false, error: errorMessage };
   }
 };
+
+    

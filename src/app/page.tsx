@@ -10,8 +10,8 @@ import Link from 'next/link';
 import { onAuthStateChange, signOut } from '@/lib/firebase/auth';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { processAndSaveExam } from '@/app/actions';
-import { getAllExamsGroupedByCategory, type Category } from '@/lib/firebase/firestore';
+import { processAndSaveExam, loadInitialData } from '@/app/actions';
+import { type Category } from '@/lib/firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useRouter } from 'next/navigation';
@@ -53,22 +53,22 @@ export default function Home() {
   const { toast } = useToast();
   const router = useRouter();
 
-  const fetchCategories = async () => {
+  const fetchInitialData = async () => {
     setIsLoading(true);
-    const result = await getAllExamsGroupedByCategory();
+    const result = await loadInitialData();
     if (result.success && result.categories) {
       setCategories(result.categories);
     } else {
       console.error("Failed to fetch categories:", result.error);
-      // Don't show a toast on initial load for a cleaner experience
     }
     setIsLoading(false);
   };
+  
 
   // Effect for handling auth and data loading
   useEffect(() => {
-    // Fetch categories on initial load and whenever the user logs in/out
-    fetchCategories();
+    // Fetch categories and ensure seed data on initial load
+    fetchInitialData();
 
     const unsubscribe = onAuthStateChange(async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
@@ -147,7 +147,7 @@ export default function Home() {
             description: `Se ha guardado en "${CATEGORY_DEFINITIONS.find(c=>c.id === selectedCategory)?.name}".`,
         });
         // Recargar las categorías para mostrar los nuevos datos
-        await fetchCategories();
+        await fetchInitialData();
       } else {
         let errorMessage = result.error ?? 'Ha ocurrido un error desconocido durante el procesamiento.';
          if (errorMessage.includes('quota')) {
@@ -397,6 +397,8 @@ export default function Home() {
     </div>
   );
 }
+
+    
 
     
 
