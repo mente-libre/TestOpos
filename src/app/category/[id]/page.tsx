@@ -20,6 +20,11 @@ export default function CategoryPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!categoryId) {
+        router.push('/');
+        return;
+    }
+    
     const fetchExams = async () => {
       setIsLoading(true);
       const result = await getExamsForCategory(categoryId);
