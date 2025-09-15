@@ -70,8 +70,6 @@ export default function Home() {
 
   // Effect for handling auth and data loading
   useEffect(() => {
-    fetchInitialData();
-
     const unsubscribe = onAuthStateChange(async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
         const appUser: AppUser = {
@@ -83,6 +81,8 @@ export default function Home() {
       } else {
         setUser(null);
       }
+      // Load data after auth state is determined
+      await fetchInitialData();
     });
     
     return () => unsubscribe();
