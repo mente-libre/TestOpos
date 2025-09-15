@@ -3,8 +3,8 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Bot, BarChart3, User, LogOut, Loader2, Folder, Wand2, Menu } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Bot, BarChart3, User, LogOut, Loader2, Folder, Wand2, Menu, Calendar, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { onAuthStateChange, signOut } from '@/lib/firebase/auth';
 import type { User as FirebaseUser } from 'firebase/auth';
@@ -14,6 +14,7 @@ import { type Category } from '@/lib/firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/ui/logo';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Badge } from '@/components/ui/badge';
 
 // A plain object to store user info, safe for React state
 interface AppUser {
@@ -238,6 +239,58 @@ export default function Home() {
             )}
           </div>
         </section>
+
+        <section id="oposiciones-section" className="py-16 md:py-24">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <Calendar className="h-12 w-12 text-primary mx-auto mb-4"/>
+              <h2 className="text-3xl font-bold">Próximas Convocatorias</h2>
+              <p className="text-lg text-muted-foreground mt-2">Ejemplos de las últimas convocatorias publicadas.</p>
+            </div>
+            
+            <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-xl">Auxiliar Administrativo (Estado)</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                        <p className="text-muted-foreground"><strong>Plazas:</strong> 1.150</p>
+                        <p className="text-muted-foreground"><strong>Requisitos:</strong> Título de Graduado en ESO o equivalente.</p>
+                        <Badge variant="secondary">Inscripción Abierta</Badge>
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle className="text-xl">Policía Nacional (Escala Básica)</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                        <p className="text-muted-foreground"><strong>Plazas:</strong> 2.458</p>
+                        <p className="text-muted-foreground"><strong>Requisitos:</strong> Título de Bachiller o equivalente.</p>
+                        <Badge variant="destructive">Cerrada</Badge>
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle className="text-xl">Administrativo (Comunidad de Madrid)</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                        <p className="text-muted-foreground"><strong>Plazas:</strong> 550</p>
+                        <p className="text-muted-foreground"><strong>Requisitos:</strong> Título de Bachiller o Técnico.</p>
+                        <Badge>Próximamente</Badge>
+                    </CardContent>
+                </Card>
+            </div>
+            <div className="text-center mt-12">
+                <a href="https://oposiciones.es/?utm_source=google&utm_medium=cpc&utm_campaign=oposiciones-es_global_es_gsn&MLL=5175&utm_term=oposiciones&gad_source=1&gad_campaignid=16767538026&gbraid=0AAAAACaR6YSB1u3xKeZ5GYZVLzedQ05zT&gclid=Cj0KCQjw8p7GBhCjARIsAEhghZ1DU5zTTkInhijrrtX3d89HdhaqX93OQxPy2RCY_zMryvjnZG4MEbQaAnruEALw_wcB" target="_blank" rel="noopener noreferrer">
+                    <Button size="lg">
+                        Ver todas las convocatorias
+                        <ExternalLink className="ml-2 h-5 w-5"/>
+                    </Button>
+                </a>
+            </div>
+          </div>
+        </section>
+
       </main>
 
       <footer className="bg-dark text-white py-8 text-center mt-auto">
@@ -249,3 +302,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
