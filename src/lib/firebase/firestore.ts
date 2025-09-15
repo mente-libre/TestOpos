@@ -11,6 +11,7 @@ import {
   doc,
   getDoc,
   getCountFromServer,
+  FirestoreError,
 } from 'firebase/firestore';
 import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest3 } from '../seed-data';
 
@@ -85,16 +86,17 @@ export const ensureSeedData = async () => {
 export const getAllExamsGroupedByCategory = async () => {
     try {
         const examsRef = collection(db, 'exams');
+        
+        // This query will fail with NOT_FOUND if the collection doesn't exist.
         const totalExamsSnapshot = await getCountFromServer(examsRef);
         const totalExams = totalExamsSnapshot.data().count;
 
         if (totalExams === 0) {
-            // If there are no exams, seed the database and recall the function
+             // If there are no exams, seed the database and recall the function
             const seedResult = await ensureSeedData();
             if (seedResult.success) {
                 return getAllExamsGroupedByCategory(); // Recursive call after seeding
             } else {
-                // If seeding fails, return an error.
                 return { success: false, error: seedResult.error || "Failed to initialize database." };
             }
         }
@@ -116,6 +118,17 @@ export const getAllExamsGroupedByCategory = async () => {
         return { success: true, categories };
 
     } catch (error) {
+        // Specifically check for the NOT_FOUND error from Firestore
+        if (error instanceof FirestoreError && error.code === 'not-found') {
+            console.log('Exams collection not found. Seeding database...');
+            const seedResult = await ensureSeedData();
+            if (seedResult.success) {
+                return getAllExamsGroupedByCategory(); // Recursive call after seeding
+            } else {
+                return { success: false, error: seedResult.error || "Failed to initialize database." };
+            }
+        }
+
         console.error('Error getting all exams:', error);
         const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
         return { success: false, error: errorMessage };
