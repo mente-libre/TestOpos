@@ -59,10 +59,8 @@ export default function Home() {
     if (result.success && result.categories) {
       setCategories(result.categories);
     } else {
-      // If there's an error fetching, it could be that there are no exams yet.
-      // We'll show an empty state, not an error.
       setCategories([]);
-      console.error("Failed to fetch categories:", result.error);
+      console.error("Failed to fetch initial data:", result.error);
     }
     setIsLoading(false);
   };
@@ -70,7 +68,6 @@ export default function Home() {
 
   // Effect for handling auth and data loading
   useEffect(() => {
-    // Fetch categories and ensure seed data on initial load
     fetchInitialData();
 
     const unsubscribe = onAuthStateChange(async (firebaseUser: FirebaseUser | null) => {
@@ -149,7 +146,7 @@ export default function Home() {
             title: '¡Examen guardado!',
             description: `Se ha guardado en "${CATEGORY_DEFINITIONS.find(c=>c.id === selectedCategory)?.name}".`,
         });
-        // Recargar las categorías para mostrar los nuevos datos
+        // Recargar las categorías para mostrar los nuevos datos, incluyendo los de demostración si es la primera vez.
         await fetchInitialData();
       } else {
         let errorMessage = result.error ?? 'Ha ocurrido un error desconocido durante el procesamiento.';

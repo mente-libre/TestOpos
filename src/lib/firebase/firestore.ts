@@ -53,33 +53,52 @@ const CATEGORY_DEFINITIONS = [
 ];
 
 /**
- * Ensures that the initial seed data (demo exams) exists in Firestore and returns all categories.
+ * Ensures that the initial seed data (demo exams) exists in Firestore.
  * It checks if there are any exams, and if not, adds the seed data.
- * @returns An object indicating success and the list of categories.
+ * This function should be called before any major data write operation like saving or generating an exam.
  */
-export const ensureSeedData = async (): Promise<{ success: boolean; categories?: Category[]; error?: string; }> => {
+export const ensureSeedData = async (): Promise<void> => {
     try {
         const examsRef = collection(db, 'exams');
-        
-        // 1. Check if seeding is needed
         const initialCheck = await getDocs(query(examsRef, limit(1)));
+
         if (initialCheck.empty) {
             console.log('Database is empty. Seeding initial exams...');
             const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006];
             const batch = writeBatch(db);
+
             seedExams.forEach(seedExam => {
                 const newExamRef = doc(examsRef);
                 batch.set(newExamRef, {
                     ...seedExam,
-                    userId: 'system',
+                    userId: 'system', // Indicates a system-generated exam
                     createdAt: Timestamp.now(),
                 });
             });
+
             await batch.commit();
             console.log(`Seeding complete. Added ${seedExams.length} new exams.`);
         }
+    } catch (error) {
+        console.error('Error in ensureSeedData:', error);
+        // We don't throw here to avoid breaking the parent operation
+    }
+}
 
-        // 2. Fetch and group all exams by category
+
+/**
+ * Retrieves all exams grouped by category or all exams for a specific category.
+ * If categoryId is null, it returns a summary of all categories.
+ * If categoryId is provided, it returns all exams within that category.
+ * @param categoryId The ID of the category, or null to get all category summaries.
+ * @returns An object with the list of exams or categories, or an error.
+ */
+export const getExamsForCategory = async (categoryId: string | null) => {
+  try {
+    const examsRef = collection(db, 'exams');
+    
+    // Scenario 1: Get all categories summary
+    if (categoryId === null) {
         const querySnapshot = await getDocs(examsRef);
         const categoryCounts: Record<string, number> = {};
 
@@ -97,30 +116,11 @@ export const ensureSeedData = async (): Promise<{ success: boolean; categories?:
                 examCount: categoryCounts[def.id] || 0,
             }))
             .filter(category => category.examCount > 0);
-        
+            
         return { success: true, categories };
-
-    } catch (error) {
-        console.error('Error in ensureSeedData:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Failed to process initial data.';
-        return { success: false, error: errorMessage };
-    }
-}
-
-
-/**
- * Retrieves all exams belonging to a specific category.
- * This function now fetches all exams in a category, regardless of user.
- * @param categoryId The ID of the category.
- * @returns An object with the list of exams or an error.
- */
-export const getExamsForCategory = async (categoryId: string) => {
-  try {
-    if (!categoryId) {
-      throw new Error('Category ID is required.');
     }
 
-    const examsRef = collection(db, 'exams');
+    // Scenario 2: Get exams for a specific category
     const q = query(
       examsRef,
       where('category', '==', categoryId)
@@ -133,7 +133,6 @@ export const getExamsForCategory = async (categoryId: string) => {
       return {
         id: doc.id,
         ...data,
-        // Convert Timestamp to a plain number (milliseconds)
         createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt,
       }
     }) as Exam[];
@@ -141,12 +140,10 @@ export const getExamsForCategory = async (categoryId: string) => {
     const categoryName = CATEGORY_DEFINITIONS.find(c => c.id === categoryId)?.name || 'Categoría desconocida';
 
     return { success: true, exams, categoryName };
+
   } catch (error) {
-    console.error('Error getting exams for category:', error);
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : 'An unknown error occurred while fetching exams for the category.';
+    console.error('Error in getExamsForCategory:', error);
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
     return { success: false, error: errorMessage };
   }
 };
@@ -218,5 +215,3 @@ export const saveExam = async (
     return { success: false, error: errorMessage };
   }
 };
-
-    

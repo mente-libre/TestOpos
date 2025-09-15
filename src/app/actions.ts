@@ -14,8 +14,9 @@ interface Question {
 
 export async function loadInitialData() {
   try {
-    const result = await ensureSeedData();
-    return result;
+    // This function now ONLY reads data. Seeding happens on user interaction.
+    const result = await getExamsForCategory(null); // Pass null to get all categories
+    return { success: true, categories: result.categories };
   } catch (error) {
     console.error('Error loading initial data:', error);
     const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error inesperado en el servidor al cargar los datos.';
@@ -30,8 +31,6 @@ export async function processAndSaveExam(
   userId: string
 ) {
   try {
-    // Note: In a real app, you'd get the user from the server-side session here
-    // For now, we trust the userId passed from the client.
     if (!userId) {
       return {
         success: false,
@@ -70,7 +69,6 @@ export async function processAndSaveExam(
 
   } catch (error) {
     console.error('Error in processAndSaveExam:', error);
-    // Cast error to get message, but check if it exists
     const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error inesperado en el servidor al procesar el examen.';
     return { 
       success: false, 
