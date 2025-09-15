@@ -276,7 +276,7 @@ export default function Home() {
                     <CardContent className="space-y-2">
                         <p className="text-muted-foreground"><strong>Plazas:</strong> 550</p>
                         <p className="text-muted-foreground"><strong>Requisitos:</strong> Título de Bachiller o Técnico.</p>
-                        <Badge>Próximamente</Badge>
+                        <Badge variant="secondary">Próximamente</Badge>
                     </CardContent>
                 </Card>
             </div>
@@ -302,5 +302,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
