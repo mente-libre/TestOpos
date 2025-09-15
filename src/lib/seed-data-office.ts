@@ -19,7 +19,8 @@ const rawOfficeTest = {
         "opciones": {
           "A": "Ctrl+(",
           "B": "Ctrl+M",
-          "C": "Ctrl+/"
+          "C": "Ctrl+/",
+          "D": " "
         },
         "respuesta_correcta": "A"
       },
@@ -29,7 +30,8 @@ const rawOfficeTest = {
         "opciones": {
           "A": "Insertar",
           "B": "Disposición",
-          "C": "Referencias"
+          "C": "Referencias",
+          "D": " "
         },
         "respuesta_correcta": "C"
       },
@@ -39,7 +41,8 @@ const rawOfficeTest = {
         "opciones": {
           "A": "Seleccionar los párrafos... desactivar 'Control de líneas viudas y huérfanas'.",
           "B": "Seleccionar los párrafos... activar 'Conservar con el siguiente'.",
-          "C": "Seleccionar los párrafos... activar 'Conservar párrafos juntos'."
+          "C": "Seleccionar los párrafos... activar 'Conservar párrafos juntos'.",
+          "D": " "
         },
         "respuesta_correcta": "B"
       },
@@ -49,7 +52,8 @@ const rawOfficeTest = {
         "opciones": {
           "A": "No ocurrirá nada.",
           "B": "Se le aplicará negrita, cursiva y tamaño 18.",
-          "C": "Se le aplicará el tamaño 18."
+          "C": "Se le aplicará el tamaño 18.",
+          "D": " "
         },
         "respuesta_correcta": "C"
       },
@@ -59,7 +63,8 @@ const rawOfficeTest = {
         "opciones": {
           "A": "Mayús+Alt+Inicio",
           "B": "Mayús+Teclas de dirección",
-          "C": "Mayús+Tab"
+          "C": "Mayús+Tab",
+          "D": " "
         },
         "respuesta_correcta": "C"
       },
@@ -69,7 +74,8 @@ const rawOfficeTest = {
         "opciones": {
           "A": "Ctrl+Mayús+L",
           "B": "Ctrl+Alt+F",
-          "C": "Ctrl+F"
+          "C": "Ctrl+F",
+          "D": " "
         },
         "respuesta_correcta": "A"
       },
@@ -79,7 +85,8 @@ const rawOfficeTest = {
         "opciones": {
           "A": "DIA.LAB.INTL",
           "B": "DIAS.LAB",
-          "C": "DIAS.LAB.INTL"
+          "C": "DIAS.LAB.INTL",
+          "D": " "
         },
         "respuesta_correcta": "B"
       },
@@ -89,7 +96,8 @@ const rawOfficeTest = {
         "opciones": {
           "A": "=BUSCARV(A4:F8;B15;5;FALSO)",
           "B": "=BUSCARV(5;B15;A4:F8;FALSO)",
-          "C": "=BUSCARV(B15;A4:F8;5;FALSO)"
+          "C": "=BUSCARV(B15;A4:F8;5;FALSO)",
+          "D": " "
         },
         "respuesta_correcta": "C"
       },
@@ -99,7 +107,8 @@ const rawOfficeTest = {
         "opciones": {
           "A": "Excel lo trata como número y se visualizaría 05",
           "B": "Excel lo trata como texto y se visualizaría 05",
-          "C": "Excel lo trata como texto y se visualizaría 5"
+          "C": "Excel lo trata como texto y se visualizaría 5",
+          "D": " "
         },
         "respuesta_correcta": "B"
       }
