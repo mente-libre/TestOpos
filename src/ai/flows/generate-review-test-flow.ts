@@ -11,7 +11,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { QuestionSchema, GenerateReviewTestInputSchema, type GenerateReviewTestOutput, type GenerateReviewTestInput } from './types';
+import { GenerateReviewTestInputSchema, GenerateReviewTestOutputSchema, type GenerateReviewTestInput, type GenerateReviewTestOutput } from './types';
 
 export async function generateReviewTest(
   input: GenerateReviewTestInput
@@ -22,13 +22,7 @@ export async function generateReviewTest(
 const generateReviewTestPrompt = ai.definePrompt({
   name: 'generateReviewTestPrompt',
   input: {schema: GenerateReviewTestInputSchema},
-  output: {schema: z.object({
-    questions: z
-      .array(QuestionSchema)
-      .describe(
-        'An array of 10 new question objects generated based on the topics of the failed questions.'
-      ),
-  })},
+  output: {schema: GenerateReviewTestOutputSchema},
   prompt: `Eres un tutor experto que ayuda a estudiantes a preparar oposiciones en España. Tu tarea es crear un test de repaso de 10 preguntas para ayudar a un usuario a reforzar los temas que ha fallado.
 
 El usuario ha fallado las siguientes preguntas:
@@ -46,13 +40,7 @@ const generateReviewTestFlow = ai.defineFlow(
   {
     name: 'generateReviewTestFlow',
     inputSchema: GenerateReviewTestInputSchema,
-    outputSchema: z.object({
-        questions: z
-        .array(QuestionSchema)
-        .describe(
-          'An array of 10 new question objects generated based on the topics of the failed questions.'
-        ),
-    }),
+    outputSchema: GenerateReviewTestOutputSchema,
   },
   async input => {
     const {output} = await generateReviewTestPrompt(input);
