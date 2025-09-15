@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState, useCallback, Suspense } from 'react';
@@ -107,8 +108,11 @@ function TestPageContent() {
       
       setIsLoading(false);
     };
+
+    // We only run this on initial component mount
     fetchExam();
-  }, [examId, router]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   
   const finishTest = useCallback(() => {
     if (questions) {
@@ -151,7 +155,16 @@ function TestPageContent() {
   };
 
   const handleRestartTest = () => {
-    window.location.reload(); // Simple way to restart the same test
+    if (examId) {
+        router.push(`/test?examId=${examId}`);
+    } else {
+        // This is likely an AI generated test, which can't be easily restarted
+        // without regenerating. For now, go home. A better UX could be to
+        // prompt the user to regenerate.
+        router.push('/');
+    }
+    // A full reload can also work if we want to re-fetch from session storage if available
+    // window.location.reload(); 
   };
   
   const handleReviewAnswers = () => {
@@ -167,6 +180,15 @@ function TestPageContent() {
         return answer && answer.selectedIndex !== null && answer.selectedIndex !== q.correctAnswerIndex;
     });
 
+    if (failedQuestions.length === 0) {
+        toast({
+            title: "¡Felicidades!",
+            description: "No has fallado ninguna pregunta. No es necesario un test de repaso."
+        });
+        setIsGeneratingReview(false);
+        return;
+    }
+
     try {
         const result = await generateReviewTest(failedQuestions);
         if (result.success && result.questions) {
@@ -174,6 +196,7 @@ function TestPageContent() {
             sessionStorage.setItem('testTitle', `Test de Repaso IA: ${title}`);
             router.push('/test');
             // We push to the same page, the useEffect will pick up the new session storage
+            // A reload is needed to re-trigger the useEffect in the Suspense boundary
             window.location.reload(); 
         } else {
             toast({
@@ -356,8 +379,8 @@ function TestPageContent() {
     return <ResultsView title={title} results={finalResults} />;
   }
   
-  if (!questions) {
-     return <div className="flex justify-center items-center min-h-screen"><Loader2 className="mr-2 h-8 w-8 animate-spin" /><p>Cargando test...</p></div>;
+  if (!questions || questions.length === 0) {
+     return <div className="flex justify-center items-center min-h-screen"><Loader2 className="mr-2 h-8 w-8 animate-spin" /><p>Cargando preguntas...</p></div>;
   }
 
   const currentQuestion = questions[currentQuestionIndex];
@@ -437,3 +460,6 @@ function formatTime(seconds: number) {
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
+
+
+    
