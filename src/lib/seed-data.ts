@@ -1,4 +1,5 @@
 
+
 import type { Question } from './firebase/firestore';
 
 interface SeedExam {
@@ -822,5 +823,343 @@ export const madridAdminTest2: SeedExam = {
         }
     ]
 };
+
+export const madridAdminTest2006: SeedExam = {
+  fileName: "Auxiliar Administrativo de Administración General - Madrid 2006",
+  category: "madrid",
+  questions: [
+    {
+      questionText:
+        "Los Derechos fundamentales y las Libertades Públicas, se recogen en:",
+      options: [
+        "En el Capítulo III, Sección primera del Título I de la Constitución española de 1978.",
+        "En el Capítulo III, Sección segunda del Título II de la Constitución española de 1978.",
+        "En el Capítulo II, Sección primera del Título I de la Constitución española de 1978.",
+        "En el Capítulo II, Sección segunda del Título I de la Constitución española de 1978.",
+      ],
+      correctAnswerIndex: 2,
+    },
+    {
+      questionText:
+        "Señale cuál de las siguientes respuestas es la correcta de acuerdo con lo dispuesto en la Constitución española de 1978:",
+      options: [
+        "Cualquier ciudadano podrá recabar la tutela ante los Tribunales del derecho a la producción y creación literaria, artística, científica y técnica por un procedimiento basado en los principios de preferencia y sumariedad.",
+        "Los miembros de las Fuerzas Armadas podrán recabar la tutela del derecho de petición, en el ejercicio individual y colectivo del mismo, a través del recurso de amparo.",
+        "Cualquier ciudadano podrá recabar la tutela del derecho a la protección de la salud de la misma forma que la prevista en la respuesta A.",
+        "Son correctas las respuestas A y C.",
+      ],
+      correctAnswerIndex: 0,
+    },
+    {
+      questionText:
+        "Señale la respuesta correcta, de conformidad con lo dispuesto en la Constitución española de 1978:",
+      options: [
+        "El mandato de los Senadores termina exclusivamente cuatro años después de su elección.",
+        "Las poblaciones de Ceuta y Melilla elegirán cada una de ellas un Senador.",
+        "La elección al Senado se verificará en cada circunscripción atendiendo a criterios de representación proporcional.",
+        "El Senado es inviolable.",
+      ],
+      correctAnswerIndex: 3,
+    },
+    {
+      questionText:
+        "Cuando se habla de la delegación legislativa en la Constitución española de 1978 ¿cuál de las siguientes afirmaciones es la correcta?",
+      options: [
+        "Las Cortes Generales sólo podrá delegar en el Gobierno la potestad de dictar normas con rango de Ley en materias que no deban ser desarrolladas por una Ley Orgánica.",
+        "La delegación legislativa deberá otorgarse en todo caso mediante una Ley de bases.",
+        "No podrá entenderse concedida de modo implícito o por tiempo indeterminado.",
+        "La delegación legislativa se agota en el momento de la entrada en vigor de la norma correspondiente.",
+      ],
+      correctAnswerIndex: 2,
+    },
+    {
+      questionText:
+        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978.",
+      options: [
+        "La CE reconoce la iniciativa popular para la presentación de proyectos de Ley.",
+        "Para el ejercicio de dicha iniciativa popular se exigirán no menos de 500.000 firmas acreditadas exclusivamente cuando afecte a los derechos fundamentales reconocidos en la Constitución.",
+        "Tendrá que ser una Ley orgánica la que regule las formas de ejercicio y requisitos de la iniciativa popular, no procediendo su ejercicio en, entre otras, materias propias de leyes tributarias.",
+        "Ninguna de las anteriores es correcta.",
+      ],
+      correctAnswerIndex: 2,
+    },
+    {
+      questionText:
+        "Señale la respuesta correcta de acuerdo con lo dispuesto en la Constitución española de 1978:",
+      options: [
+        "Los Poderes del Estado emanan del pueblo español.",
+        "La soberanía nacional reside en las Cortes Generales como representantes que son del pueblo español.",
+        "La forma política del Estado español es la democracia.",
+        "España se constituye en un Estado liberal y democrático de Derecho.",
+      ],
+      correctAnswerIndex: 0,
+    },
+    {
+      questionText:
+        "La dignidad de la persona, los derechos inviolables que le son inherentes, el libre desarrollo de la personalidad, el respeto a la ley y a los derechos de los demás, son de conformidad con lo dispuesto en el artículo 10 de la Constitución española de 1978:",
+      options: [
+        "El fundamento del orden político y de la paz social.",
+        "Los principios ordenadores del ordenamiento jurídico español.",
+        "Los principios que deberán regir la actuación de los poderes públicos.",
+        "Ninguna de las anteriores respuestas es correcta.",
+      ],
+      correctAnswerIndex: 0,
+    },
+    {
+      questionText:
+        "La Constitución española de 1978 reconoce el derecho a expresar y difundir libremente los pensamientos, ideas y opiniones. Señale cuál de las siguientes respuestas es la incorrecta:",
+      options: [
+        "Este derecho se encuadra, de acuerdo con la propia Constitución, dentro de los denominados derechos fundamentales y libertades públicas.",
+        "Su ejercicio no podrá verse restringido mediante ningún tipo de censura previa.",
+        "Al tratarse de un derecho fundamental, su ejercicio no podrá ser sometido a límite alguno.",
+        "El ejercicio de este derecho tiene límites, entre otros el respeto a la intimidad y al honor.",
+      ],
+      correctAnswerIndex: 2,
+    },
+    {
+      questionText:
+        "De conformidad con lo dispuesto en la Constitución española de 1978, ¿qué regulará la Ley Orgánica del Poder Judicial?",
+      options: [
+        "La constitución, funcionamiento y gobierno de los Juzgados y Tribunales.",
+        "El estatuto jurídico de los Jueces y Magistrados de carrera.",
+        "El estatuto jurídico del personal al servicio de la Administración de Justicia.",
+        "Todas las anteriores son correctas.",
+      ],
+      correctAnswerIndex: 3,
+    },
+    {
+      questionText:
+        "Respecto del Ministerio Fiscal, y de acuerdo con lo dispuesto en la Constitución española de 1978, ¿cuál de las siguientes afirmaciones es incorrecta?",
+      options: [
+        "El Ministerio Fiscal ejerce sus funciones por medio de órganos propios conforme a los principios de unidad de actuación y dependencia jerárquica.",
+        "Además de los principios señalados en la respuesta A, también ejercerá sus funciones de conformidad con los principios de legalidad e imparcialidad.",
+        "El Ministerio Fiscal tiene como misión, entre otras, la de velar por la independencia de los Tribunales y procurar ante éstos la satisfacción del interés social.",
+        "El Fiscal General del Estado será nombrado por el Rey, a propuesta del Consejo General del Poder Judicial, oído el Gobierno.",
+      ],
+      correctAnswerIndex: 3,
+    },
+    {
+      questionText:
+        "El Gobierno, de acuerdo con lo dispuesto en la Constitución española de 1978:",
+      options: [
+        "Dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado. Ejerce la función ejecutiva y la potestad reglamentaria de acuerdo con la Constitución y las leyes.",
+        "Dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado. Ejerce la función ejecutiva y la potestad legislativa y reglamentaria de acuerdo con la Constitución y las leyes.",
+        "Dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado exclusivamente.",
+        "Dirige la política exterior, la Administración civil y militar y la defensa del Estado, coordina la política interior junto con las Comunidades Autónomas. Ejerce la función ejecutiva y la potestad reglamentaria de acuerdo con la Constitución y las leyes.",
+      ],
+      correctAnswerIndex: 0,
+    },
+    {
+      questionText:
+        "Señale, de acuerdo con lo dispuesto en la Constitución española de 1978, la respuesta correcta respecto de la Administración:",
+      options: [
+        "Los órganos de la Administración del Estado son creados, regidos y coordinados de acuerdo con lo dispuesto en los correspondientes reglamentos de organización.",
+        "Los Tribunales controlan la potestad reglamentaria y la legalidad de la actuación administrativa, así como el sometimiento de ésta a los fines que la justifican.",
+        "Los Tribunales controlan la potestad reglamentaria y la legalidad de la actuación administrativa, correspondiendo al Poder Legislativo controlar su sometimiento a los fines que la justifican.",
+        "Los particulares, en los términos establecidos por la ley, tendrán derecho a ser indemnizados por toda lesión que sufran en cualquiera de sus bienes y derechos, siempre que la lesión sea consecuencia del funcionamiento de los servicios públicos.",
+      ],
+      correctAnswerIndex: 1,
+    },
+    {
+      questionText:
+        "Respecto de la Administración territorial de la Administración General del Estado, señale la respuesta correcta, de conformidad con la Ley 6/1997, de 14 de abril, de Organización y Funcionamiento de la Administración General del Estado:",
+      options: [
+        "Los Subdelegados del Gobierno en las Provincias tienen rango de Subdirector General.",
+        "Los Delegados del Gobierno en las Comunidades Autónomas tienen rango de Directores Generales.",
+        "Los Delegados del Gobierno en las Comunidades Autónomas y los Subdelegados del Gobierno en las Provincias tienen condición de alto cargo.",
+        "Ninguna de las anteriores respuestas es correcta.",
+      ],
+      correctAnswerIndex: 0,
+    },
+    {
+      questionText:
+        "De las siguientes afirmaciones señale la incorrecta, de acuerdo con lo dispuesto en la Ley 6/1997, de 14 de abril, de Organización y Funcionamiento de la Administración General del Estado:",
+      options: [
+        "Las Delegaciones del Gobierno se adscriben orgánicamente al Ministerio de Administraciones Públicas.",
+        "Las Subdelegaciones del Gobierno en las Provincias se constituyen en órganos de la respectiva delegación del Gobierno.",
+        "Los Delegados del Gobierno dependen de la Presidencia del Gobierno.",
+        "En caso de ausencia, vacante o enfermedad, el Delegado del Gobierno será suplido, temporalmente y en todo caso, por el Subdelegado del Gobierno de la provincia donde aquél tenga su sede.",
+      ],
+      correctAnswerIndex: 3,
+    },
+    {
+      questionText:
+        "De acuerdo con lo dispuesto en la Ley 6/1997, de 14 de abril, de Organización y Funcionamiento de la Administración General del Estado, señale cuál de las siguientes afirmaciones es incorrecta:",
+      options: [
+        "Los Ministros son los jefes superiores del Departamento y superiores jerárquicos directos de los Secretarios de Estado.",
+        "Los Ministros tienen la consideración de alto cargo.",
+        "Corresponde a los Ministros mantener las relaciones con las Comunidades Autónomas y convocar las conferencias sectoriales y los órganos de cooperación en el ámbito de las competencias atribuidas a su Departamento.",
+        "Corresponde a los Ministros celebrar en el ámbito de su competencia todos los contratos y convenios.",
+      ],
+      correctAnswerIndex: 3,
+    },
+    {
+      questionText:
+        "¿Cuál de las siguientes afirmaciones es la correcta de conformidad con lo dispuesto en la Constitución española de 1978?",
+      options: [
+        "Los Estatutos de las distintas Comunidades Autónomas no podrán presentar diferencia alguna de acuerdo con el principio de unidad y solidaridad.",
+        "Los Estatutos de las distintas Comunidades Autónomas podrán presentar diferencias que impliquen privilegios económicos, en virtud de las competencias asumidas en los mismos, pero en ningún caso privilegios sociales.",
+        "Las diferencias entre los Estatutos de las distintas Comunidades Autónomas no podrán implicar, en ningún caso, privilegios económicos o sociales.",
+        "Las diferencias entre los Estatutos de las distintas Comunidades Autónomas no podrán implicar, en ningún caso, privilegios económicos o sociales que no estén reconocidos en la propia Constitución española.",
+      ],
+      correctAnswerIndex: 2,
+    },
+    {
+      questionText:
+        "De acuerdo con lo dispuesto en la Constitución española de 1978, podrán acceder a su autogobierno y constituirse en Comunidades Autónomas:",
+      options: [
+        "Los territorios insulares.",
+        "Las provincias limítrofes con características históricas, culturales y económicas comunes.",
+        "Las provincias con entidad regional histórica.",
+        "Todos los territorios anteriores podrán acceder a su autogobierno y constituirse en Comunidades Autónomas con arreglo a lo previsto en el Título VIII de la Constitución y en los respectivos Estatutos.",
+      ],
+      correctAnswerIndex: 3,
+    },
+    {
+      questionText:
+        "Según la Constitución española de 1978, ¿a quien corresponde la elaboración del proyecto de Estatuto?",
+      options: [
+        "A una asamblea compuesta por los miembros de la Diputación u órgano interinsular de las provincias afectadas a propuesta de los Diputados y Senadores elegidos en ellas siendo elevado a las Cortes Generales para su tramitación como ley.",
+        "A una asamblea compuesta por los miembros de la Diputación u órgano interinsular de las provincias afectadas y por los Diputados y Senadores elegidos en ellas y será elevado a las Cortes Generales para su tramitación como ley.",
+        "A una asamblea compuesta por los miembros de la Diputación u órgano interinsular de las provincias afectadas para su estudio por una comisión formada por los Diputados y Senadores elegidos en ellas y ulterior remisión a las Cortes Generales para su tramitación como ley orgánica.",
+        "A una asamblea compuesta por los miembros de la Diputación u órgano interinsular de las provincias afectadas a propuesta de los Diputados y Senadores elegidos en ellas siendo elevado al Senado, como Cámara de representación territorial, para su tramitación como ley.",
+      ],
+      correctAnswerIndex: 1,
+    },
+    {
+      questionText:
+        "Según lo dispuesto en el artículo 149.3 de la Constitución española de 1978, señale la respuesta correcta:",
+      options: [
+        "Las materias no atribuidas expresamente al Estado por la Constitución corresponderán a las Comunidades Autónomas",
+        "La competencia sobre las materias que no se hayan asumido por los Estatutos de Autonomía corresponderá al Estado, cuyas normas prevalecerán siempre, en caso de conflicto, sobre las de las Comunidades Autónomas.",
+        "El Derecho estatal será, en todo caso, supletorio del Derecho de las Comunidades Autónomas.",
+        "Ninguna de las anteriores respuestas es correcta.",
+      ],
+      correctAnswerIndex: 2,
+    },
+    {
+      questionText:
+        "De acuerdo con lo dispuesto en el artículo 149 de la de la Constitución española de 1978, el Estado tiene competencia exclusiva en:",
+      options: [
+        "Legislación laboral, sin perjuicio de la normativa de desarrollo que será competencia de las Comunidades Autónomas.",
+        "Legislación laboral, sin perjuicio de su ejecución por los órganos de las Comunidades Autónomas.",
+        "Legislación laboral y de su ejecución.",
+        "Legislación laboral, sin perjuicio de la normativa de desarrollo y de su ejecución por los órganos de las Comunidades Autónomas.",
+      ],
+      correctAnswerIndex: 1,
+    },
+    {
+      questionText:
+        "De acuerdo con lo dispuesto en la Constitución española de 1978, la reforma constitucional:",
+      options: [
+        "Podrá ser total o parcial.",
+        "Sólo podrá ser parcial.",
+        "Podrá ser total o parcial, pero en el caso de que se propusiere la revisión total de la Constitución, ésta se llevará a cabo por el procedimiento previsto para la reforma parcial.",
+        "Podrá ser total o parcial, pero en el caso de que se propusiere la revisión total de la Constitución, ésta se llevará a cabo por el procedimiento previsto para la reforma total.",
+      ],
+      correctAnswerIndex: 0,
+    },
+    {
+      questionText:
+        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
+      options: [
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados.",
+        "La reforma de la Constitución se iniciará por el Senado.",
+        "La reforma de la Constitución se iniciará por el Gobierno.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado o por el Gobierno.",
+      ],
+      correctAnswerIndex: 3,
+    },
+    {
+      questionText:
+        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
+      options: [
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado o por el Gobierno, pero en ningún caso por las Asambleas de las Comunidades Autónomas.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de dos tercios de los miembros de la Asamblea respectiva.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
+      ],
+      correctAnswerIndex: 1,
+    },
+    {
+      questionText:
+        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
+      options: [
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de dos tercios de los miembros de la Asamblea respectiva.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría absoluta de los miembros de la Asamblea respectiva.",
+        "Ninguna de las anteriores respuestas es correcta.",
+      ],
+      correctAnswerIndex: 3,
+    },
+    {
+      questionText:
+        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
+      options: [
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de dos tercios de los miembros de la Asamblea respectiva.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría absoluta de los miembros de la Asamblea respectiva.",
+        "Las Asambleas de las Comunidades Autónomas no podrán iniciar la reforma constitucional.",
+      ],
+      correctAnswerIndex: 3,
+    },
+    {
+      questionText:
+        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
+      options: [
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de dos tercios de los miembros de la Asamblea respectiva.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría absoluta de los miembros de la Asamblea respectiva.",
+        "Las Asambleas de las Comunidades Autónomas no podrán iniciar la reforma constitucional, pero sí podrán proponerla al Gobierno o a las Cortes Generales.",
+      ],
+      correctAnswerIndex: 3,
+    },
+    {
+      questionText:
+        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
+      options: [
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de dos tercios de los miembros de la Asamblea respectiva.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría absoluta de los miembros de la Asamblea respectiva.",
+        "Las Asambleas de las Comunidades Autónomas no podrán iniciar la reforma constitucional, pero sí podrán proponerla al Gobierno o a las Cortes Generales, mediante una proposición de ley aprobada por mayoría de tres quintos de sus miembros.",
+      ],
+      correctAnswerIndex: 3,
+    },
+    {
+      questionText:
+        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
+      options: [
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de dos tercios de los miembros de la Asamblea respectiva.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría absoluta de los miembros de la Asamblea respectiva.",
+        "Las Asambleas de las Comunidades Autónomas no podrán iniciar la reforma constitucional, pero sí podrán proponerla al Gobierno o a las Cortes Generales, mediante una proposición de ley aprobada por mayoría de dos tercios de sus miembros.",
+      ],
+      correctAnswerIndex: 3,
+    },
+    {
+      questionText:
+        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
+      options: [
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de dos tercios de los miembros de la Asamblea respectiva.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría absoluta de los miembros de la Asamblea respectiva.",
+        "Las Asambleas de las Comunidades Autónomas no podrán iniciar la reforma constitucional, pero sí podrán proponerla al Gobierno o a las Cortes Generales, mediante una proposición de ley aprobada por mayoría absoluta de sus miembros.",
+      ],
+      correctAnswerIndex: 3,
+    },
+    {
+      questionText:
+        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
+      options: [
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de two tercios de los miembros de la Asamblea respectiva.",
+        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría absoluta de los miembros de la Asamblea respectiva.",
+        "Las Asambleas de las Comunidades Autónomas no podrán iniciar la reforma constitucional, pero sí podrán proponerla al Gobierno o a las Cortes Generales, mediante una proposición de ley aprobada por mayoría simple de sus miembros.",
+      ],
+      correctAnswerIndex: 3,
+    },
+  ],
+};
     
     
+
