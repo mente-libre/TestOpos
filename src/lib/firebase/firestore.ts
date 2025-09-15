@@ -132,7 +132,14 @@ export const getAllExamsGroupedByCategory = async (): Promise<{ success: boolean
 
     } catch (error) {
         console.error("Error getting exam categories:", error);
-        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred while fetching categories.';
+        
+        let errorMessage = error instanceof Error ? error.message : 'An unknown error occurred while fetching categories.';
+        
+        // Provide a more helpful error message if an index is missing.
+        if (errorMessage.includes('NOT_FOUND') || errorMessage.includes('requires an index')) {
+            errorMessage = 'La consulta a la base de datos ha fallado. Esto suele ocurrir porque falta un índice en Firestore. Por favor, revisa los logs del servidor para encontrar un enlace para crear el índice necesario y vuelve a intentarlo.';
+        }
+
         return { success: false, error: errorMessage };
     }
 }
