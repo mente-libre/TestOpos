@@ -58,7 +58,7 @@ export interface TestResult {
 
 
 // Constant with category definitions
-const CATEGORY_DEFINITIONS = [
+export const CATEGORY_DEFINITIONS = [
     { id: "madrid", name: "Comunidad de Madrid" },
     { id: "valencia", name: "Comunidad Valenciana" },
     { id: "andalucia", name: "Andalucía" },
@@ -68,41 +68,16 @@ const CATEGORY_DEFINITIONS = [
 
 
 /**
- * Retrieves all exams grouped by category or all exams for a specific category.
- * If categoryId is null, it returns a summary of all categories.
- * If categoryId is provided, it returns all exams within that category.
- * @param categoryId The ID of the category, or null to get all category summaries.
- * @returns An object with the list of exams or categories, or an error.
+ * Retrieves all exams for a specific category.
+ * This function is intended to be called from the client.
+ * @param categoryId The ID of the category.
+ * @returns An object with the list of exams or an error.
  */
-export const getExamsForCategory = async (categoryId: string | null) => {
+export const getExamsForCategory = async (categoryId: string) => {
   try {
     
     const examsRef = collection(db, 'exams');
     
-    // Scenario 1: Get all categories summary
-    if (categoryId === null) {
-        const querySnapshot = await getDocs(examsRef);
-        const categoryCounts: Record<string, number> = {};
-
-        querySnapshot.forEach(doc => {
-            const exam = doc.data();
-            if (exam.category) {
-                categoryCounts[exam.category] = (categoryCounts[exam.category] || 0) + 1;
-            }
-        });
-        
-        const categories = CATEGORY_DEFINITIONS
-            .map(def => ({
-                id: def.id,
-                name: def.name,
-                examCount: categoryCounts[def.id] || 0,
-            }))
-            .filter(category => category.examCount > 0);
-            
-        return { success: true, categories };
-    }
-
-    // Scenario 2: Get exams for a specific category
     const q = query(
       examsRef,
       where('category', '==', categoryId)
@@ -169,3 +144,54 @@ export const getExamById = async (examId: string) => {
     return { success: false, error: errorMessage };
   }
 };
+
+
+export async function saveExam(exam: Omit<Exam, 'id' | 'createdAt'>): Promise<{ success: boolean; error?: string }> {
+  try {
+    await addDoc(collection(db, 'exams'), {
+      ...exam,
+      createdAt: Timestamp.now(),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving exam:', error);
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, error: errorMessage };
+  }
+}
+
+export async function saveTestResult(result: Omit<TestResult, 'id' | 'createdAt'>): Promise<{ success: boolean; error?: string }> {
+  try {
+    // In a real app, you would associate this with the logged-in user
+    // For now, we'll use a placeholder user ID.
+    const userId = 'placeholder-user-id';
+    
+    await addDoc(collection(db, 'testResults'), {
+      ...result,
+      userId,
+      createdAt: Timestamp.now(),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving test result:', error);
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, error: errorMessage };
+  }
+}
+
+export async function getTestResults(): Promise<TestResult[]> {
+    const userId = 'placeholder-user-id'; // Use the same placeholder
+    const resultsRef = collection(db, 'testResults');
+    const q = query(resultsRef, where('userId', '==', userId), orderBy('createdAt', 'desc'));
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        const createdAt = data.createdAt;
+        return {
+            id: doc.id,
+            ...data,
+            createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt,
+        } as TestResult
+    });
+}
