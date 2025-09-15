@@ -97,8 +97,7 @@ export const ensureSeedData = async () => {
 
 /**
  * Retrieves all exams and groups them by category.
- * If no exams are found or the collection doesn't exist, it seeds the database.
- * This version is optimized to perform count queries instead of fetching all documents.
+ * This version is optimized to perform count queries in parallel to avoid timeouts.
  * @returns An object with the list of summarized categories or an error.
  */
 export const getAllExamsGroupedByCategory = async (): Promise<{ success: boolean; categories?: Category[]; error?: string; }> => {
@@ -106,20 +105,28 @@ export const getAllExamsGroupedByCategory = async (): Promise<{ success: boolean
         await ensureSeedData(); // Ensure data exists before counting
 
         const examsRef = collection(db, 'exams');
-        const categories: Category[] = [];
-
-        for (const def of CATEGORY_DEFINITIONS) {
+        
+        // Create an array of promises for all the count queries
+        const countPromises = CATEGORY_DEFINITIONS.map(def => {
             const q = query(examsRef, where('category', '==', def.id));
-            const snapshot = await getCountFromServer(q);
-            const count = snapshot.data().count;
-            if (count > 0) {
-                categories.push({
-                    id: def.id,
-                    name: def.name,
-                    examCount: count,
-                });
-            }
-        }
+            return getCountFromServer(q).then(snapshot => ({
+                id: def.id,
+                name: def.name,
+                count: snapshot.data().count,
+            }));
+        });
+
+        // Execute all promises in parallel
+        const results = await Promise.all(countPromises);
+
+        // Filter out categories with no exams and map to the final structure
+        const categories = results
+            .filter(result => result.count > 0)
+            .map(result => ({
+                id: result.id,
+                name: result.name,
+                examCount: result.count,
+            }));
         
         return { success: true, categories };
 
@@ -240,3 +247,4 @@ export const saveExam = async (
     return { success: false, error: errorMessage };
   }
 };
+
