@@ -11,6 +11,10 @@ interface Question {
   correctAnswerIndex: number;
 }
 
+export async function ensureSeedDataAction() {
+  return await ensureSeedData();
+}
+
 export async function processAndSaveExam(
   pdfDataUri: string,
   fileName: string,
@@ -26,10 +30,6 @@ export async function processAndSaveExam(
         error: 'Usuario no autenticado.'
       };
     }
-    
-    // Ensure seed data exists. This is a safe place to run it, as it only seeds
-    // if the data is missing and it's triggered by a user action.
-    await ensureSeedData();
     
     // 1. Extract questions from PDF using AI
     const extractionResult = await extractQuestionsFromPdf({ pdfDataUri });
