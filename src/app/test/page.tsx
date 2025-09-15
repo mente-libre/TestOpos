@@ -72,56 +72,58 @@ function TestPageContent() {
   const examId = searchParams.get('examId');
 
   useEffect(() => {
-    const fetchExam = async () => {
-      setIsLoading(true);
-      let loaded = false;
+    const fetchExam = async (id: string) => {
+      const result = await getExamById(id);
+      if (result.success && result.exam) {
+        setQuestions(result.exam.questions);
+        setTitle(result.exam.fileName);
+        setAnswers(result.exam.questions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
+        setIsLoading(false);
+      } else {
+        console.error("Failed to load exam:", result.error);
+        router.push('/');
+      }
+    };
 
-      // First, try to load AI-generated test from session storage
+    const loadTest = () => {
+      setIsLoading(true);
+      let loadedFromSession = false;
+
+      // 1. Try to load from session storage (for AI-generated tests)
       try {
         const sessionQuestions = sessionStorage.getItem('testQuestions');
         const sessionTitle = sessionStorage.getItem('testTitle');
         
         if (sessionQuestions && sessionTitle) {
-            const parsedQuestions = JSON.parse(sessionQuestions);
-            if (parsedQuestions && parsedQuestions.length > 0) {
-              setQuestions(parsedQuestions);
-              setTitle(sessionTitle);
-              setAnswers(parsedQuestions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
-              // Clean up session storage after loading
-              sessionStorage.removeItem('testQuestions');
-              sessionStorage.removeItem('testTitle');
-              loaded = true;
-            }
+          const parsedQuestions = JSON.parse(sessionQuestions);
+          if (parsedQuestions && parsedQuestions.length > 0) {
+            setQuestions(parsedQuestions);
+            setTitle(sessionTitle);
+            setAnswers(parsedQuestions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
+            sessionStorage.removeItem('testQuestions');
+            sessionStorage.removeItem('testTitle');
+            loadedFromSession = true;
+            setIsLoading(false);
+          }
         }
       } catch(e) {
          console.error("Failed to parse questions from session storage", e);
-         // If parsing fails, fall through to loading by ID or redirecting.
       }
-       
-      // If no session test, load from Firestore using examId
-      if (!loaded && examId) {
-        const result = await getExamById(examId);
-        if (result.success && result.exam) {
-          setQuestions(result.exam.questions);
-          setTitle(result.exam.fileName);
-          setAnswers(result.exam.questions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
-          loaded = true;
-        } else {
-          console.error("Failed to load exam:", result.error);
-        }
-      } 
-      
-      // No AI test and no examId, or loading failed
-      if (!loaded) {
-          console.error("No valid test found to load.");
-          router.push('/');
-      }
-      
-      setIsLoading(false);
-    };
 
-    // We only run this on initial component mount
-    fetchExam();
+      // 2. If not from session, and we have an examId, load from Firestore
+      if (!loadedFromSession && examId) {
+        fetchExam(examId);
+      } 
+      // 3. If no session data and no examId, it's an invalid state.
+      else if (!loadedFromSession && !examId) {
+        console.error("no valid test found to load.");
+        router.push('/');
+      }
+    };
+    
+    loadTest();
+  // We depend on examId to re-trigger this if the URL changes.
+  // The initial load is handled once.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [examId]);
   
@@ -480,6 +482,9 @@ function formatTime(seconds: number) {
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
+
+
+    
 
 
     
