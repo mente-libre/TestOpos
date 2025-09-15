@@ -8,17 +8,18 @@ import { saveExam, type Exam, getExamsForCategory, ensureSeedData, type Question
 
 export async function loadInitialData() {
   try {
-    // Attempt to get categories first
-    let initialResult = await getExamsForCategory(null);
+    // Attempt to seed data first. This is idempotent.
+    await ensureSeedData();
 
-    // If no categories exist (which implies no exams), seed the data and refetch
-    if (initialResult.success && initialResult.categories && initialResult.categories.length === 0) {
-      await ensureSeedData();
-      // Refetch after seeding
-      initialResult = await getExamsForCategory(null);
-    }
+    // Fetch categories. Now it should be populated.
+    const initialResult = await getExamsForCategory(null);
     
-    return initialResult;
+    if (initialResult.success) {
+      return initialResult;
+    } else {
+      // If it fails even after seeding, return an error.
+      return { success: false, error: initialResult.error };
+    }
 
   } catch (error) {
     console.error('Error loading initial data:', error);
@@ -29,19 +30,17 @@ export async function loadInitialData() {
 
 export async function generateNewTest(category: string) {
   try {
+     // Ensure seed data exists, just in case.
+     await ensureSeedData();
+     
      // 1. Get existing exams from the selected category to use as context
     const existingExamsResult = await getExamsForCategory(category);
+
     if (!existingExamsResult.success || !existingExamsResult.exams || existingExamsResult.exams.length === 0) {
-      // Before failing, ensure seed data exists, as this might be the first run.
-      await ensureSeedData();
-      const secondAttemptResult = await getExamsForCategory(category);
-      if (!secondAttemptResult.success || !secondAttemptResult.exams || secondAttemptResult.exams.length === 0) {
-        return {
-          success: false,
-          error: 'No hay exámenes en esta categoría para usar como base para la generación. Prueba con otra categoría o espera a que se carguen los datos iniciales.'
-        };
-      }
-      return generateNewTest(category); // Retry with seeded data
+      return {
+        success: false,
+        error: 'No hay exámenes en esta categoría para usar como base para la generación. Prueba con otra categoría o espera a que se carguen los datos iniciales.'
+      };
     }
 
     // 2. Format the existing questions as context for the AI

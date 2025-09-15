@@ -108,9 +108,6 @@ export const ensureSeedData = async (): Promise<void> => {
  */
 export const getExamsForCategory = async (categoryId: string | null) => {
   try {
-    // This call ensures data exists, especially for category summary.
-    await ensureSeedData();
-
     const examsRef = collection(db, 'exams');
     
     // Scenario 1: Get all categories summary
