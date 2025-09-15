@@ -51,6 +51,7 @@ export interface TestResult {
   correctCount: number;
   incorrectCount: number;
   unansweredCount: number;
+
   totalQuestions: number;
   createdAt: Timestamp | number;
 }
@@ -115,7 +116,6 @@ export const getExamsForCategory = async (categoryId: string | null) => {
     
     // Scenario 1: Get all categories summary
     if (categoryId === null) {
-        await ensureSeedData(); // Ensure seed data exists before any read
         const querySnapshot = await getDocs(examsRef);
         const categoryCounts: Record<string, number> = {};
 
@@ -294,5 +294,3 @@ export const getTestResults = async (): Promise<TestResult[]> => {
       return [];
   }
 };
-
-    
