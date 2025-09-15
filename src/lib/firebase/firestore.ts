@@ -95,6 +95,10 @@ export const ensureSeedData = async (): Promise<void> => {
  */
 export const getExamsForCategory = async (categoryId: string | null) => {
   try {
+    // Always ensure seed data exists before any fetch operation.
+    // This is cheap and prevents empty states on first load.
+    await ensureSeedData();
+
     const examsRef = collection(db, 'exams');
     
     // Scenario 1: Get all categories summary
