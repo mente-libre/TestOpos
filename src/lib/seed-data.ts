@@ -825,341 +825,729 @@ export const madridAdminTest2: SeedExam = {
 };
 
 export const madridAdminTest2006: SeedExam = {
-  fileName: "Auxiliar Administrativo de Administración General - Madrid 2006",
-  category: "madrid",
-  questions: [
-    {
-      questionText:
-        "Los Derechos fundamentales y las Libertades Públicas, se recogen en:",
-      options: [
-        "En el Capítulo III, Sección primera del Título I de la Constitución española de 1978.",
-        "En el Capítulo III, Sección segunda del Título II de la Constitución española de 1978.",
-        "En el Capítulo II, Sección primera del Título I de la Constitución española de 1978.",
-        "En el Capítulo II, Sección segunda del Título I de la Constitución española de 1978.",
-      ],
-      correctAnswerIndex: 2,
-    },
-    {
-      questionText:
-        "Señale cuál de las siguientes respuestas es la correcta de acuerdo con lo dispuesto en la Constitución española de 1978:",
-      options: [
-        "Cualquier ciudadano podrá recabar la tutela ante los Tribunales del derecho a la producción y creación literaria, artística, científica y técnica por un procedimiento basado en los principios de preferencia y sumariedad.",
-        "Los miembros de las Fuerzas Armadas podrán recabar la tutela del derecho de petición, en el ejercicio individual y colectivo del mismo, a través del recurso de amparo.",
-        "Cualquier ciudadano podrá recabar la tutela del derecho a la protección de la salud de la misma forma que la prevista en la respuesta A.",
-        "Son correctas las respuestas A y C.",
-      ],
-      correctAnswerIndex: 0,
-    },
-    {
-      questionText:
-        "Señale la respuesta correcta, de conformidad con lo dispuesto en la Constitución española de 1978:",
-      options: [
-        "El mandato de los Senadores termina exclusivamente cuatro años después de su elección.",
-        "Las poblaciones de Ceuta y Melilla elegirán cada una de ellas un Senador.",
-        "La elección al Senado se verificará en cada circunscripción atendiendo a criterios de representación proporcional.",
-        "El Senado es inviolable.",
-      ],
-      correctAnswerIndex: 3,
-    },
-    {
-      questionText:
-        "Cuando se habla de la delegación legislativa en la Constitución española de 1978 ¿cuál de las siguientes afirmaciones es la correcta?",
-      options: [
-        "Las Cortes Generales sólo podrá delegar en el Gobierno la potestad de dictar normas con rango de Ley en materias que no deban ser desarrolladas por una Ley Orgánica.",
-        "La delegación legislativa deberá otorgarse en todo caso mediante una Ley de bases.",
-        "No podrá entenderse concedida de modo implícito o por tiempo indeterminado.",
-        "La delegación legislativa se agota en el momento de la entrada en vigor de la norma correspondiente.",
-      ],
-      correctAnswerIndex: 2,
-    },
-    {
-      questionText:
-        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978.",
-      options: [
-        "La CE reconoce la iniciativa popular para la presentación de proyectos de Ley.",
-        "Para el ejercicio de dicha iniciativa popular se exigirán no menos de 500.000 firmas acreditadas exclusivamente cuando afecte a los derechos fundamentales reconocidos en la Constitución.",
-        "Tendrá que ser una Ley orgánica la que regule las formas de ejercicio y requisitos de la iniciativa popular, no procediendo su ejercicio en, entre otras, materias propias de leyes tributarias.",
-        "Ninguna de las anteriores es correcta.",
-      ],
-      correctAnswerIndex: 2,
-    },
-    {
-      questionText:
-        "Señale la respuesta correcta de acuerdo con lo dispuesto en la Constitución española de 1978:",
-      options: [
-        "Los Poderes del Estado emanan del pueblo español.",
-        "La soberanía nacional reside en las Cortes Generales como representantes que son del pueblo español.",
-        "La forma política del Estado español es la democracia.",
-        "España se constituye en un Estado liberal y democrático de Derecho.",
-      ],
-      correctAnswerIndex: 0,
-    },
-    {
-      questionText:
-        "La dignidad de la persona, los derechos inviolables que le son inherentes, el libre desarrollo de la personalidad, el respeto a la ley y a los derechos de los demás, son de conformidad con lo dispuesto en el artículo 10 de la Constitución española de 1978:",
-      options: [
-        "El fundamento del orden político y de la paz social.",
-        "Los principios ordenadores del ordenamiento jurídico español.",
-        "Los principios que deberán regir la actuación de los poderes públicos.",
-        "Ninguna de las anteriores respuestas es correcta.",
-      ],
-      correctAnswerIndex: 0,
-    },
-    {
-      questionText:
-        "La Constitución española de 1978 reconoce el derecho a expresar y difundir libremente los pensamientos, ideas y opiniones. Señale cuál de las siguientes respuestas es la incorrecta:",
-      options: [
-        "Este derecho se encuadra, de acuerdo con la propia Constitución, dentro de los denominados derechos fundamentales y libertades públicas.",
-        "Su ejercicio no podrá verse restringido mediante ningún tipo de censura previa.",
-        "Al tratarse de un derecho fundamental, su ejercicio no podrá ser sometido a límite alguno.",
-        "El ejercicio de este derecho tiene límites, entre otros el respeto a la intimidad y al honor.",
-      ],
-      correctAnswerIndex: 2,
-    },
-    {
-      questionText:
-        "De conformidad con lo dispuesto en la Constitución española de 1978, ¿qué regulará la Ley Orgánica del Poder Judicial?",
-      options: [
-        "La constitución, funcionamiento y gobierno de los Juzgados y Tribunales.",
-        "El estatuto jurídico de los Jueces y Magistrados de carrera.",
-        "El estatuto jurídico del personal al servicio de la Administración de Justicia.",
-        "Todas las anteriores son correctas.",
-      ],
-      correctAnswerIndex: 3,
-    },
-    {
-      questionText:
-        "Respecto del Ministerio Fiscal, y de acuerdo con lo dispuesto en la Constitución española de 1978, ¿cuál de las siguientes afirmaciones es incorrecta?",
-      options: [
-        "El Ministerio Fiscal ejerce sus funciones por medio de órganos propios conforme a los principios de unidad de actuación y dependencia jerárquica.",
-        "Además de los principios señalados en la respuesta A, también ejercerá sus funciones de conformidad con los principios de legalidad e imparcialidad.",
-        "El Ministerio Fiscal tiene como misión, entre otras, la de velar por la independencia de los Tribunales y procurar ante éstos la satisfacción del interés social.",
-        "El Fiscal General del Estado será nombrado por el Rey, a propuesta del Consejo General del Poder Judicial, oído el Gobierno.",
-      ],
-      correctAnswerIndex: 3,
-    },
-    {
-      questionText:
-        "El Gobierno, de acuerdo con lo dispuesto en la Constitución española de 1978:",
-      options: [
-        "Dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado. Ejerce la función ejecutiva y la potestad reglamentaria de acuerdo con la Constitución y las leyes.",
-        "Dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado. Ejerce la función ejecutiva y la potestad legislativa y reglamentaria de acuerdo con la Constitución y las leyes.",
-        "Dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado exclusivamente.",
-        "Dirige la política exterior, la Administración civil y militar y la defensa del Estado, coordina la política interior junto con las Comunidades Autónomas. Ejerce la función ejecutiva y la potestad reglamentaria de acuerdo con la Constitución y las leyes.",
-      ],
-      correctAnswerIndex: 0,
-    },
-    {
-      questionText:
-        "Señale, de acuerdo con lo dispuesto en la Constitución española de 1978, la respuesta correcta respecto de la Administración:",
-      options: [
-        "Los órganos de la Administración del Estado son creados, regidos y coordinados de acuerdo con lo dispuesto en los correspondientes reglamentos de organización.",
-        "Los Tribunales controlan la potestad reglamentaria y la legalidad de la actuación administrativa, así como el sometimiento de ésta a los fines que la justifican.",
-        "Los Tribunales controlan la potestad reglamentaria y la legalidad de la actuación administrativa, correspondiendo al Poder Legislativo controlar su sometimiento a los fines que la justifican.",
-        "Los particulares, en los términos establecidos por la ley, tendrán derecho a ser indemnizados por toda lesión que sufran en cualquiera de sus bienes y derechos, siempre que la lesión sea consecuencia del funcionamiento de los servicios públicos.",
-      ],
-      correctAnswerIndex: 1,
-    },
-    {
-      questionText:
-        "Respecto de la Administración territorial de la Administración General del Estado, señale la respuesta correcta, de conformidad con la Ley 6/1997, de 14 de abril, de Organización y Funcionamiento de la Administración General del Estado:",
-      options: [
-        "Los Subdelegados del Gobierno en las Provincias tienen rango de Subdirector General.",
-        "Los Delegados del Gobierno en las Comunidades Autónomas tienen rango de Directores Generales.",
-        "Los Delegados del Gobierno en las Comunidades Autónomas y los Subdelegados del Gobierno en las Provincias tienen condición de alto cargo.",
-        "Ninguna de las anteriores respuestas es correcta.",
-      ],
-      correctAnswerIndex: 0,
-    },
-    {
-      questionText:
-        "De las siguientes afirmaciones señale la incorrecta, de acuerdo con lo dispuesto en la Ley 6/1997, de 14 de abril, de Organización y Funcionamiento de la Administración General del Estado:",
-      options: [
-        "Las Delegaciones del Gobierno se adscriben orgánicamente al Ministerio de Administraciones Públicas.",
-        "Las Subdelegaciones del Gobierno en las Provincias se constituyen en órganos de la respectiva delegación del Gobierno.",
-        "Los Delegados del Gobierno dependen de la Presidencia del Gobierno.",
-        "En caso de ausencia, vacante o enfermedad, el Delegado del Gobierno será suplido, temporalmente y en todo caso, por el Subdelegado del Gobierno de la provincia donde aquél tenga su sede.",
-      ],
-      correctAnswerIndex: 3,
-    },
-    {
-      questionText:
-        "De acuerdo con lo dispuesto en la Ley 6/1997, de 14 de abril, de Organización y Funcionamiento de la Administración General del Estado, señale cuál de las siguientes afirmaciones es incorrecta:",
-      options: [
-        "Los Ministros son los jefes superiores del Departamento y superiores jerárquicos directos de los Secretarios de Estado.",
-        "Los Ministros tienen la consideración de alto cargo.",
-        "Corresponde a los Ministros mantener las relaciones con las Comunidades Autónomas y convocar las conferencias sectoriales y los órganos de cooperación en el ámbito de las competencias atribuidas a su Departamento.",
-        "Corresponde a los Ministros celebrar en el ámbito de su competencia todos los contratos y convenios.",
-      ],
-      correctAnswerIndex: 3,
-    },
-    {
-      questionText:
-        "¿Cuál de las siguientes afirmaciones es la correcta de conformidad con lo dispuesto en la Constitución española de 1978?",
-      options: [
-        "Los Estatutos de las distintas Comunidades Autónomas no podrán presentar diferencia alguna de acuerdo con el principio de unidad y solidaridad.",
-        "Los Estatutos de las distintas Comunidades Autónomas podrán presentar diferencias que impliquen privilegios económicos, en virtud de las competencias asumidas en los mismos, pero en ningún caso privilegios sociales.",
-        "Las diferencias entre los Estatutos de las distintas Comunidades Autónomas no podrán implicar, en ningún caso, privilegios económicos o sociales.",
-        "Las diferencias entre los Estatutos de las distintas Comunidades Autónomas no podrán implicar, en ningún caso, privilegios económicos o sociales que no estén reconocidos en la propia Constitución española.",
-      ],
-      correctAnswerIndex: 2,
-    },
-    {
-      questionText:
-        "De acuerdo con lo dispuesto en la Constitución española de 1978, podrán acceder a su autogobierno y constituirse en Comunidades Autónomas:",
-      options: [
-        "Los territorios insulares.",
-        "Las provincias limítrofes con características históricas, culturales y económicas comunes.",
-        "Las provincias con entidad regional histórica.",
-        "Todos los territorios anteriores podrán acceder a su autogobierno y constituirse en Comunidades Autónomas con arreglo a lo previsto en el Título VIII de la Constitución y en los respectivos Estatutos.",
-      ],
-      correctAnswerIndex: 3,
-    },
-    {
-      questionText:
-        "Según la Constitución española de 1978, ¿a quien corresponde la elaboración del proyecto de Estatuto?",
-      options: [
-        "A una asamblea compuesta por los miembros de la Diputación u órgano interinsular de las provincias afectadas a propuesta de los Diputados y Senadores elegidos en ellas siendo elevado a las Cortes Generales para su tramitación como ley.",
-        "A una asamblea compuesta por los miembros de la Diputación u órgano interinsular de las provincias afectadas y por los Diputados y Senadores elegidos en ellas y será elevado a las Cortes Generales para su tramitación como ley.",
-        "A una asamblea compuesta por los miembros de la Diputación u órgano interinsular de las provincias afectadas para su estudio por una comisión formada por los Diputados y Senadores elegidos en ellas y ulterior remisión a las Cortes Generales para su tramitación como ley orgánica.",
-        "A una asamblea compuesta por los miembros de la Diputación u órgano interinsular de las provincias afectadas a propuesta de los Diputados y Senadores elegidos en ellas siendo elevado al Senado, como Cámara de representación territorial, para su tramitación como ley.",
-      ],
-      correctAnswerIndex: 1,
-    },
-    {
-      questionText:
-        "Según lo dispuesto en el artículo 149.3 de la Constitución española de 1978, señale la respuesta correcta:",
-      options: [
-        "Las materias no atribuidas expresamente al Estado por la Constitución corresponderán a las Comunidades Autónomas",
-        "La competencia sobre las materias que no se hayan asumido por los Estatutos de Autonomía corresponderá al Estado, cuyas normas prevalecerán siempre, en caso de conflicto, sobre las de las Comunidades Autónomas.",
-        "El Derecho estatal será, en todo caso, supletorio del Derecho de las Comunidades Autónomas.",
-        "Ninguna de las anteriores respuestas es correcta.",
-      ],
-      correctAnswerIndex: 2,
-    },
-    {
-      questionText:
-        "De acuerdo con lo dispuesto en el artículo 149 de la de la Constitución española de 1978, el Estado tiene competencia exclusiva en:",
-      options: [
-        "Legislación laboral, sin perjuicio de la normativa de desarrollo que será competencia de las Comunidades Autónomas.",
-        "Legislación laboral, sin perjuicio de su ejecución por los órganos de las Comunidades Autónomas.",
-        "Legislación laboral y de su ejecución.",
-        "Legislación laboral, sin perjuicio de la normativa de desarrollo y de su ejecución por los órganos de las Comunidades Autónomas.",
-      ],
-      correctAnswerIndex: 1,
-    },
-    {
-      questionText:
-        "De acuerdo con lo dispuesto en la Constitución española de 1978, la reforma constitucional:",
-      options: [
-        "Podrá ser total o parcial.",
-        "Sólo podrá ser parcial.",
-        "Podrá ser total o parcial, pero en el caso de que se propusiere la revisión total de la Constitución, ésta se llevará a cabo por el procedimiento previsto para la reforma parcial.",
-        "Podrá ser total o parcial, pero en el caso de que se propusiere la revisión total de la Constitución, ésta se llevará a cabo por el procedimiento previsto para la reforma total.",
-      ],
-      correctAnswerIndex: 0,
-    },
-    {
-      questionText:
-        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
-      options: [
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados.",
-        "La reforma de la Constitución se iniciará por el Senado.",
-        "La reforma de la Constitución se iniciará por el Gobierno.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado o por el Gobierno.",
-      ],
-      correctAnswerIndex: 3,
-    },
-    {
-      questionText:
-        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
-      options: [
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado o por el Gobierno, pero en ningún caso por las Asambleas de las Comunidades Autónomas.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de dos tercios de los miembros de la Asamblea respectiva.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
-      ],
-      correctAnswerIndex: 1,
-    },
-    {
-      questionText:
-        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
-      options: [
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de dos tercios de los miembros de la Asamblea respectiva.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría absoluta de los miembros de la Asamblea respectiva.",
-        "Ninguna de las anteriores respuestas es correcta.",
-      ],
-      correctAnswerIndex: 3,
-    },
-    {
-      questionText:
-        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
-      options: [
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de dos tercios de los miembros de la Asamblea respectiva.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría absoluta de los miembros de la Asamblea respectiva.",
-        "Las Asambleas de las Comunidades Autónomas no podrán iniciar la reforma constitucional.",
-      ],
-      correctAnswerIndex: 3,
-    },
-    {
-      questionText:
-        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
-      options: [
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de dos tercios de los miembros de la Asamblea respectiva.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría absoluta de los miembros de la Asamblea respectiva.",
-        "Las Asambleas de las Comunidades Autónomas no podrán iniciar la reforma constitucional, pero sí podrán proponerla al Gobierno o a las Cortes Generales.",
-      ],
-      correctAnswerIndex: 3,
-    },
-    {
-      questionText:
-        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
-      options: [
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de dos tercios de los miembros de la Asamblea respectiva.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría absoluta de los miembros de la Asamblea respectiva.",
-        "Las Asambleas de las Comunidades Autónomas no podrán iniciar la reforma constitucional, pero sí podrán proponerla al Gobierno o a las Cortes Generales, mediante una proposición de ley aprobada por mayoría de tres quintos de sus miembros.",
-      ],
-      correctAnswerIndex: 3,
-    },
-    {
-      questionText:
-        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
-      options: [
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de dos tercios de los miembros de la Asamblea respectiva.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría absoluta de los miembros de la Asamblea respectiva.",
-        "Las Asambleas de las Comunidades Autónomas no podrán iniciar la reforma constitucional, pero sí podrán proponerla al Gobierno o a las Cortes Generales, mediante una proposición de ley aprobada por mayoría de dos tercios de sus miembros.",
-      ],
-      correctAnswerIndex: 3,
-    },
-    {
-      questionText:
-        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
-      options: [
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de dos tercios de los miembros de la Asamblea respectiva.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría absoluta de los miembros de la Asamblea respectiva.",
-        "Las Asambleas de las Comunidades Autónomas no podrán iniciar la reforma constitucional, pero sí podrán proponerla al Gobierno o a las Cortes Generales, mediante una proposición de ley aprobada por mayoría absoluta de sus miembros.",
-      ],
-      correctAnswerIndex: 3,
-    },
-    {
-      questionText:
-        "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978:",
-      options: [
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de tres quintos de los miembros de la Asamblea respectiva.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría de two tercios de los miembros de la Asamblea respectiva.",
-        "La reforma de la Constitución se iniciará por el Congreso de los Diputados, por el Senado, por el Gobierno o por las Asambleas de las Comunidades Autónomas, pero en este último caso, la iniciativa requerirá la aprobación por mayoría absoluta de los miembros de la Asamblea respectiva.",
-        "Las Asambleas de las Comunidades Autónomas no podrán iniciar la reforma constitucional, pero sí podrán proponerla al Gobierno o a las Cortes Generales, mediante una proposición de ley aprobada por mayoría simple de sus miembros.",
-      ],
-      correctAnswerIndex: 3,
-    },
-  ],
-};
+    fileName: "Auxiliar Administrativo de Administración General - Madrid 2006",
+    category: "madrid",
+    questions: [
+      {
+        questionText: "Los Derechos fundamentales y las Libertades Públicas, se recogen en:",
+        options: [
+          "En el Capítulo III, Sección primera del Título I de la Constitución española de 1978.",
+          "En el Capítulo III, Sección segunda del Título II de la Constitución española de 1978.",
+          "En el Capítulo II, Sección primera del Título I de la Constitución española de 1978.",
+          "En el Capítulo II, Sección segunda del Título I de la Constitución española de 1978.",
+        ],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "Señale cuál de las siguientes respuestas es la correcta de acuerdo con lo dispuesto en la Constitución española de 1978:",
+        options: [
+          "Cualquier ciudadano podrá recabar la tutela ante los Tribunales del derecho a la producción y creación literaria, artística, científica y técnica por un procedimiento basado en los principios de preferencia y sumariedad.",
+          "Los miembros de las Fuerzas Armadas podrán recabar la tutela del derecho de petición, en el ejercicio individual y colectivo del mismo, a través del recurso de amparo.",
+          "Cualquier ciudadano podrá recabar la tutela del derecho a la protección de la salud de la misma forma que la prevista en la respuesta A.",
+          "Son correctas las respuestas A y C.",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "Señale la respuesta correcta, de conformidad con lo dispuesto en la Constitución española de 1978:",
+        options: [
+          "El mandato de los Senadores termina exclusivamente cuatro años después de su elección.",
+          "Las poblaciones de Ceuta y Melilla elegirán cada una de ellas un Senador.",
+          "La elección al Senado se verificará en cada circunscripción atendiendo a criterios de representación proporcional.",
+          "El Senado es inviolable.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "Cuando se habla de la delegación legislativa en la Constitución española de 1978 ¿cuál de las siguientes afirmaciones es la correcta?",
+        options: [
+          "Las Cortes Generales sólo podrá delegar en el Gobierno la potestad de dictar normas con rango de Ley en materias que no deban ser desarrolladas por una Ley Orgánica.",
+          "La delegación legislativa deberá otorgarse en todo caso mediante una Ley de bases.",
+          "No podrá entenderse concedida de modo implícito o por tiempo indeterminado.",
+          "La delegación legislativa se agota en el momento de la entrada en vigor de la norma correspondiente.",
+        ],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "Señale la respuesta correcta, de acuerdo con lo dispuesto en la Constitución española de 1978.",
+        options: [
+          "La CE reconoce la iniciativa popular para la presentación de proyectos de Ley.",
+          "Para el ejercicio de dicha iniciativa popular se exigirán no menos de 500.000 firmas acreditadas exclusivamente cuando afecte a los derechos fundamentales reconocidos en la Constitución.",
+          "Tendrá que ser una Ley orgánica la que regule las formas de ejercicio y requisitos de la iniciativa popular, no procediendo su ejercicio en, entre otras, materias propias de leyes tributarias.",
+          "Ninguna de las anteriores es correcta.",
+        ],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "Señale la respuesta correcta de acuerdo con lo dispuesto en la Constitución española de 1978:",
+        options: [
+          "Los Poderes del Estado emanan del pueblo español.",
+          "La soberanía nacional reside en las Cortes Generales como representantes que son del pueblo español.",
+          "La forma política del Estado español es la democracia.",
+          "España se constituye en un Estado liberal y democrático de Derecho.",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "La dignidad de la persona, los derechos inviolables que le son inherentes, el libre desarrollo de la personalidad, el respeto a la ley y a los derechos de los demás, son de conformidad con lo dispuesto en el artículo 10 de la Constitución española de 1978:",
+        options: [
+          "El fundamento del orden político y de la paz social.",
+          "Los principios ordenadores del ordenamiento jurídico español.",
+          "Los principios que deberán regir la actuación de los poderes públicos.",
+          "Ninguna de las anteriores respuestas es correcta.",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "La Constitución española de 1978 reconoce el derecho a expresar y difundir libremente los pensamientos, ideas y opiniones. Señale cuál de las siguientes respuestas es la incorrecta:",
+        options: [
+          "Este derecho se encuadra, de acuerdo con la propia Constitución, dentro de los denominados derechos fundamentales y libertades públicas.",
+          "Su ejercicio no podrá verse restringido mediante ningún tipo de censura previa.",
+          "Al tratarse de un derecho fundamental, su ejercicio no podrá ser sometido a límite alguno.",
+          "El ejercicio de este derecho tiene límites, entre otros el respeto a la intimidad y al honor.",
+        ],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "De conformidad con lo dispuesto en la Constitución española de 1978, ¿qué regulará la Ley Orgánica del Poder Judicial?",
+        options: [
+          "La constitución, funcionamiento y gobierno de los Juzgados y Tribunales.",
+          "El estatuto jurídico de los Jueces y Magistrados de carrera.",
+          "El estatuto jurídico del personal al servicio de la Administración de Justicia.",
+          "Todas las anteriores son correctas.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "Respecto del Ministerio Fiscal, y de acuerdo con lo dispuesto en la Constitución española de 1978, ¿cuál de las siguientes afirmaciones es incorrecta?",
+        options: [
+          "El Ministerio Fiscal ejerce sus funciones por medio de órganos propios conforme a los principios de unidad de actuación y dependencia jerárquica.",
+          "Además de los principios señalados en la respuesta A, también ejercerá sus funciones de conformidad con los principios de legalidad e imparcialidad.",
+          "El Ministerio Fiscal tiene como misión, entre otras, la de velar por la independencia de los Tribunales y procurar ante éstos la satisfacción del interés social.",
+          "El Fiscal General del Estado será nombrado por el Rey, a propuesta del Consejo General del Poder Judicial, oído el Gobierno.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "El Gobierno, de acuerdo con lo dispuesto en la Constitución española de 1978:",
+        options: [
+          "Dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado. Ejerce la función ejecutiva y la potestad reglamentaria de acuerdo con la Constitución y las leyes.",
+          "Dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado. Ejerce la función ejecutiva y la potestad legislativa y reglamentaria de acuerdo con la Constitución y las leyes.",
+          "Dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado exclusivamente.",
+          "Dirige la política exterior, la Administración civil y militar y la defensa del Estado, coordina la política interior junto con las Comunidades Autónomas. Ejerce la función ejecutiva y la potestad reglamentaria de acuerdo con la Constitución y las leyes.",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "Señale, de acuerdo con lo dispuesto en la Constitución española de 1978, la respuesta correcta respecto de la Administración:",
+        options: [
+          "Los órganos de la Administración del Estado son creados, regidos y coordinados de acuerdo con lo dispuesto en los correspondientes reglamentos de organización.",
+          "Los Tribunales controlan la potestad reglamentaria y la legalidad de la actuación administrativa, así como el sometimiento de ésta a los fines que la justifican.",
+          "Los Tribunales controlan la potestad reglamentaria y la legalidad de la actuación administrativa, correspondiendo al Poder Legislativo controlar su sometimiento a los fines que la justifican.",
+          "Los particulares, en los términos establecidos por la ley, tendrán derecho a ser indemnizados por toda lesión que sufran en cualquiera de sus bienes y derechos, siempre que la lesión sea consecuencia del funcionamiento de los servicios públicos.",
+        ],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "Respecto de la Administración territorial de la Administración General del Estado, señale la respuesta correcta, de conformidad con la Ley 6/1997, de 14 de abril, de Organización y Funcionamiento de la Administración General del Estado:",
+        options: [
+          "Los Subdelegados del Gobierno en las Provincias tienen rango de Subdirector General.",
+          "Los Delegados del Gobierno en las Comunidades Autónomas tienen rango de Directores Generales.",
+          "Los Delegados del Gobierno en las Comunidades Autónomas y los Subdelegados del Gobierno en las Provincias tienen condición de alto cargo.",
+          "Ninguna de las anteriores respuestas es correcta.",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "De las siguientes afirmaciones señale la incorrecta, de acuerdo con lo dispuesto en la Ley 6/1997, de 14 de abril, de Organización y Funcionamiento de la Administración General del Estado:",
+        options: [
+          "Las Delegaciones del Gobierno se adscriben orgánicamente al Ministerio de Administraciones Públicas.",
+          "Las Subdelegaciones del Gobierno en las Provincias se constituyen en órganos de la respectiva delegación del Gobierno.",
+          "Los Delegados del Gobierno dependen de la Presidencia del Gobierno.",
+          "En caso de ausencia, vacante o enfermedad, el Delegado del Gobierno será suplido, temporalmente y en todo caso, por el Subdelegado del Gobierno de la provincia donde aquél tenga su sede.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "De acuerdo con lo dispuesto en la Ley 6/1997, de 14 de abril, de Organización y Funcionamiento de la Administración General del Estado, señale cuál de las siguientes afirmaciones es incorrecta:",
+        options: [
+          "Los Ministros son los jefes superiores del Departamento y superiores jerárquicos directos de los Secretarios de Estado.",
+          "Los Ministros tienen la consideración de alto cargo.",
+          "Corresponde a los Ministros mantener las relaciones con las Comunidades Autónomas y convocar las conferencias sectoriales y los órganos de cooperación en el ámbito de las competencias atribuidas a su Departamento.",
+          "Corresponde a los Ministros celebrar en el ámbito de su competencia todos los contratos y convenios.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "¿Cuál de las siguientes afirmaciones es la correcta de conformidad con lo dispuesto en la Constitución española de 1978?",
+        options: [
+          "Los Estatutos de las distintas Comunidades Autónomas no podrán presentar diferencia alguna de acuerdo con el principio de unidad y solidaridad.",
+          "Los Estatutos de las distintas Comunidades Autónomas podrán presentar diferencias que impliquen privilegios económicos, en virtud de las competencias asumidas en los mismos, pero en ningún caso privilegios sociales.",
+          "Las diferencias entre los Estatutos de las distintas Comunidades Autónomas no podrán implicar, en ningún caso, privilegios económicos o sociales.",
+          "Las diferencias entre los Estatutos de las distintas Comunidades Autónomas no podrán implicar, en ningún caso, privilegios económicos o sociales que no estén reconocidos en la propia Constitución española.",
+        ],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "De acuerdo con lo dispuesto en la Constitución española de 1978, podrán acceder a su autogobierno y constituirse en Comunidades Autónomas:",
+        options: [
+          "Los territorios insulares.",
+          "Las provincias limítrofes con características históricas, culturales y económicas comunes.",
+          "Las provincias con entidad regional histórica.",
+          "Todos los territorios anteriores podrán acceder a su autogobierno y constituirse en Comunidades Autónomas con arreglo a lo previsto en el Título VIII de la Constitución y en los respectivos Estatutos.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "Según la Constitución española de 1978, ¿a quien corresponde la elaboración del proyecto de Estatuto?",
+        options: [
+          "A una asamblea compuesta por los miembros de la Diputación u órgano interinsular de las provincias afectadas a propuesta de los Diputados y Senadores elegidos en ellas siendo elevado a las Cortes Generales para su tramitación como ley.",
+          "A una asamblea compuesta por los miembros de la Diputación u órgano interinsular de las provincias afectadas y por los Diputados y Senadores elegidos en ellas y será elevado a las Cortes Generales para su tramitación como ley.",
+          "A una asamblea compuesta por los miembros de la Diputación u órgano interinsular de las provincias afectadas para su estudio por una comisión formada por los Diputados y Senadores elegidos en ellas y ulterior remisión a las Cortes Generales para su tramitación como ley orgánica.",
+          "A una asamblea compuesta por los miembros de la Diputación u órgano interinsular de las provincias afectadas a propuesta de los Diputados y Senadores elegidos en ellas siendo elevado al Senado, como Cámara de representación territorial, para su tramitación como ley.",
+        ],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "Según lo dispuesto en el artículo 149.3 de la Constitución española de 1978, señale la respuesta correcta:",
+        options: [
+          "Las materias no atribuidas expresamente al Estado por la Constitución corresponderán a las Comunidades Autónomas",
+          "La competencia sobre las materias que no se hayan asumido por los Estatutos de Autonomía corresponderá al Estado, cuyas normas prevalecerán siempre, en caso de conflicto, sobre las de las Comunidades Autónomas.",
+          "El Derecho estatal será, en todo caso, supletorio del Derecho de las Comunidades Autónomas.",
+          "Ninguna de las anteriores respuestas es correcta.",
+        ],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "De acuerdo con lo dispuesto en el artículo 149 de la de la Constitución española de 1978, el Estado tiene competencia exclusiva en:",
+        options: [
+          "Legislación laboral, sin perjuicio de la normativa de desarrollo que será competencia de las Comunidades Autónomas.",
+          "Legislación sobre Seguridad Social, sin perjuicio de su ejecución por los órganos de las Comunidades Autónomas.",
+          "Convocatoria de consultas populares por vía de referéndum.",
+          "Regulación de las condiciones de obtención, expedición y homologación de títulos académicos y profesionales y normas básicas para el desarrollo del artículo 27 de la Constitución, a fin de garantizar el cumplimiento de las obligaciones de los poderes públicos en esta materia.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "¿Quién nombra al Presidente de la Comunidad de Madrid, de conformidad con su Estatuto de Autonomía?",
+        options: [
+          "La Asamblea de Madrid.",
+          "El Congreso.",
+          "El Senado.",
+          "El Rey.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "En la Comunidad de Madrid, ¿a quién le corresponde la potestad de establecer y exigir tributos de conformidad con su Estatuto de Autonomía?",
+        options: [
+          "Al Presidente de la Comunidad de Madrid.",
+          "A la Asamblea.",
+          "Al Consejero de Hacienda.",
+          "Al Gobierno de la Comunidad de Madrid.",
+        ],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "Según el Estatuto de Autonomía, es necesario ser diputado de la Asamblea de la Comunidad de Madrid, para:",
+        options: [
+          "Ser Vicepresidente del Gobierno de la Comunidad de Madrid.",
+          "Ser Consejero del Gobierno de la Comunidad de Madrid, pero no para ser Vicepresidente del mismo.",
+          "Ser tanto Vicepresidente como Consejero del Gobierno de la Comunidad de Madrid.",
+          "Ninguna respuesta es correcta.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "Señale el número de Consejerías que existen en la actualidad en la Administración de la Comunidad de Madrid:",
+        options: ["13", "11", "12", "10"],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "En la Comunidad de Madrid, ¿quién tiene mayor nivel orgánico, los Secretarios Generales Técnicos o los Directores Generales?",
+        options: [
+          "Los Secretarios Generales Técnicos.",
+          "Ambos tienen idéntico nivel orgánico.",
+          "Los Directores Generales.",
+          "Dependerá de cómo se haya estructurado la respectiva Consejería.",
+        ],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "¿Cuántos artículos tiene la Ley 30/1992, de 26 de noviembre, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común?",
+        options: ["144.", "145.", "46.", "147."],
+        correctAnswerIndex: -1, // ANULADA
+      },
+      {
+        questionText: "¿Cómo se denomina el Título IV de la Ley 30/1992, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común?",
+        options: [
+          "De la actividad de las Administraciones Públicas.",
+          "De los interesados",
+          "De las disposiciones y actos administrativos.",
+          "De los órganos de las Administraciones Públicas.",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "Según el artículo 35 de la Ley 30/1992, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común, ¿tienen derecho los ciudadanos en sus relaciones con las Administraciones Públicas a no presentar aquellos documentos que ya se encuentren en poder de la Administración actuante?",
+        options: [
+          "En la Comunidad de Madrid dependerá de lo que disponga anualmente la Orden que aprueba el Consejero de Presidencia.",
+          "No, salvo que así lo disponga la norma reguladora del procedimiento concreto.",
+          "Dependerá del órgano instructor del procedimiento, mediante decisión motivada en todo caso.",
+          "Sí, de acuerdo con el citado artículo.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "Las cuestiones incidentales que se suceden en el procedimiento administrativo, de conformidad con la Ley 30/1992, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común ¿suspenden la tramitación del mismo?",
+        options: [
+          "No, en ningún caso.",
+          "No, a excepción de la recusación.",
+          "Sí, en todo caso.",
+          "No, salvo las que se refieran a la nulidad de actuaciones.",
+        ],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "Cuando el plazo se fija en meses o años, éstos se computarán de acuerdo con lo dispuesto en la Ley 30/1992, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común, a partir:",
+        options: [
+          "Del día siguiente a aquel en que tenga lugar la notificación o publicación del acto de que se trate.",
+          "Del mismo día en que tenga lugar la notificación o publicación del acto de que se trate.",
+          "Del día siguiente a aquel en que se produzca la estimación o desestimación por silencio administrativo.",
+          "Las respuestas A y C son correctas.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "Según el artículo 107.2 de la Ley 30/1992, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común, las leyes podrán sustituir el recurso de alzada, en supuestos o ámbitos sectoriales determinados, cuando la especificidad de la materia así lo justifique, ante órganos colegiados o comisiones específicas no sometidas a estructuras jerárquicas, por otros procedimientos de:",
+        options: [
+          "Impugnación, reclamación, conciliación, mediación y arbitraje.",
+          "Resolución, reclamación, conciliación, mediación y arbitraje.",
+          "Impugnación, reclamación, conformidad, mediación y arbitraje.",
+          "Impugnación, reclamación, conciliación, intervención y arbitraje.",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "Interpuesto el recurso de reposición y de acuerdo con la Ley 30/1992, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común ¿puede interponerse un recurso contencioso-administrativo",
+        options: [
+          "No, hasta que no sea resuelto expresamente el recurso de reposición.",
+          "Sí, ya que ambos recursos son simultáneos.",
+          "No hasta que se haya producido la estimación presunta del recurso de reposición interpuesto.",
+          "Sí, y además cabe interponer el recurso de alzada ante el superior jerárquico.",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "¿Qué tipo de recurso administrativo cabe contra la resolución de un recurso de alzada?",
+        options: [
+          "Potestativo de reposición.",
+          "Ninguno.",
+          "El recurso contencioso-administrativo.",
+          "Solo cabe el recurso extraordinario de revisión en los supuestos del 118.1 de la Ley 30/1992, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "¿Suspende la interposición de cualquier recurso la ejecución del acto impugnado, de acuerdo con la Ley 30/1992, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común?",
+        options: [
+          "No, en ningún caso.",
+          "No, excepto en los casos en que una disposición establezca lo contrario.",
+          "No, salvo que se fundamente en alguna de las causas de nulidad de pleno derecho del artículo 63 de la Ley 30/1992, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común.",
+          "Sí, siempre.",
+        ],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "¿Cuál de los siguientes supuestos no es susceptible de recurso contencioso-administrativo, de conformidad con lo dispuesto en la Ley 29/1998, de 13 de julio, de la Jurisdicción Contencioso-Administrativa?",
+        options: [
+          "Las disposiciones de carácter general.",
+          "Los actos que se produzcan en aplicación de las disposiciones de carácter general.",
+          "La inactividad de la administración.",
+          "Los actos administrativos que no pongan fin a la vía administrativa.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "Será requisito necesario para autorizar la compatibilidad de actividades públicas el que la cantidad total percibida por ambos puestos o actividades no supere la remuneración prevista en los Presupuestos Generales del Estado para cargo de Director General, ni supere la correspondiente al principal, estimada en régimen de dedicación ordinaria, incrementada en:",
+        options: [
+          "Un 30 por 100, para los funcionarios del grupo D o personal de nivel equivalente.",
+          "Un 45 por 100, para los funcionarios del grupo D o personal de nivel equivalente.",
+          "Un 35 por 100, para los funcionarios del grupo D o personal de nivel equivalente.",
+          "Un 40 por 100, para los funcionarios del grupo D o personal de nivel equivalente.",
+        ],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "Según lo establecido en el artículo 29 de la Ley 1/1986, de 10 abril de Función Pública de la Comunidad de Madrid, ¿cuál de los siguiente supuestos no supone la pérdida de la condición de funcionario?",
+        options: [
+          "Renuncia verbal del interesado.",
+          "Pérdida de la nacionalidad española.",
+          "Jubilación forzosa.",
+          "Jubilación voluntaria.",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "Señale cuál de los siguientes no es un Cuerpo de Administración Especial en la Comunidad de Madrid:",
+        options: [
+          "Cuerpo Superior de Gestión.",
+          "Cuerpo de Letrados de la Comunidad de Madrid.",
+          "Cuerpo de Inspectores de Hacienda de la Comunidad de Madrid.",
+          "Cuerpo de Técnicos Medioambientales.",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "El funcionario con un hijo/a menor de doce meses tiene derecho a un permiso de una hora diaria de ausencia del trabajo para atenderlo. En el caso de que el padre y la madre presten servicio en la Administración de la Comunidad, ¿quién de los dos podrá ejercitar este derecho?",
+        options: [
+          "Siempre la madre.",
+          "Siempre el padre.",
+          "Sólo uno de ellos.",
+          "Ninguna de las respuestas es correcta.",
+        ],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "Según el Acuerdo Sectorial para el Personal Funcionario de Administración y Servicios al Servicio de la Administración General de la Comunidad de Madrid y sus Organismos Autónomos 2005-2007, si por razones del servicio los días de permiso por asuntos particulares no se hayan disfrutado durante el año en curso, ¿cuándo podrá un funcionario disfrutar de dichos días?",
+        options: [
+          "En el mes de enero del ejercicio siguiente.",
+          "Hasta el mes de abril del ejercicio siguiente.",
+          "Hasta el mes de julio del ejercicio siguiente.",
+          "Si no se disfrutan durante el año en curso, se pierde el derecho a los mismos.",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "¿Cómo se crean, extinguen o modifican los Registros de la Comunidad de Madrid?",
+        options: [
+          "Mediante Decreto del Gobierno de la Comunidad de Madrid.",
+          "Mediante Orden del Consejero de Presidencia.",
+          "Mediante Orden del Consejero de Hacienda.",
+          "Mediante Decreto del Presidente de la Comunidad de Madrid",
+        ],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "¿En qué plazo máximo, contado desde la recepción de la solicitud de un ciudadano de la expedición de copias auténticas deberán expedirse las mismas o notificarse la resolución que deniegue dicha expedición?",
+        options: ["Quince días.", "Un mes.", "Dos meses.", "Tres meses."],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "¿Qué Centros de Archivo de competencia autonómica cuya consulta sea de interés para los ciudadanos pueden integrarse en la Red de Archivos de Uso Público de la Comunidad de Madrid?",
+        options: [
+          "Sólo los de titularidad pública.",
+          "Los de titularidad pública y privada.",
+          "Sólo los de titularidad privada.",
+          "Ninguna respuesta es correcta.",
+        ],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "Señale cuál de las siguientes no es una actividad de registro:",
+        options: [
+          "El envío masivo de comunicaciones en desarrollo de una actividad privada de carácter comercial.",
+          "La expedición de recibos de la presentación de comunicaciones.",
+          "La anotación de asientos de salida de escritos.",
+          "Todas las anteriores forman parte de la actividad de registro.",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "¿Cuál de las siguientes extensiones en un fichero informático corresponde a una hoja de cálculo?",
+        options: ["WWW", "JPG", "MPG", "XLS"],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? DESCOLLAR",
+        options: [
+          "Ganar la voluntad de uno con halagos para conseguir alguna cosa.",
+          "Mejorar una casta o raza de animales, cruzándolos con otros.",
+          "Dar la embarcación en arena o piedra, quedando sin movimiento.",
+          "Sobresalir.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? FÉTIDO",
+        options: [
+          "Hediondo.",
+          "Dícese de la persona a quien se puede fiar.",
+          "Perteneciente o relativo al gato.",
+          "Que profesa determinada fe religiosa.",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? INEFABLE",
+        options: [
+          "Vagabundo, ambulante, sin domicilio cierto.",
+          "Que constituye excepción a la regla común.",
+          "Dícese del que obra por mera rutina.",
+          "Que no se puede explicar con palabras.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? PUERIL",
+        options: [
+          "Que ha llegado a la pubertad.",
+          "Falto de sensatez, fatuo.",
+          "De poco aprecio o importancia.",
+          "Propio de un niño o que parece un niño.",
+        ],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "Seleccione la opción (A, B, C o D) que contenga todas las palabras bien escritas.",
+        options: [
+          "legado | apabullar | hediondo | punción",
+          "heregía | célibe | lúgubre | infibulación",
+          "ardid | calumnia | hexaló | alondra",
+          "ampuloso | exigüo | tenue | implícito",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "Seleccione la opción (A, B, C o D) que contenga todas las palabras bien escritas.",
+        options: [
+          "quizá | presagiar | edonismo | esto",
+          "pío | rinvovante | alumbramiento | prorrogar",
+          "boya | acicate | almanaque | siega",
+          "exangüe | vituperar | advenedizo | proceda",
+        ],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "Seleccione la opción (A, B, C o D) que contenga todas las palabras bien escritas.",
+        options: [
+          "arenga | heno | hilbanar | mahometano",
+          "infestado | herrumbroso | anhelo | ñu",
+          "ronroneo | báculo | grillete | averiguar",
+          "negligente | cíngaro | histriónico | behemente",
+        ],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
+        options: ["", "", "", ""],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
+        options: ["", "", "", ""],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
+        options: ["", "", "", ""],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
+        options: ["", "", "", ""],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
+        options: ["", "", "", ""],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "¿Cuál ha sido la media trimestral de llamadas sobre hacienda?",
+        options: ["500", "600", "700", "800"],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "¿En qué área se ha producido un mayor aumento porcentual de llamadas del primer trimestre al cuarto?",
+        options: ["Consumo", "Hacienda", "Sanidad", "Educación"],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "Si durante el año ha habido siete operadores para responder a las llamadas del área de educación ¿qué número de llamadas, en promedio, ha atendido cada uno de ellos trimestralmente? Responda con aquella opción de respuesta que más se aproxime a la cifra exacta.",
+        options: ["75", "89", "94", "102"],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "Teniendo en cuenta los datos que aparecen en la tabla siguiente y los contenidos en el gráfico anterior, ¿en qué área los operadores tuvieron una mayor carga de trabajo (número de llamadas atendidas por operador) durante el 4º trimestre?",
+        options: ["Consumo", "Hacienda", "Sanidad", "Educación"],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "En cada ejercicio, elija el código de símbolos (A, B, C o D) que se corresponda con la palabra escrita en mayúsculas. COFRADE",
+        options: ["COFRACE", "CPFRADE", "COFRADE", "CPFRACE"],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "En cada ejercicio, elija el código de símbolos (A, B, C o D) que se corresponda con la palabra escrita en mayúsculas. ADMIRADOR",
+        options: ["ADSIRADOK", "ADMIRADOK", "ADMIRADOR", "ADMIRADOL"],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "En cada ejercicio, elija el código de símbolos (A, B, C o D) que se corresponda con la palabra escrita en mayúsculas. CELEBRIDAD",
+        options: ["CEKFBRIDAD", "CEKEBRCDBD", "CEKFBRIDAB", "CELEBRIDAD"],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "En cada ejercicio, elija el código de símbolos (A, B, C o D) que se corresponda con la palabra escrita en mayúsculas. PECULIARIDAD",
+        options: ["PECULIARIDAD", "PECVLIARICAD", "PECVKIARIDAD", "PECULICRICAD"],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? FLÁCIDO",
+        options: [
+          "Que causa enfermedad o concierne a ella.",
+          "Flaco, flojo, sin consistencia.",
+          "Desembarazado, airoso y galán.",
+          "De poca sustancia, valor o importancia.",
+        ],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? TÉTRICO",
+        options: [
+          "Triste, grave y melancólico.",
+          "Que causa pavor.",
+          "Flaco y descolorido.",
+          "Decaído, falto de vigor y aliento.",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? AFORISMO",
+        options: [
+          "Inclinación, amor a alguna persona o cosa.",
+          "Sentencia breve y doctrinal que se propone como regla en alguna ciencia.",
+          "Explicación o comentario de un texto oscuro o difícil de entender.",
+          "Rodeo o digresión antes de entrar en materia.",
+        ],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? ENJUTO",
+        options: [
+          "Duda, dificultad, enredo.",
+          "Delgado, seco o de pocas carnes.",
+          "Mezcla de varias cosas diversas entre sí.",
+          "Acción o efecto de encoger.",
+        ],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? INSTIGAR",
+        options: [
+          "Incitar, provocar o inducir a uno a que haga alguna cosa.",
+          "Echar poco a poco, gota a gota, un líquido en otra cosa.",
+          "Hollar con los pies algo.",
+          "Apuntar el nombre de una persona entre los de otras para un objeto determinado.",
+        ],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "En las siguientes oraciones algunas letras han sido sustituidas por un guión bajo ('_'). ¿En cuántas de las siguientes oraciones la letra que falta ('_') debería llevar tilde?",
+        options: ["1", "2", "3", "4"],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "En las siguientes oraciones algunas letras han sido sustituidas por un guión bajo ('_'). ¿En cuántas de las siguientes oraciones la letra que falta ('_') debería llevar tilde?",
+        options: ["1", "2", "3", "4"],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "En las siguientes oraciones algunas letras han sido sustituidas por un guión bajo ('_'). ¿En cuántos de los siguientes guiones bajos ('_') debería aparecer la letra 'h'?",
+        options: ["1", "2", "3", "4"],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "En las siguientes oraciones algunas letras han sido sustituidas por un guión bajo ('_'). ¿En cuántos de los siguientes guiones bajos ('_') debería aparecer la letra 'b'?",
+        options: ["1", "2", "3", "4"],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "En las siguientes oraciones algunas letras han sido sustituidas por un guión bajo ('_'). ¿En cuántos de los siguientes guiones bajos ('_') debería aparecer la letra 'y'?",
+        options: ["1", "2", "3", "4"],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "En las siguientes oraciones algunas letras han sido sustituidas por un guión bajo ('_'). ¿En cuántos de los siguientes guiones bajos ('_') debería aparecer la letra 'x'?",
+        options: ["1", "2", "3", "4"],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
+        options: ["", "", "", ""],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
+        options: ["", "", "", ""],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
+        options: ["", "", "", ""],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
+        options: ["", "", "", ""],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "¿Qué departamento (A, B, C o D) ha gastado más dinero en envíos de cartas?",
+        options: ["A", "B", "C", "D"],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "¿Qué departamento (A, B, C o D) ha gastado más dinero en envíos de cartas?",
+        options: ["A", "B", "C", "D"],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "¿Qué departamento (A, B, C o D) ha gastado más dinero en envíos de cartas?",
+        options: ["A", "B", "C", "D"],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "¿Qué departamento (A, B, C o D) ha gastado más dinero en envíos de cartas?",
+        options: ["A", "B", "C", "D"],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "¿Qué departamento (A, B, C o D) ha gastado más dinero en envíos de cartas?",
+        options: ["A", "B", "C", "D"],
+        correctAnswerIndex: 2,
+      },
+      {
+        questionText: "Observe en cada ejercicio los cuatro cuadros con símbolos y escoja una respuesta (A, B, C o D) en función de los siguientes criterios: A. Si todos los cuadros son diferentes B. Si hay dos cuadros iguales C. Si hay tres cuadros iguales D. Si todos los cuadros son iguales",
+        options: ["A", "B", "C", "D"],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "Observe en cada ejercicio los cuatro cuadros con símbolos y escoja una respuesta (A, B, C o D) en función de los siguientes criterios: A. Si todos los cuadros son diferentes B. Si hay dos cuadros iguales C. Si hay tres cuadros iguales D. Si todos los cuadros son iguales",
+        options: ["A", "B", "C", "D"],
+        correctAnswerIndex: 0,
+      },
+      {
+        questionText: "Observe en cada ejercicio los cuatro cuadros con símbolos y escoja una respuesta (A, B, C o D) en función de los siguientes criterios: A. Si todos los cuadros son diferentes B. Si hay dos cuadros iguales C. Si hay tres cuadros iguales D. Si todos los cuadros son iguales",
+        options: ["A", "B", "C", "D"],
+        correctAnswerIndex: 1,
+      },
+      {
+        questionText: "Observe en cada ejercicio los cuatro cuadros con símbolos y escoja una respuesta (A, B, C o D) en función de los siguientes criterios: A. Si todos los cuadros son diferentes B. Si hay dos cuadros iguales C. Si hay tres cuadros iguales D. Si todos los cuadros son iguales",
+        options: ["A", "B", "C", "D"],
+        correctAnswerIndex: 3,
+      },
+      {
+        questionText: "Observe en cada ejercicio los cuatro cuadros con símbolos y escoja una respuesta (A, B, C o D) en función de los siguientes criterios: A. Si todos los cuadros son diferentes B. Si hay dos cuadros iguales C. Si hay tres cuadros iguales D. Si todos los cuadros son iguales",
+        options: ["A", "B", "C", "D"],
+        correctAnswerIndex: 1,
+      },
+    ],
+  };
     
     
 
+
+
+    
