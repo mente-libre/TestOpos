@@ -125,6 +125,12 @@ export const getAllExamsGroupedByCategory = async (): Promise<{ success: boolean
 
     } catch (error) {
         console.error("Error getting exam categories:", error);
+        if (error instanceof FirestoreError && error.code === 'not-found') {
+             console.log("Collection not found, attempting to seed data...");
+             await ensureSeedData();
+             // Retry after seeding
+             return getAllExamsGroupedByCategory();
+        }
         return { success: false, error: (error as FirestoreError).message };
     }
 }
