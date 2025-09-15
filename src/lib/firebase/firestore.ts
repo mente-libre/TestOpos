@@ -67,15 +67,17 @@ const CATEGORY_DEFINITIONS = [
 
 /**
  * Ensures that the initial seed data (demo exams) exists in Firestore.
- * It checks if there are any exams, and if not, adds the seed data.
+ * It checks if a specific seed exam exists, and if not, adds all seed data.
  */
 export const ensureSeedData = async (): Promise<void> => {
     try {
         const examsRef = collection(db, 'exams');
-        const initialCheck = await getDocs(query(examsRef, limit(1)));
+        // Check if our main seed document already exists to avoid re-seeding
+        const seedCheckQuery = query(examsRef, where("fileName", "==", madridAdminTest.fileName), limit(1));
+        const seedCheckSnapshot = await getDocs(seedCheckQuery);
 
-        if (initialCheck.empty) {
-            console.log('Database is empty. Seeding initial exams...');
+        if (seedCheckSnapshot.empty) {
+            console.log('Seed data not found. Seeding initial exams...');
             const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006];
             const batch = writeBatch(db);
 
@@ -108,6 +110,8 @@ export const ensureSeedData = async (): Promise<void> => {
  */
 export const getExamsForCategory = async (categoryId: string | null) => {
   try {
+    await ensureSeedData(); // Ensure seed data exists before any read
+    
     const examsRef = collection(db, 'exams');
     
     // Scenario 1: Get all categories summary
@@ -290,3 +294,5 @@ export const getTestResults = async (): Promise<TestResult[]> => {
       return [];
   }
 };
+
+    
