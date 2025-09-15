@@ -30,7 +30,23 @@ export default function Home() {
   
   const router = useRouter();
 
-  // Effect for handling auth and data loading
+  // Effect for handling auth state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChange((firebaseUser: FirebaseUser | null) => {
+      if (firebaseUser) {
+        setUser({
+          uid: firebaseUser.uid,
+          displayName: firebaseUser.displayName,
+          email: firebaseUser.email,
+        });
+      } else {
+        setUser(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Effect for fetching initial data, independent of user state
   useEffect(() => {
     const fetchInitialData = async () => {
       setIsLoading(true);
@@ -45,24 +61,7 @@ export default function Home() {
       setIsLoading(false);
     };
 
-    const unsubscribe = onAuthStateChange(async (firebaseUser: FirebaseUser | null) => {
-      if (firebaseUser) {
-        const appUser: AppUser = {
-          uid: firebaseUser.uid,
-          displayName: firebaseUser.displayName,
-          email: firebaseUser.email,
-        };
-        setUser(appUser);
-        // Load data only after a user is confirmed
-        await fetchInitialData();
-      } else {
-        setUser(null);
-        // If no user, also attempt to load data (for public view)
-        await fetchInitialData();
-      }
-    });
-    
-    return () => unsubscribe();
+    fetchInitialData();
   }, []); // Empty dependency array ensures this runs once on mount
 
 
