@@ -50,7 +50,7 @@ export default function TestPage() {
   const examId = searchParams.get('examId');
 
   const finishTest = useCallback(() => {
-    if (!questions || isFinished) return; 
+    if (!questions || isFinished) return;
 
     setIsFinished(true);
     setIsReviewMode(false);
@@ -358,3 +358,5 @@ function formatTime(seconds: number) {
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
+
+    
