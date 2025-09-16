@@ -4,7 +4,7 @@
 import { generateTestFromExam } from '@/ai/flows/generate-test-from-exam-flow';
 import { generateReviewTest as generateReviewTestFlow } from '@/ai/flows/generate-review-test-flow';
 import { saveTestResult, type TestResult, type Question } from '@/lib/firebase/firestore';
-import { ensureSeedData, getCategories, getTestResults } from '@/lib/firebase/firestore-server';
+import { ensureSeedData, getCategories, getTestResults, getQuestionsForCategory } from '@/lib/firebase/firestore-server';
 
 
 export async function loadInitialData() {
@@ -22,7 +22,7 @@ export async function loadInitialData() {
     const initialResult = await getCategories();
     
     if (initialResult.success) {
-      return initialResult;
+      return { success: true, categories: initialResult.categories };
     } else {
       // If it fails even after seeding, return an error.
       return { success: false, error: initialResult.error };
@@ -40,16 +40,24 @@ export async function generateNewTest(category: string) {
      // Ensure seed data exists, just in case.
      await ensureSeedData();
      
-     // For context, we need to get the exams from the client.
-     // This is a placeholder as we cannot call client-side firestore from a server action directly
-     // For a real app, we would pass the context from the client to this action.
-     // For now, we simulate fetching some questions.
-    const contextQuestions = "Pregunta de ejemplo: ¿Cuál es la capital de España?\nRespuesta Correcta: Madrid";
+     // Get actual questions from the selected category to provide context.
+    const questionsResult = await getQuestionsForCategory(category);
+    if (!questionsResult.success || questionsResult.questions.length === 0) {
+      return {
+        success: false,
+        error: `No hay suficientes preguntas en la categoría "${category}" para generar un nuevo test. Por favor, elige otra categoría.`
+      }
+    }
+
+    // Format the questions into a string context for the AI.
+    const context = questionsResult.questions
+      .map(q => `Pregunta: ${q.questionText}\nRespuesta Correcta: ${q.options[q.correctAnswerIndex]}`)
+      .join('\n---\n');
       
-    // 3. Call the AI flow to generate new questions
+    // Call the AI flow to generate new questions
     const generationResult = await generateTestFromExam({
       category,
-      context: contextQuestions
+      context: context
     });
 
     if (!generationResult?.questions || generationResult.questions.length === 0) {

@@ -17,7 +17,7 @@ import {
 import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '../seed-data';
 import { advoGeneralTest } from '../seed-data-new';
 import { officeTest } from '../seed-data-office';
-import { type TestResult, CATEGORY_DEFINITIONS } from './firestore';
+import { type TestResult, type Question, CATEGORY_DEFINITIONS } from './firestore';
 
 /**
  * Ensures that the initial seed data (demo exams) exists in Firestore.
@@ -94,6 +94,40 @@ export const getCategories = async () => {
     return { success: false, error: errorMessage };
   }
 };
+
+/**
+ * Retrieves up to 100 questions for a given category to be used as context.
+ * @param categoryId The ID of the category.
+ * @returns An object with the list of questions or an error.
+ */
+export const getQuestionsForCategory = async (categoryId: string): Promise<{ success: boolean, questions: Question[], error?: string }> => {
+  try {
+    const examsRef = collection(db, 'exams');
+    const q = query(
+      examsRef,
+      where('category', '==', categoryId),
+      limit(10) // Limit to 10 exams to avoid fetching too much data
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return { success: true, questions: [] };
+    }
+
+    // Flatten all questions from all exams found, up to a limit of 100
+    const allQuestions = querySnapshot.docs
+      .flatMap(doc => doc.data().questions as Question[])
+      .slice(0, 100);
+
+    return { success: true, questions: allQuestions };
+
+  } catch (error) {
+    console.error(`Error fetching questions for category ${categoryId}:`, error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error.';
+    return { success: false, questions: [], error: errorMessage };
+  }
+}
 
 
 export async function getTestResults(): Promise<TestResult[]> {
