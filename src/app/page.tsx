@@ -47,7 +47,7 @@ export default function Home() {
       setIsLoading(true);
       try {
         const result = await loadInitialData();
-        if (result.success) {
+        if (result.success && result.categories) {
           setCategories(result.categories);
         } else {
           setCategories([]);
