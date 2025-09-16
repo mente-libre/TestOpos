@@ -1,18 +1,22 @@
 
 import { initializeApp, getApps, App, cert, getApp } from 'firebase-admin/app';
 
-const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT
-  ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
-  : undefined;
+const serviceAccountString = process.env.FIREBASE_SERVICE_ACCOUNT;
 
-let app: App;
+let app: App | undefined;
 
-if (!getApps().length) {
-  app = initializeApp({
-    credential: cert(serviceAccount!),
-  });
+if (serviceAccountString) {
+    const serviceAccount = JSON.parse(serviceAccountString);
+    if (!getApps().length) {
+      app = initializeApp({
+        credential: cert(serviceAccount),
+      });
+    } else {
+      app = getApp();
+    }
 } else {
-  app = getApp();
+    console.warn("FIREBASE_SERVICE_ACCOUNT environment variable is not set. Firebase Admin SDK will not be initialized.");
 }
+
 
 export { app };
