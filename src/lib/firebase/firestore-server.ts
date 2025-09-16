@@ -131,8 +131,7 @@ export const getQuestionsForCategory = async (categoryId: string): Promise<{ suc
 }
 
 
-export async function getTestResults(): Promise<TestResult[]> {
-    const userId = 'placeholder-user-id'; // Use the same placeholder
+export async function getTestResultsForUser(userId: string): Promise<TestResult[]> {
     const resultsRef = collection(db, 'testResults');
     const q = query(resultsRef, where('userId', '==', userId), orderBy('createdAt', 'desc'));
     const querySnapshot = await getDocs(q);

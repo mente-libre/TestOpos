@@ -159,14 +159,12 @@ export async function saveExam(exam: Omit<Exam, 'id' | 'createdAt'>): Promise<{ 
 }
 
 export async function saveTestResult(result: Omit<TestResult, 'id' | 'createdAt'>): Promise<{ success: boolean; error?: string }> {
+  if (!result.userId) {
+     return { success: false, error: "UserID is required to save results." };
+  }
   try {
-    // In a real app, you would associate this with the logged-in user
-    // For now, we'll use a placeholder user ID.
-    const userId = 'placeholder-user-id';
-    
     await addDoc(collection(db, 'testResults'), {
       ...result,
-      userId,
       createdAt: Timestamp.now(),
     });
     return { success: true };

@@ -13,6 +13,8 @@ import { Progress } from '@/components/ui/progress';
 import { generateReviewTest, saveFinishedTest } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+import { onAuthStateChange, type User } from '@/lib/firebase/auth';
+
 
 type AnswerStatus = 'unanswered' | 'correct' | 'incorrect';
 
@@ -55,6 +57,7 @@ function calculateResults(questions: Question[], answers: AnswerState[]): Result
 }
 
 function TestPageContent() {
+  const [user, setUser] = useState<User | null>(null);
   const [title, setTitle] = useState<string>('Cargando...');
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -70,6 +73,14 @@ function TestPageContent() {
   const { toast } = useToast();
   const searchParams = useSearchParams();
   const examId = searchParams.get('examId');
+  
+  useEffect(() => {
+    const unsubscribe = onAuthStateChange((firebaseUser) => {
+      setUser(firebaseUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
 
   useEffect(() => {
     const fetchExam = async (id: string) => {
@@ -128,7 +139,7 @@ function TestPageContent() {
   }, [examId]);
   
   const finishTest = useCallback(() => {
-    if (isFinished) return;
+    if (isFinished || !user) return;
 
     if (questions) {
       const results = calculateResults(questions, answers);
@@ -143,13 +154,13 @@ function TestPageContent() {
             incorrectCount: results.incorrectCount,
             unansweredCount: results.unansweredCount,
             totalQuestions: questions.length,
-            userId: 'placeholder-user-id' // Add placeholder userId
+            userId: user.uid
         };
         saveFinishedTest(resultToSave); // Fire-and-forget, don't block UI
       }
     }
     setIsFinished(true);
-  }, [questions, answers, title, isFinished]);
+  }, [questions, answers, title, isFinished, user]);
 
 
   useEffect(() => {
@@ -287,14 +298,14 @@ function TestPageContent() {
                     <XCircle className="h-6 w-6"/>
                     <span className="text-2xl font-bold">{results.incorrectCount}</span>
                   </div>
-                  <p className="text-sm text-muted-foreground">Incorrectas</p>
+                  <p className="text-muted-foreground">Incorrectas</p>
                 </div>
                  <div>
                   <div className="flex items-center justify-center gap-2 text-gray-500">
                     <Eye className="h-6 w-6"/>
                     <span className="text-2xl font-bold">{results.unansweredCount}</span>
                   </div>
-                  <p className="text-sm text-muted-foreground">Sin responder</p>
+                  <p className="text-muted-foreground">Sin responder</p>
                 </div>
               </div>
             </CardContent>
