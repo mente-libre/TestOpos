@@ -23,35 +23,13 @@ import { type TestResult, type Question, type Exam, type Category, CATEGORY_DEFI
 
 /**
  * Retrieves a summary of all categories with the count of exams in each.
- * If the database is empty, it seeds the initial data first.
- * This function is intended to be called from the server and is highly efficient.
+ * This function only reads data and is highly efficient.
  * @returns An object with the list of categories or an error.
  */
 export const getCategories = async () => {
   try {
     const examsRef = collection(db, 'exams');
-    let querySnapshot = await getDocs(examsRef);
-    
-    // If the database is empty, seed it with initial data.
-    if (querySnapshot.empty) {
-        console.log('No exams found. Seeding initial data...');
-        const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, officeTest];
-        const batch = writeBatch(db);
-        
-        seedExams.forEach(seedExam => {
-            const newExamRef = doc(examsRef);
-            batch.set(newExamRef, {
-                ...seedExam,
-                userId: 'system',
-                createdAt: Timestamp.now(),
-            });
-        });
-        
-        await batch.commit();
-        console.log('Seeding complete. Refetching data...');
-        // Refetch the data after seeding
-        querySnapshot = await getDocs(examsRef);
-    }
+    const querySnapshot = await getDocs(examsRef);
 
     const categoryCounts: { [key: string]: number } = {};
     querySnapshot.docs.forEach(doc => {
