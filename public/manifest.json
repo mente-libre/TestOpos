@@ -1,11 +1,17 @@
 {
-  "name": "TestOpos - Oposiciones con IA",
-  "short_name": "TestOpos",
-  "description": "Practica y genera tests para tus oposiciones con la ayuda de la Inteligencia Artificial.",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
   "theme_color": "#2563eb",
+  "background_color": "#f9fafb",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "name": "TestOpos - Tests de Oposiciones con IA",
+  "short_name": "TestOpos",
+  "description": "Practica con exámenes reales o deja que nuestra IA genere nuevos tests para ti. La preparación más completa a tu alcance.",
+  "orientation": "portrait",
+  "id": "/?source=pwa",
+  "lang": "es-ES",
+  "dir": "ltr",
+  "categories": ["education", "productivity"],
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
@@ -13,9 +19,51 @@
       "type": "image/png"
     },
     {
+      "src": "/icons/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/screenshot1.png",
+      "type": "image/png",
+      "sizes": "1080x1920",
+      "form_factor": "narrow"
+    },
+    {
+        "src": "/screenshots/screenshot2.png",
+        "type": "image/png",
+        "sizes": "1080x1920",
+        "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshots/screenshot-wide.png",
+      "type": "image/png",
+      "sizes": "1920x1080",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Generar Test con IA",
+      "url": "/generate",
+      "description": "Crea un nuevo test personalizado con inteligencia artificial"
+    },
+    {
+      "name": "Ver Estadísticas",
+      "url": "/stats",
+      "description": "Revisa tu progreso y resultados"
     }
   ]
 }
