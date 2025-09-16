@@ -4,7 +4,7 @@
 import { generateTestFromExam } from '@/ai/flows/generate-test-from-exam-flow';
 import { generateReviewTest as generateReviewTestFlow } from '@/ai/flows/generate-review-test-flow';
 import { saveTestResult } from '@/lib/firebase/firestore';
-import { type TestResult, type Question } from '@/lib/definitions';
+import { type TestResult, type Question, type Category, CATEGORY_DEFINITIONS } from '@/lib/definitions';
 import { getCategories, getTestResultsForUser, getQuestionsForCategory } from '@/lib/firebase/firestore-server';
 import { getAuth } from 'firebase-admin/auth';
 import { app as adminApp } from '@/lib/firebase/firebase-admin';
