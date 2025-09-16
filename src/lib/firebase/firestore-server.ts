@@ -22,7 +22,7 @@ import { type TestResult, type Question, CATEGORY_DEFINITIONS, type Exam, type C
 
 /**
  * Ensures that the initial seed data (demo exams) exists in Firestore.
- * It checks for each seed exam and adds it if it's missing.
+ * It checks for each seed exam and adds it if it's missing using an efficient count query.
  * This function is intended to be called from the server and is idempotent.
  * @returns An object indicating if a write operation was performed.
  */
@@ -36,14 +36,15 @@ export const ensureSeedData = async (): Promise<{ hasWritten: boolean }> => {
 
         for (const seedExam of seedExams) {
              const seedCheckQuery = query(examsRef, where("fileName", "==", seedExam.fileName), limit(1));
-             const seedCheckSnapshot = await getDocs(seedCheckQuery);
-             if (seedCheckSnapshot.empty) {
+             // Use getCountFromServer for an efficient check without fetching full documents
+             const snapshot = await getCountFromServer(seedCheckQuery);
+             if (snapshot.data().count === 0) {
                 console.log(`Seed exam "${seedExam.fileName}" not found. Adding to batch.`);
                 const newExamRef = doc(examsRef);
                 batch.set(newExamRef, {
                     ...seedExam,
                     userId: 'system', // Indicates a system-generated exam
-                    createdAt: new Date(),
+                    createdAt: new Date(), // Use JS Date object, Firestore will convert it
                 });
                 batchHasWrites = true;
              }
