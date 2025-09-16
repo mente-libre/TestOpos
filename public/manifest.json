@@ -1,12 +1,42 @@
 {
-  "name": "TestOpos - Tests de Oposiciones con IA",
+  "name": "TestOpos - Oposiciones con IA",
   "short_name": "TestOpos",
   "description": "Practica con exámenes reales o deja que nuestra IA genere nuevos tests para ti. La preparación más completa a tu alcance.",
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#f9fafb",
   "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "id": "/?source=pwa",
+  "scope": "/",
+  "lang": "es-ES",
+  "dir": "ltr",
   "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
@@ -27,22 +57,17 @@
   "screenshots": [
     {
       "src": "/screenshots/screenshot1.png",
-      "sizes": "1280x720",
       "type": "image/png",
-      "label": "Página de Inicio"
+      "sizes": "1080x1920",
+      "form_factor": "narrow"
     },
     {
       "src": "/screenshots/screenshot2.png",
-      "sizes": "1280x720",
       "type": "image/png",
-      "label": "Generador de Tests IA"
+      "sizes": "1920x1080",
+      "form_factor": "wide"
     }
   ],
-  "orientation": "portrait",
-  "id": "/?source=pwa",
-  "scope": "/",
-  "lang": "es-ES",
-  "dir": "ltr",
   "categories": [
     "education",
     "productivity"
@@ -51,7 +76,7 @@
     {
       "name": "Generar Test con IA",
       "short_name": "Generar IA",
-      "description": "Crear un nuevo test personalizado con IA",
+      "description": "Crea un nuevo test personalizado con IA",
       "url": "/generate",
       "icons": [
         {
@@ -74,18 +99,12 @@
     }
   ],
   "display_override": [
-    "standalone"
+    "standalone",
+    "minimal-ui"
   ],
-  "related_applications": [],
-  "prefer_related_applications": false,
-  "protocol_handlers": [
-    {
-      "protocol": "web+testopos",
-      "url": "/?protocol=%s"
-    }
-  ],
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-32a3ac449730",
   "share_target": {
-    "action": "/share-target/",
+    "action": "/share-target",
     "method": "GET",
     "params": {
       "title": "title",
@@ -93,40 +112,73 @@
       "url": "url"
     }
   },
-  "iarc_rating_id": "e84b072d-8685-4c3e-826d-33e634de40e6",
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.example.app1",
+      "id": "com.example.app1"
+    }
+  ],
+  "prefer_related_applications": false,
+  "protocol_handlers": [
+    {
+      "protocol": "web+testopos",
+      "url": "/protocol?q=%s"
+    }
+  ],
   "launch_handler": {
     "client_mode": "navigate-existing"
   },
-  "edge_side_panel": {},
-  "note_taking": {},
-  "file_handlers": [],
+  "file_handlers": [
+    {
+      "action": "/open-file",
+      "accept": {
+        "text/plain": [
+          ".txt"
+        ]
+      }
+    }
+  ],
   "widgets": [
     {
-      "name": "Resumen de Estadísticas",
-      "description": "Widget para ver tu progreso reciente.",
-      "tag": "stats-widget",
-      "template": "stats-widget-template",
-      "ms_ac_template": "widgets/stats-widget.json",
+      "name": "Estadísticas Rápidas",
+      "description": "Ver tu puntuación media.",
+      "tag": "stats",
+      "template": "stats-template",
+      "ms_ac_template": "widgets/stats.json",
       "data": "widgets/stats-data.json",
-      "icons": [
-        {
-          "src": "/icons/widget-icon.png",
-          "sizes": "128x128"
-        }
-      ],
+      "type": "application/json",
       "screenshots": [
         {
           "src": "/screenshots/widget-screenshot.png",
-          "sizes": "400x200",
-          "label": "Widget de Estadísticas"
+          "sizes": "600x400",
+          "type": "image/png"
         }
       ],
-      "auth": true,
-      "update": 3600
+      "icons": [
+        {
+          "src": "/icons/widget-icon.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ],
+      "auth": false,
+      "update": 86400
     }
   ],
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
+  "note_taking": {
+    "new_note_url": "/new-note",
+    "needs_sync": true
+  },
   "scope_extensions": [
-    { "origin": "https://*.test-opos.vercel.app" },
-    { "origin": "*.example.com" }
+    {
+      "origin": "https://*.test-opos.vercel.app"
+    },
+    {
+      "origin": "https://*.vercel.app"
+    }
   ]
 }
