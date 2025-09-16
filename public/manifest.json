@@ -1,76 +1,106 @@
 {
-  "name": "TestOpos - Tests de Oposiciones con IA",
-  "short_name": "TestOpos",
-  "description": "Genera y practica tests para oposiciones usando Inteligencia Artificial.",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#f9fafb",
-  "theme_color": "#2563eb",
-  "orientation": "portrait-primary",
-  "id": "/?source=pwa",
-  "scope": "/",
-  "lang": "es-ES",
-  "dir": "ltr",
-  "icons": [
-    {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
+    "name": "TestOpos - Tests de Oposiciones con IA",
+    "short_name": "TestOpos",
+    "description": "Genera tests para oposiciones usando IA y prepárate para el éxito.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#2563eb",
+    "orientation": "portrait",
+    "id": "/?source=pwa",
+    "lang": "es-ES",
+    "dir": "ltr",
+    "scope": "/",
+    "prefer_related_applications": false,
+    "related_applications": [],
+    "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+    "categories": [
+        "education",
+        "productivity"
+    ],
+    "icons": [
+        {
+            "src": "/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-maskable-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/icons/icon-maskable-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/screenshots/screenshot1.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Vista Principal de la App"
+        },
+        {
+            "src": "/screenshots/screenshot2.png",
+            "sizes": "1280x800",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Generador de Tests IA"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Generar Test con IA",
+            "short_name": "Generar IA",
+            "description": "Crea un nuevo test personalizado con la IA.",
+            "url": "/generate",
+            "icons": [
+                {
+                    "src": "/icons/shortcut-generate.png",
+                    "sizes": "96x96"
+                }
+            ]
+        },
+        {
+            "name": "Ver Estadísticas",
+            "short_name": "Estadísticas",
+            "description": "Revisa tu progreso y resultados.",
+            "url": "/stats",
+            "icons": [
+                {
+                    "src": "/icons/shortcut-stats.png",
+                    "sizes": "96x96"
+                }
+            ]
+        }
+    ],
+    "share_target": {
+        "action": "/compartir",
+        "method": "GET",
+        "params": {
+            "title": "titulo",
+            "text": "texto",
+            "url": "url"
+        }
     },
-    {
-      "src": "/icons/icon-256x256.png",
-      "sizes": "256x256",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/maskable_icon.png",
-      "sizes": "196x196",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshots/screenshot1.png",
-      "type": "image/png",
-      "sizes": "1080x1920",
-      "form_factor": "narrow"
-    },
-    {
-      "src": "/screenshots/screenshot2.png",
-      "type": "image/png",
-      "sizes": "1920x1080",
-      "form_factor": "wide"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Generar Test con IA",
-      "short_name": "Generar IA",
-      "description": "Crea un nuevo test personalizado con IA",
-      "url": "/generate",
-      "icons": [{ "src": "/icons/shortcut-wand.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Ver Estadísticas",
-      "short_name": "Estadísticas",
-      "description": "Revisa tu progreso y resultados",
-      "url": "/stats",
-      "icons": [{ "src": "/icons/shortcut-stats.png", "sizes": "96x96" }]
-    }
-  ],
-  "categories": [
-    "education",
-    "productivity"
-  ]
+    "display_override": [
+        "standalone",
+        "minimal-ui"
+    ],
+    "protocol_handlers": [
+        {
+            "protocol": "web+testopos",
+            "url": "/test?id=%s"
+        }
+    ]
 }
