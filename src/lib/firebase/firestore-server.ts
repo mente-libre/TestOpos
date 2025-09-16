@@ -87,7 +87,7 @@ export const getCategories = async () => {
     const categories: Category[] = CATEGORY_DEFINITIONS.map(def => ({
       ...def,
       examCount: categoryCounts[def.id] || 0,
-    })).filter(cat => cat.examCount > 0);
+    }));
     
     return { success: true, categories };
 

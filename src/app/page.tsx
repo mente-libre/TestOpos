@@ -28,6 +28,7 @@ export default function Home() {
   const [user, setUser] = useState<AppUser | null>(null);
   const [isLoading, setIsLoading] = useState(true); // Start with loading true
   const [categories, setCategories] = useState<Category[]>([]);
+  const [error, setError] = useState<string | null>(null);
   
   const router = useRouter();
 
@@ -46,16 +47,20 @@ export default function Home() {
 
     const fetchInitialData = async () => {
       setIsLoading(true);
+      setError(null);
       try {
         const result = await loadInitialData();
         if (result.success && result.categories) {
           setCategories(result.categories);
         } else {
           setCategories([]);
+          setError(result.error || "No se pudieron cargar las categorías.");
           console.error("Failed to fetch initial data:", result.error);
         }
       } catch (error) {
          setCategories([]);
+         const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error inesperado al cargar los datos.';
+         setError(errorMessage);
          console.error("An unexpected error occurred while fetching initial data:", error);
       } finally {
         setIsLoading(false);
@@ -65,7 +70,36 @@ export default function Home() {
     fetchInitialData();
     
     return () => unsubscribe();
-  }, []); // Single useEffect for auth and data fetching
+  }, []);
+
+  const CategoryCard = ({ category }: { category: Category }) => {
+    const isDisabled = category.examCount === 0;
+
+    const cardContent = (
+      <Card 
+        className={`group hover:shadow-lg hover:-translate-y-1 transition-transform h-full ${
+          isDisabled ? 'opacity-50 cursor-not-allowed bg-muted' : 'cursor-pointer'
+        }`}
+      >
+        <CardContent className="pt-6 flex flex-col items-center text-center">
+          <Folder className="h-16 w-16 text-primary/70 group-hover:text-primary transition-colors mb-4" />
+          <h4 className="font-semibold text-lg">{category.name}</h4>
+          <p className="text-sm text-muted-foreground">{category.examCount} {category.examCount === 1 ? 'examen' : 'exámenes'}</p>
+        </CardContent>
+      </Card>
+    );
+
+    if (isDisabled) {
+      return <div>{cardContent}</div>;
+    }
+
+    return (
+      <Link href={`/category/${category.id}`} key={category.id} passHref>
+        {cardContent}
+      </Link>
+    );
+  };
+
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -212,19 +246,16 @@ export default function Home() {
                   <Loader2 className="mr-2 h-8 w-8 animate-spin" />
                   <p>Cargando tus datos...</p>
               </div>
+            ) : error ? (
+                <div className="text-center text-red-500 py-10">
+                    <p className="mb-4">Error al cargar los exámenes: {error}</p>
+                    <Button onClick={() => window.location.reload()}>Reintentar</Button>
+                </div>
             ) : (
                 categories.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {categories.map(category => (
-                          <Link href={`/category/${category.id}`} key={category.id} passHref>
-                             <Card className="group hover:shadow-lg hover:-translate-y-1 transition-transform h-full cursor-pointer">
-                                <CardContent className="pt-6 flex flex-col items-center text-center">
-                                    <Folder className="h-16 w-16 text-primary/70 group-hover:text-primary transition-colors mb-4" />
-                                    <h4 className="font-semibold text-lg">{category.name}</h4>
-                                    <p className="text-sm text-muted-foreground">{category.examCount} {category.examCount === 1 ? 'examen' : 'exámenes'}</p>
-                                </CardContent>
-                            </Card>
-                          </Link>
+                          <CategoryCard key={category.id} category={category} />
                         ))}
                     </div>
                 ) : (
