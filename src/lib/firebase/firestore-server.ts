@@ -17,7 +17,7 @@ import {
 import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '../seed-data';
 import { advoGeneralTest } from '../seed-data-new';
 import { officeTest } from '../seed-data-office';
-import { type TestResult, type Question, CATEGORY_DEFINITIONS } from './firestore';
+import { type TestResult, type Question, CATEGORY_DEFINITIONS, type Exam, type Category } from './firestore';
 
 /**
  * Ensures that the initial seed data (demo exams) exists in Firestore.
@@ -71,20 +71,22 @@ export const ensureSeedData = async (): Promise<{ hasWritten: boolean }> => {
 export const getCategories = async () => {
   try {
     const examsRef = collection(db, 'exams');
+    const querySnapshot = await getDocs(examsRef);
+    
+    const categoryMap: { [key: string]: { id: string, name: string, examCount: number } } = {};
 
-    // Create an array of promises for each category count
-    const countPromises = CATEGORY_DEFINITIONS.map(async (def) => {
-      const q = query(examsRef, where('category', '==', def.id));
-      const snapshot = await getCountFromServer(q);
-      return {
-        id: def.id,
-        name: def.name,
-        examCount: snapshot.data().count,
-      };
+    CATEGORY_DEFINITIONS.forEach(def => {
+        categoryMap[def.id] = { ...def, examCount: 0 };
     });
 
-    // Resolve all promises in parallel
-    const categories = await Promise.all(countPromises);
+    querySnapshot.docs.forEach(doc => {
+        const exam = doc.data() as Exam;
+        if (exam.category && categoryMap[exam.category]) {
+            categoryMap[exam.category].examCount++;
+        }
+    });
+
+    const categories: Category[] = Object.values(categoryMap).filter(cat => cat.examCount > 0);
     
     return { success: true, categories };
 
