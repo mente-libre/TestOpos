@@ -4,9 +4,10 @@ import './globals.css';
 import { Inter as FontSans } from 'next/font/google';
 import { cn } from '@/lib/utils';
 
-const fontSans = FontSans({ 
+const fontSans = FontSans({
   subsets: ['latin'],
   variable: '--font-sans',
+  weight: ['400', '600', '700'],
 });
 
 export const metadata: Metadata = {
