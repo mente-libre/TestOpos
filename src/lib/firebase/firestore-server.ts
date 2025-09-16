@@ -73,20 +73,19 @@ export const getCategories = async () => {
     const examsRef = collection(db, 'exams');
     const querySnapshot = await getDocs(examsRef);
     
-    const categoryMap: { [key: string]: { id: string, name: string, examCount: number } } = {};
-
-    CATEGORY_DEFINITIONS.forEach(def => {
-        categoryMap[def.id] = { ...def, examCount: 0 };
-    });
+    const categoryCounts: { [key: string]: number } = {};
 
     querySnapshot.docs.forEach(doc => {
         const exam = doc.data() as Exam;
-        if (exam.category && categoryMap[exam.category]) {
-            categoryMap[exam.category].examCount++;
+        if (exam.category) {
+            categoryCounts[exam.category] = (categoryCounts[exam.category] || 0) + 1;
         }
     });
 
-    const categories: Category[] = Object.values(categoryMap).filter(cat => cat.examCount > 0);
+    const categories: Category[] = CATEGORY_DEFINITIONS.map(def => ({
+      ...def,
+      examCount: categoryCounts[def.id] || 0,
+    })).filter(cat => cat.examCount > 0);
     
     return { success: true, categories };
 

@@ -10,22 +10,16 @@ import { ensureSeedData, getCategories, getTestResults, getQuestionsForCategory 
 export async function loadInitialData() {
   try {
     // Attempt to seed data first. This is idempotent.
-    const { hasWritten } = await ensureSeedData();
-
-    // If data was just written, we need to give Firestore a moment to be consistent.
-    // This is a simple workaround for eventual consistency.
-    if (hasWritten) {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-    }
+    await ensureSeedData();
 
     // Fetch categories. Now it should be populated.
-    const initialResult = await getCategories();
+    const result = await getCategories();
     
-    if (initialResult.success) {
-      return { success: true, categories: initialResult.categories };
+    if (result.success) {
+      return { success: true, categories: result.categories };
     } else {
       // If it fails even after seeding, return an error.
-      return { success: false, error: initialResult.error };
+      return { success: false, error: result.error };
     }
 
   } catch (error) {
@@ -136,5 +130,3 @@ export async function loadStatistics() {
         return { success: false, error: "No se pudieron cargar las estadísticas." };
     }
 }
-
-    
