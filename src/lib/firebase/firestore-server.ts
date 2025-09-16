@@ -18,16 +18,7 @@ import {
 import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '../seed-data';
 import { advoGeneralTest } from '../seed-data-new';
 import { officeTest } from '../seed-data-office';
-import { type TestResult, type Question, type Exam, type Category } from './firestore';
-
-// Centralized category definitions, safe for client and server use
-export const CATEGORY_DEFINITIONS = [
-    { id: "madrid", name: "Comunidad de Madrid" },
-    { id: "valencia", name: "Comunidad Valenciana" },
-    { id: "andalucia", name: "Andalucía" },
-    { id: "estado", name: "Administración del Estado" },
-    { id: "otros", name: "Otras" },
-];
+import { type TestResult, type Question, type Exam, type Category, CATEGORY_DEFINITIONS } from './firestore';
 
 
 /**

@@ -15,7 +15,15 @@ import {
   writeBatch,
   orderBy,
 } from 'firebase/firestore';
-import { CATEGORY_DEFINITIONS } from './firestore-server';
+
+// Centralized category definitions, safe for client and server use
+export const CATEGORY_DEFINITIONS = [
+    { id: "madrid", name: "Comunidad de Madrid" },
+    { id: "valencia", name: "Comunidad Valenciana" },
+    { id: "andalucia", name: "Andalucía" },
+    { id: "estado", name: "Administración del Estado" },
+    { id: "otros", name: "Otras" },
+];
 
 
 // Main type for an exam document
@@ -55,9 +63,6 @@ export interface TestResult {
   totalQuestions: number;
   createdAt: Timestamp | number;
 }
-
-// Centralized category definitions, re-exported for client-side use
-export { CATEGORY_DEFINITIONS };
 
 
 /**
