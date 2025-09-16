@@ -34,10 +34,7 @@ async function getUserId(): Promise<string | null> {
 
 export async function loadInitialData() {
   try {
-    // Attempt to seed data first. This is idempotent.
-    await ensureSeedData();
-
-    // Fetch categories. Now it should be populated.
+    // getCategories will now handle seeding if necessary.
     const result = await getCategories();
     
     if (result.success) {
