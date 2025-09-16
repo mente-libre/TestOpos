@@ -43,7 +43,7 @@ export const ensureSeedData = async (): Promise<{ hasWritten: boolean }> => {
                 batch.set(newExamRef, {
                     ...seedExam,
                     userId: 'system', // Indicates a system-generated exam
-                    createdAt: Timestamp.now(),
+                    createdAt: new Date(),
                 });
                 batchHasWrites = true;
              }
