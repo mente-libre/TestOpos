@@ -10,7 +10,7 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {z} from 'zod';
 import { GenerateTestFromExamInputSchema, GenerateTestFromExamOutputSchema, type GenerateTestFromExamInput, type GenerateTestFromExamOutput } from './types';
 
 export async function generateTestFromExam(
