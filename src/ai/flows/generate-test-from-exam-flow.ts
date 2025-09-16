@@ -44,6 +44,6 @@ const generateTestFromExamFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await generateTestFromExamPrompt(input);
-    return output || {questions: []};
+    return output!;
   }
 );

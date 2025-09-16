@@ -44,6 +44,6 @@ const generateReviewTestFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await generateReviewTestPrompt(input);
-    return output || {questions: []};
+    return output!;
   }
 );
