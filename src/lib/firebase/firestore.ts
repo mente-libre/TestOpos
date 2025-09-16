@@ -16,8 +16,53 @@ import {
   orderBy,
 } from 'firebase/firestore';
 import { type Exam, type Question, type TestResult, CATEGORY_DEFINITIONS } from '../definitions';
+import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '../seed-data';
+import { advoGeneralTest } from '../seed-data-new';
+import { officeTest } from '../seed-data-office';
+
 
 export * from '../definitions';
+
+/**
+ * Ensures that the initial seed data (demo exams) exists in Firestore.
+ * This function is intended to be called from the client and is idempotent.
+ */
+export const ensureSeedDataClient = async (): Promise<{ hasWritten: boolean }> => {
+    try {
+        const examsRef = collection(db, 'exams');
+        
+        // Check if there are any exams at all to prevent re-seeding
+        const countQuery = query(examsRef, limit(1));
+        const initialCheck = await getDocs(countQuery);
+        if (!initialCheck.empty) {
+            // Data exists, no need to seed.
+            return { hasWritten: false };
+        }
+
+        // If no data, proceed to seed
+        console.log("No exams found. Seeding initial data...");
+        const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, officeTest];
+        const batch = writeBatch(db);
+
+        seedExams.forEach(seedExam => {
+            const newExamRef = doc(examsRef);
+            batch.set(newExamRef, {
+                ...seedExam,
+                userId: 'system',
+                createdAt: Timestamp.now(),
+            });
+        });
+
+        await batch.commit();
+        console.log("Seeding complete. Wrote " + seedExams.length + " exams.");
+        return { hasWritten: true };
+
+    } catch (error) {
+        console.error('Error in ensureSeedDataClient:', error);
+        // Don't throw, just report.
+        return { hasWritten: false };
+    }
+}
 
 
 /**

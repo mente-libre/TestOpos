@@ -5,7 +5,7 @@ import { generateTestFromExam } from '@/ai/flows/generate-test-from-exam-flow';
 import { generateReviewTest as generateReviewTestFlow } from '@/ai/flows/generate-review-test-flow';
 import { saveTestResult } from '@/lib/firebase/firestore';
 import { type TestResult, type Question } from '@/lib/definitions';
-import { getCategories, getTestResultsForUser, getQuestionsForCategory, ensureSeedData } from '@/lib/firebase/firestore-server';
+import { getCategories, getTestResultsForUser, getQuestionsForCategory } from '@/lib/firebase/firestore-server';
 import { getAuth } from 'firebase-admin/auth';
 import { app as adminApp } from '@/lib/firebase/firebase-admin';
 
@@ -34,16 +34,12 @@ async function getUserId(): Promise<string | null> {
 
 export async function loadInitialData() {
   try {
-    // 1. Ensure seed data exists. This is now a robust, idempotent function.
-    await ensureSeedData();
-    
-    // 2. Now, get the categories. This function now only reads data.
+    // This function now ONLY reads data. The seeding is handled client-side.
     const result = await getCategories();
     
     if (result.success) {
       return { success: true, categories: result.categories };
     } else {
-      // If it fails even after seeding, return an error.
       return { success: false, error: result.error };
     }
 
@@ -56,9 +52,6 @@ export async function loadInitialData() {
 
 export async function generateNewTest(category: string) {
   try {
-     // Ensure seed data exists, just in case.
-     await ensureSeedData();
-     
      // Get actual questions from the selected category to provide context.
     const questionsResult = await getQuestionsForCategory(category);
     if (!questionsResult.success || questionsResult.questions.length === 0) {
