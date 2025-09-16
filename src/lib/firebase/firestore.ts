@@ -16,64 +16,16 @@ import {
   orderBy,
 } from 'firebase/firestore';
 import { type Exam, type Question, type TestResult, CATEGORY_DEFINITIONS } from '../definitions';
+import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '@/lib/seed-data';
+import { advoGeneralTest } from '@/lib/seed-data-new';
+import { officeTest } from '@/lib/seed-data-office';
 
 export * from '../definitions';
-
-/**
- * Ensures that the initial seed data (demo exams) exists in Firestore.
- * This function is intended to be called from the client and is idempotent.
- */
-export const ensureSeedDataClient = async (): Promise<{ hasWritten: boolean }> => {
-    try {
-        const examsRef = collection(db, 'exams');
-        
-        // Check if there are any exams at all to prevent re-seeding
-        const countQuery = query(examsRef, limit(1));
-        const initialCheck = await getDocs(countQuery);
-        
-        if (!initialCheck.empty) {
-            // Data exists, no need to seed.
-            return { hasWritten: false };
-        }
-
-        // If no data, proceed to seed. This will likely fail if security rules are restrictive.
-        console.log("No exams found. Attempting to seed initial data from the client...");
-        
-        // Dynamic import to avoid server-side code in client bundle
-        const { madridAdminTest } = await import('../seed-data');
-        const { estadoConstitutionTest } = await import('../seed-data');
-        const { madridAdminTest2 } = await import('../seed-data');
-        const { madridAdminTest2006 } = await import('../seed-data');
-        const { advoGeneralTest } = await import('../seed-data-new');
-        const { officeTest } = await import('../seed-data-office');
-
-        const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, officeTest];
-        const batch = writeBatch(db);
-
-        seedExams.forEach(seedExam => {
-            const newExamRef = doc(examsRef);
-            batch.set(newExamRef, {
-                ...seedExam,
-                userId: 'system',
-                createdAt: new Date(), // Use JS Date for client
-            });
-        });
-
-        await batch.commit();
-        console.log("Client-side seeding complete. Wrote " + seedExams.length + " exams.");
-        return { hasWritten: true };
-
-    } catch (error) {
-        console.error('Error in ensureSeedDataClient:', error);
-        // Don't throw, just report. This can fail due to security rules.
-        return { hasWritten: false };
-    }
-}
 
 
 /**
  * Retrieves all exams for a specific category.
- * This function is intended to be called from the client.
+ * If no exams are found in Firestore, it falls back to local seed data.
  * @param categoryId The ID of the category.
  * @returns An object with the list of exams or an error.
  */
@@ -90,16 +42,35 @@ export const getExamsForCategory = async (categoryId: string) => {
 
     const categoryName = CATEGORY_DEFINITIONS.find(c => c.id === categoryId)?.name || 'Categoría desconocida';
 
+    let exams: Exam[] = [];
 
-    const exams = querySnapshot.docs.map(doc => {
-      const data = doc.data();
-      // Ensure all data is serializable using JSON stringify/parse
-      const plainData = JSON.parse(JSON.stringify(data));
-      return {
-        id: doc.id,
-        ...plainData,
-      }
-    }) as Exam[];
+    if (!querySnapshot.empty) {
+        exams = querySnapshot.docs.map(doc => {
+            const data = doc.data();
+            // Ensure all data is serializable using JSON stringify/parse
+            const plainData = JSON.parse(JSON.stringify(data));
+            return {
+                id: doc.id,
+                ...plainData,
+            }
+        }) as Exam[];
+    } else {
+        // Fallback to local seed data if Firestore is empty for this category
+        console.warn(`No exams found in Firestore for category '${categoryId}'. Using local fallback data.`);
+        const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, officeTest];
+        const fallbackExams = allSeedExams
+            .filter(exam => exam.category === categoryId)
+            .map((seedExam, index) => ({
+                id: `seed-${categoryId}-${index}`,
+                userId: 'system',
+                fileName: seedExam.fileName,
+                category: seedExam.category,
+                questions: seedExam.questions,
+                createdAt: new Date().getTime(),
+            }));
+        exams = fallbackExams;
+    }
+
 
     return { success: true, exams, categoryName };
 
@@ -121,6 +92,32 @@ export const getExamById = async (examId: string) => {
     if (!examId) {
       return { success: false, error: 'Exam ID is required.' };
     }
+
+    // Handle seed data case
+    if (examId.startsWith('seed-')) {
+        console.warn(`Loading exam '${examId}' from local seed data.`);
+        const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, officeTest];
+        const [, category, indexStr] = examId.split('-');
+        const index = parseInt(indexStr, 10);
+        
+        const categoryExams = allSeedExams.filter(e => e.category === category);
+        const seedExam = categoryExams[index];
+
+        if (seedExam) {
+            const exam: Exam = {
+                id: examId,
+                userId: 'system',
+                fileName: seedExam.fileName,
+                category: seedExam.category,
+                questions: seedExam.questions,
+                createdAt: new Date().getTime(),
+            };
+            return { success: true, exam };
+        } else {
+             return { success: false, error: 'No se encontró el examen de ejemplo.' };
+        }
+    }
+
 
     const examRef = doc(db, 'exams', examId);
     const docSnap = await getDoc(examRef);
