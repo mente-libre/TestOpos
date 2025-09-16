@@ -1,27 +1,47 @@
 {
-  "theme_color": "#2563eb",
-  "background_color": "#f9fafb",
-  "display": "standalone",
-  "scope": "/",
-  "start_url": "/",
   "name": "TestOpos - Tests de Oposiciones con IA",
   "short_name": "TestOpos",
-  "description": "Practica con exámenes reales o deja que nuestra IA genere nuevos tests para ti. La preparación más completa a tu alcance.",
-  "orientation": "portrait",
-  "id": "/?source=pwa",
+  "description": "Genera y practica tests para oposiciones usando Inteligencia Artificial. Analiza tu progreso y mejora tus resultados.",
+  "start_url": "/",
+  "id": "/?utm_source=pwa",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
   "lang": "es-ES",
   "dir": "ltr",
-  "categories": ["education", "productivity"],
+  "scope": "/",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
       "type": "image/png"
     },
     {
-      "src": "/icons/icon-256x256.png",
-      "sizes": "256x256",
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
       "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/icons/icon-384x384.png",
@@ -42,13 +62,13 @@
       "form_factor": "narrow"
     },
     {
-        "src": "/screenshots/screenshot2.png",
-        "type": "image/png",
-        "sizes": "1080x1920",
-        "form_factor": "narrow"
+      "src": "/screenshots/screenshot2.png",
+      "type": "image/png",
+      "sizes": "1080x1920",
+      "form_factor": "narrow"
     },
     {
-      "src": "/screenshots/screenshot-wide.png",
+      "src": "/screenshots/screenshot3_wide.png",
       "type": "image/png",
       "sizes": "1920x1080",
       "form_factor": "wide"
@@ -57,13 +77,22 @@
   "shortcuts": [
     {
       "name": "Generar Test con IA",
+      "short_name": "Generar IA",
+      "description": "Crea un nuevo test personalizado con la IA",
       "url": "/generate",
-      "description": "Crea un nuevo test personalizado con inteligencia artificial"
+      "icons": [{ "src": "/icons/shortcut-wand.png", "sizes": "96x96" }]
     },
     {
       "name": "Ver Estadísticas",
+      "short_name": "Estadísticas",
+      "description": "Revisa tu progreso y resultados",
       "url": "/stats",
-      "description": "Revisa tu progreso y resultados"
+      "icons": [{ "src": "/icons/shortcut-stats.png", "sizes": "96x96" }]
     }
-  ]
+  ],
+  "categories": [
+    "education",
+    "productivity"
+  ],
+  "prefer_related_applications": false
 }
