@@ -45,7 +45,7 @@ export const ensureSeedData = async (): Promise<{ hasWritten: boolean }> => {
                 batch.set(newExamRef, {
                     ...seedExam,
                     userId: 'system', // Indicates a system-generated exam
-                    createdAt: new Date(), // Use JS Date object, Firestore will convert it
+                    createdAt: Timestamp.now(), // Use JS Date object, Firestore will convert it
                 });
                 batchHasWrites = true;
              }

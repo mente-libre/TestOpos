@@ -4,57 +4,10 @@
 import { generateTestFromExam } from '@/ai/flows/generate-test-from-exam-flow';
 import { generateReviewTest as generateReviewTestFlow } from '@/ai/flows/generate-review-test-flow';
 import { saveTestResult } from '@/lib/firebase/firestore';
-import { type TestResult, type Question, CATEGORY_DEFINITIONS } from '@/lib/definitions';
-import { getCategories, getTestResultsForUser, getQuestionsForCategory } from '@/lib/firebase/firestore-server';
+import { type TestResult, type Question } from '@/lib/definitions';
+import { getCategories, getTestResultsForUser, getQuestionsForCategory, ensureSeedData } from '@/lib/firebase/firestore-server';
 import { getAuth } from 'firebase-admin/auth';
 import { app as adminApp } from '@/lib/firebase/firebase-admin';
-import { collection, doc, getCountFromServer, query, where, writeBatch, Timestamp } from 'firebase/firestore';
-import { db } from '@/lib/firebase/config';
-import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '@/lib/seed-data';
-import { advoGeneralTest } from '@/lib/seed-data-new';
-import { officeTest } from '@/lib/seed-data-office';
-
-
-/**
- * Ensures that the initial seed data (demo exams) exists in Firestore.
- * This function is intended to be called from a server action and is idempotent.
- * @returns An object indicating if a write operation was performed.
- */
-async function ensureSeedData(): Promise<{ hasWritten: boolean }> {
-    try {
-        const examsRef = collection(db, 'exams');
-        const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, officeTest];
-        
-        const batch = writeBatch(db);
-        let batchHasWrites = false;
-
-        for (const seedExam of seedExams) {
-             const seedCheckQuery = query(examsRef, where("fileName", "==", seedExam.fileName));
-             const snapshot = await getCountFromServer(seedCheckQuery);
-             if (snapshot.data().count === 0) {
-                console.log(`Seed exam "${seedExam.fileName}" not found. Adding to batch.`);
-                const newExamRef = doc(examsRef);
-                batch.set(newExamRef, {
-                    ...seedExam,
-                    userId: 'system',
-                    createdAt: Timestamp.now(), // Use Firestore Timestamp
-                });
-                batchHasWrites = true;
-             }
-        }
-       
-        if (batchHasWrites) {
-            await batch.commit();
-            console.log(`Seeding complete. Batch committed.`);
-        }
-        
-        return { hasWritten: batchHasWrites };
-
-    } catch (error) {
-        console.error('Error in ensureSeedData:', error);
-        return { hasWritten: false };
-    }
-}
 
 
 async function getUserId(): Promise<string | null> {
