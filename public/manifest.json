@@ -1,89 +1,91 @@
 {
-  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
   "name": "TestOpos - Tests de Oposiciones con IA",
   "short_name": "TestOpos",
-  "description": "Genera y practica tests para oposiciones usando Inteligencia Artificial. Prepárate de forma inteligente.",
+  "description": "Genera tests para oposiciones usando IA y practica con exámenes reales.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f9fafb",
+  "background_color": "#ffffff",
   "theme_color": "#2563eb",
   "orientation": "portrait-primary",
   "id": "/?source=pwa",
   "scope": "/",
   "lang": "es-ES",
   "dir": "ltr",
-  "display_override": [
-    "standalone",
-    "minimal-ui"
-  ],
-  "iarc_rating_id": "e84b072d-4540-42b0-9329-89d6a3f65d6b",
+  "iarc_rating_id": "e84b072d-8685-4191-a061-02685059AP",
   "prefer_related_applications": false,
+  "related_applications": [],
   "icons": [
     {
-      "src": "icons/icon-72x72.png",
+      "src": "/icons/icon-72x72.png",
       "sizes": "72x72",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-96x96.png",
+      "src": "/icons/icon-96x96.png",
       "sizes": "96x96",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-128x128.png",
+      "src": "/icons/icon-128x128.png",
       "sizes": "128x128",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-144x144.png",
+      "src": "/icons/icon-144x144.png",
       "sizes": "144x144",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-152x152.png",
+      "src.": "/icons/icon-152x152.png",
       "sizes": "152x152",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-192x192.png",
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "icons/icon-384x384.png",
+      "src": "/icons/icon-384x384.png",
       "sizes": "384x384",
       "type": "image/png"
     },
     {
-      "src": "icons/icon-512x512.png",
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "screenshots": [
     {
       "src": "/screenshots/screenshot1.png",
-      "type": "image/png",
       "sizes": "1080x1920",
-      "form_factor": "narrow"
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Pantalla de Inicio"
     },
     {
       "src": "/screenshots/screenshot2.png",
+      "sizes": "1080x1920",
       "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Generador de Tests IA"
+    },
+    {
+      "src": "/screenshots/screenshot3.png",
       "sizes": "1920x1080",
-      "form_factor": "wide"
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Resultados del Test"
     }
-  ],
-  "categories": [
-    "education",
-    "productivity"
   ],
   "shortcuts": [
     {
       "name": "Generar Test con IA",
       "short_name": "Generar IA",
-      "description": "Crea un nuevo test personalizado con IA",
+      "description": "Crea un nuevo test con preguntas personalizadas",
       "url": "/generate",
       "icons": [{ "src": "/icons/shortcut-generate.png", "sizes": "96x96" }]
     },
@@ -95,52 +97,75 @@
       "icons": [{ "src": "/icons/shortcut-stats.png", "sizes": "96x96" }]
     }
   ],
-  "share_target": {
-    "action": "/share-target",
-    "method": "GET",
-    "params": {
-      "title": "name",
-      "text": "description",
-      "url": "link"
-    }
+  "categories": ["education", "productivity"],
+  "display_override": ["window-controls-overlay", "minimal-ui"],
+  "edge_side_panel": {
+    "preferred_width": 480
   },
-  "protocol_handlers": [
-    {
-      "protocol": "web+testopos",
-      "url": "/test?examId=%s"
-    }
-  ],
   "file_handlers": [
     {
-      "action": "/handle-file",
+      "action": "/handle-pdf",
       "accept": {
         "application/pdf": [".pdf"]
-      }
+      },
+      "icons": [
+        {
+          "src": "/icons/pdf-handler.png",
+          "sizes": "128x128"
+        }
+      ],
+      "launch_type": "single-client"
     }
   ],
   "launch_handler": {
     "client_mode": "navigate-existing"
   },
-  "related_applications": [],
-  "widgets": [
-    {
-      "name": "Últimos Resultados",
-      "description": "Widget para ver tus últimos resultados de tests.",
-      "tag": "results",
-      "template": "results-widget",
-      "ms_ac_template": "widgets/results.json",
-      "data": "widgets/results-data.json",
-      "type": "application/json"
-    }
-  ],
-  "edge_side_panel": {
-    "preferred_width": 480
-  },
   "note_taking": {
     "new_note_url": "/new-note",
-    "needs_multipart": true
+    "edit_note_url": "/edit-note"
   },
+  "protocol_handlers": [
+    {
+      "protocol": "web+testopos",
+      "url": "/protocol-handler?path=%s"
+    }
+  ],
   "scope_extensions": [
-    { "origin": "*.testopos.com" }
+    { "origin": "*.testopos.com" },
+    { "origin": "testopos.co.uk" }
+  ],
+  "share_target": {
+    "action": "/share-handler/",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "widgets": [
+    {
+      "name": "Resumen de Estadísticas",
+      "description": "Widget para ver tu progreso reciente.",
+      "tag": "stats-widget",
+      "template": "stats_widget",
+      "ms_ac_template": "/widgets/stats_template.json",
+      "data": "/widgets/stats_data.json",
+      "screenshots": [
+        {
+          "src": "/widgets/stats_screenshot.png",
+          "sizes": "600x400",
+          "label": "Widget de Estadísticas"
+        }
+      ],
+      "icons": [
+        {
+          "src": "/widgets/stats_icon.png",
+          "sizes": "96x96"
+        }
+      ],
+      "auth": false,
+      "update": 86400
+    }
   ]
 }
