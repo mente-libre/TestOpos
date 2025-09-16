@@ -15,6 +15,7 @@ import {
   writeBatch,
   orderBy,
 } from 'firebase/firestore';
+import { CATEGORY_DEFINITIONS } from './firestore-server';
 
 
 // Main type for an exam document
@@ -55,14 +56,9 @@ export interface TestResult {
   createdAt: Timestamp | number;
 }
 
-// Centralized category definitions, safe for client and server use
-export const CATEGORY_DEFINITIONS = [
-    { id: "madrid", name: "Comunidad de Madrid" },
-    { id: "valencia", name: "Comunidad Valenciana" },
-    { id: "andalucia", name: "Andalucía" },
-    { id: "estado", name: "Administración del Estado" },
-    { id: "otros", name: "Otras" },
-];
+// Centralized category definitions, re-exported for client-side use
+export { CATEGORY_DEFINITIONS };
+
 
 /**
  * Retrieves all exams for a specific category.
