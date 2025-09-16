@@ -30,7 +30,6 @@ export default function Home() {
   
   const router = useRouter();
 
-  // Effect for handling auth state
   useEffect(() => {
     const unsubscribe = onAuthStateChange((firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
@@ -43,27 +42,29 @@ export default function Home() {
         setUser(null);
       }
     });
-    return () => unsubscribe();
-  }, []);
 
-  // Effect for fetching initial data, independent of user state
-  useEffect(() => {
     const fetchInitialData = async () => {
       setIsLoading(true);
-      const result = await loadInitialData();
-      if (result.success) {
-        setCategories(result.categories);
-      } else {
-        setCategories([]);
-        // Do not show an error to the user, just log it.
-        console.error("Failed to fetch initial data:", result.error);
+      try {
+        const result = await loadInitialData();
+        if (result.success) {
+          setCategories(result.categories);
+        } else {
+          setCategories([]);
+          console.error("Failed to fetch initial data:", result.error);
+        }
+      } catch (error) {
+         setCategories([]);
+         console.error("An unexpected error occurred while fetching initial data:", error);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     fetchInitialData();
-  }, []); // Empty dependency array ensures this runs once on mount
-
+    
+    return () => unsubscribe();
+  }, []); // Single useEffect for auth and data fetching
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -302,5 +303,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
