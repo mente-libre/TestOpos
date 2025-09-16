@@ -16,10 +16,6 @@ import {
   orderBy,
 } from 'firebase/firestore';
 import { type Exam, type Question, type TestResult, CATEGORY_DEFINITIONS } from '../definitions';
-import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '../seed-data';
-import { advoGeneralTest } from '../seed-data-new';
-import { officeTest } from '../seed-data-office';
-
 
 export * from '../definitions';
 
@@ -34,13 +30,23 @@ export const ensureSeedDataClient = async (): Promise<{ hasWritten: boolean }> =
         // Check if there are any exams at all to prevent re-seeding
         const countQuery = query(examsRef, limit(1));
         const initialCheck = await getDocs(countQuery);
+        
         if (!initialCheck.empty) {
             // Data exists, no need to seed.
             return { hasWritten: false };
         }
 
-        // If no data, proceed to seed
-        console.log("No exams found. Seeding initial data...");
+        // If no data, proceed to seed. This will likely fail if security rules are restrictive.
+        console.log("No exams found. Attempting to seed initial data from the client...");
+        
+        // Dynamic import to avoid server-side code in client bundle
+        const { madridAdminTest } = await import('../seed-data');
+        const { estadoConstitutionTest } = await import('../seed-data');
+        const { madridAdminTest2 } = await import('../seed-data');
+        const { madridAdminTest2006 } = await import('../seed-data');
+        const { advoGeneralTest } = await import('../seed-data-new');
+        const { officeTest } = await import('../seed-data-office');
+
         const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, officeTest];
         const batch = writeBatch(db);
 
@@ -49,17 +55,17 @@ export const ensureSeedDataClient = async (): Promise<{ hasWritten: boolean }> =
             batch.set(newExamRef, {
                 ...seedExam,
                 userId: 'system',
-                createdAt: Timestamp.now(),
+                createdAt: new Date(), // Use JS Date for client
             });
         });
 
         await batch.commit();
-        console.log("Seeding complete. Wrote " + seedExams.length + " exams.");
+        console.log("Client-side seeding complete. Wrote " + seedExams.length + " exams.");
         return { hasWritten: true };
 
     } catch (error) {
         console.error('Error in ensureSeedDataClient:', error);
-        // Don't throw, just report.
+        // Don't throw, just report. This can fail due to security rules.
         return { hasWritten: false };
     }
 }

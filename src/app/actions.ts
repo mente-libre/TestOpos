@@ -8,6 +8,10 @@ import { type TestResult, type Question } from '@/lib/definitions';
 import { getCategories, getTestResultsForUser, getQuestionsForCategory } from '@/lib/firebase/firestore-server';
 import { getAuth } from 'firebase-admin/auth';
 import { app as adminApp } from '@/lib/firebase/firebase-admin';
+import { CATEGORY_DEFINITIONS } from '@/lib/definitions';
+import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '@/lib/seed-data';
+import { advoGeneralTest } from '@/lib/seed-data-new';
+import { officeTest } from '@/lib/seed-data-office';
 
 
 async function getUserId(): Promise<string | null> {
@@ -34,13 +38,28 @@ async function getUserId(): Promise<string | null> {
 
 export async function loadInitialData() {
   try {
-    // This function now ONLY reads data. The seeding is handled client-side.
     const result = await getCategories();
     
-    if (result.success) {
+    if (result.success && result.categories && result.categories.some(c => c.examCount > 0)) {
       return { success: true, categories: result.categories };
     } else {
-      return { success: false, error: result.error };
+      // Fallback: If DB is empty or call fails, use local seed data to build categories
+      console.warn("Database is empty or failed to load. Using local fallback data.");
+      const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, officeTest];
+      const categoryCounts: { [key: string]: number } = {};
+
+      seedExams.forEach(exam => {
+        if (exam.category) {
+          categoryCounts[exam.category] = (categoryCounts[exam.category] || 0) + 1;
+        }
+      });
+
+      const fallbackCategories = CATEGORY_DEFINITIONS.map(def => ({
+        ...def,
+        examCount: categoryCounts[def.id] || 0,
+      }));
+
+      return { success: true, categories: fallbackCategories };
     }
 
   } catch (error) {

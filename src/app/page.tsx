@@ -10,7 +10,6 @@ import { onAuthStateChange, signOut } from '@/lib/firebase/auth';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { loadInitialData } from '@/app/actions';
-import { ensureSeedDataClient } from '@/lib/firebase/firestore';
 import { type Category } from '@/lib/definitions';
 import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/ui/logo';
@@ -49,10 +48,6 @@ export default function Home() {
       setIsLoading(true);
       setError(null);
       try {
-        // 1. Ensure seed data exists using the client-side function
-        await ensureSeedDataClient();
-        
-        // 2. Now, load the category counts from the server
         const result = await loadInitialData();
         if (result.success && result.categories) {
           setCategories(result.categories);
