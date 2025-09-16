@@ -1,6 +1,6 @@
 
 
-import type { Question } from './firebase/firestore';
+import { type Question } from './definitions';
 
 interface SeedExam {
     fileName: string;
@@ -471,11 +471,11 @@ export const estadoConstitutionTest: SeedExam = {
             explanation: "ARTÍCULO 97 CONSTITUCIÓN: El Gobierno dirige la política interior y exterior, la Administración civil y militar y la defensa del Estado. Ejerce la función ejecutiva y la potestad reglamentaria de acuerdo con la Constitución y las leyes.ARTÍCULO 99 CONSTITUCIÓN: 1. Después de cada renovación del Congreso de los Diputados, y en los demás supuestos constitucionales en que así proceda, el Rey, previa consulta con los representantes designados por los Grupos políticos con representación parlamentaria, y a través del Presidente del Congreso, propondrá un candidato a la Presidencia del Gobierno.ARTÍCULO 102: 1. La responsabilidad criminal del Presidente y los demás miembros del Gobierno será exigible, en su caso, ante la Sala de lo Penal del Tribunal Supremo."
         },
         {
-            questionText: "Según el artículo 11, ningún español de origen puede ser privado de su nacionalidad salvo que…",
+            questionText: "Según el artículo 11, un español de origen:",
             options: [
-                "Resida fuera de España por más de 10 años.",
-                "Adquiera voluntariamente otra nacionalidad.",
-                "Renuncie expresamente a ella ante un organismo internacional.",
+                "Debe mantener su nacionalidad al residir en el extranjero.",
+                "Puede perder su nacionalidad por decisión judicial.",
+                "No puede ser privado de su nacionalidad.",
                  "Ninguna de las anteriores es correcta."
             ],
             correctAnswerIndex: 1,
@@ -742,56 +742,6 @@ export const madridAdminTest2: SeedExam = {
             correctAnswerIndex: 0
         },
         {
-            questionText: "La Ley de transparencia, acceso a la información pública y buen gobierno (en adelante Ley de Transparencia) es:",
-            options: [ "La Ley 17/2012", "La Ley 19/2014", "La Ley 19/2013", "La Ley 17/2014" ],
-            correctAnswerIndex: 2
-        },
-        {
-            questionText: "La adaptación a la normativa europea expresada en el Reglamento General de Protección de Datos ha requerido la elaboración de una nueva ley orgánica que sustituya a la Ley Orgánica 15/1999, de 13 de diciembre, de Protección de Datos de Carácter Personal que es:",
-            options: [ "La Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales", "La Ley Orgánica 1/2019, de 15 de enero, de Protección de Datos Personales y garantía de los derechos digitales", "La Ley Orgánica 5/2019, de 13 de febrero, de Protección de Datos Personales y garantía de los derechos digitales", "La Ley Orgánica 8/2019, de 25 de mayo, de Protección de Datos Personales y garantía de los derechos digitales" ],
-            correctAnswerIndex: 0
-        },
-        {
-            questionText: "Los contratos del sector público están regulados actualmente por:",
-            options: [ "La Ley de Contratos del Estado", "La Ley de Contratos del Sector Público", "La Ley de Contratos de las Administraciones Públicas", "La Ley de Contratos de los Entes Públicos" ],
-            correctAnswerIndex: 1
-        },
-        {
-            questionText: "Están sujetos a regulación armonizada los contratos de obras, de concesión de obras y de concesión de servicios cuyo valor estimado sea:",
-            options: [ "Superior a 5.648.000 euros", "Inferior a 5.748.000 euros", "Igual o superior a 5.848.000 euros", "Igual o superior a 5.548.000 euros" ],
-            correctAnswerIndex: 3
-        },
-        {
-            questionText: "Son funcionarios interinos los que son nombrados como tales por razones:",
-            options: [ "Organizativas y de necesidad", "De necesidad y urgencia", "Expresamente justificadas de necesidad y urgencia", "Expresamente motivadas por necesidad y urgencia" ],
-            correctAnswerIndex: 2
-        },
-        {
-            questionText: "En la carrera horizontal de los funcionarios de carrera, los ascensos serán:",
-            options: [ "Consecutivos, única y exclusivamente", "Consecutivos y no consecutivos", "Consecutivos con carácter general, salvo en aquellos supuestos excepcionales en los que se prevea otra posibilidad", "Ninguna de las anteriores contestaciones es correcta" ],
-            correctAnswerIndex: 2
-        },
-        {
-            questionText: "En aquellos Regímenes de la Seguridad Social en que así resulte necesario podrán establecerse sistemas especiales exclusivamente en materia de:",
-            options: [ "Encuadramiento", "Encuadramiento o recaudación", "Encuadramiento, afiliación o recaudación", "Encuadramiento, afiliación, forma de cotización o recaudación" ],
-            correctAnswerIndex: 3
-        },
-        {
-            questionText: "La incapacidad temporal del Régimen General de la S.S. tendrá una duración máxima inicial de:",
-            options: [ "Seis meses", "365 días", "Quince meses", "Diez meses" ],
-            correctAnswerIndex: 1
-        },
-        {
-            questionText: "La potestad originaria para establecer los tributos corresponde exclusivamente:",
-            options: [ "A las Cortes Generales, mediante ley orgánica", "Al Gobierno, mediante ley", "Al Estado, mediante ley", "Al Gobierno, mediante reglamentos" ],
-            correctAnswerIndex: 2
-        },
-        {
-            questionText: "El Proyecto de Ley de Presupuestos Generales de la Comunidad y la documentación anexa, ¿será objeto de publicación?:",
-            options: [ "No hay previsión legal al respecto", "Sí, en el BOCM", "Sí, en sede electrónica", "Sí, en los tablones de anuncio de la Consejería de Hacienda, para información pública" ],
-            correctAnswerIndex: 1
-        },
-        {
             questionText: "La ley estatal para la igualdad efectiva de mujeres y hombres es:",
             options: [ "La Ley 4/2006", "La Ley Orgánica 3/2009", "La Ley Orgánica 3/2007", "El Real Decreto-Ley 7/2003" ],
             correctAnswerIndex: 2
@@ -1052,7 +1002,7 @@ export const madridAdminTest2006: SeedExam = {
         questionText: "Según el Estatuto de Autonomía, es necesario ser diputado de la Asamblea de la Comunidad de Madrid, para:",
         options: [
           "Ser Vicepresidente del Gobierno de la Comunidad de Madrid.",
-          "Ser Consejero del Gobierno de la Comunidad de Madrid, pero no para ser Vicepresidente del mismo.",
+          "Ser Consejero del Gobierno de la Comunidad de Madrid, but no para ser Vicepresidente del mismo.",
           "Ser tanto Vicepresidente como Consejero del Gobierno de la Comunidad de Madrid.",
           "Ninguna respuesta es correcta.",
         ],
@@ -1074,9 +1024,14 @@ export const madridAdminTest2006: SeedExam = {
         correctAnswerIndex: 1,
       },
       {
-        questionText: "¿Cuántos artículos tiene la Ley 30/1992, de 26 de noviembre, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común?",
-        options: ["144.", "145.", "46.", "147."],
-        correctAnswerIndex: -1, // ANULADA
+        questionText: "La Ley 30/1992, de 26 de noviembre, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común fue derogada por la ley:",
+        options: [
+          "39/2015, de 1 de octubre.",
+          "40/2015, de 1 de octubre.",
+          "A y B son correctas.",
+          "Ninguna respuesta es correcta."
+        ],
+        correctAnswerIndex: 2,
       },
       {
         questionText: "¿Cómo se denomina el Título IV de la Ley 30/1992, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común?",
@@ -1118,432 +1073,7 @@ export const madridAdminTest2006: SeedExam = {
         ],
         correctAnswerIndex: 3,
       },
-      {
-        questionText: "Según el artículo 107.2 de la Ley 30/1992, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común, las leyes podrán sustituir el recurso de alzada, en supuestos o ámbitos sectoriales determinados, cuando la especificidad de la materia así lo justifique, ante órganos colegiados o comisiones específicas no sometidas a estructuras jerárquicas, por otros procedimientos de:",
-        options: [
-          "Impugnación, reclamación, conciliación, mediación y arbitraje.",
-          "Resolución, reclamación, conciliación, mediación y arbitraje.",
-          "Impugnación, reclamación, conformidad, mediación y arbitraje.",
-          "Impugnación, reclamación, conciliación, intervención y arbitraje.",
-        ],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "Interpuesto el recurso de reposición y de acuerdo con la Ley 30/1992, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común ¿puede interponerse un recurso contencioso-administrativo",
-        options: [
-          "No, hasta que no sea resuelto expresamente el recurso de reposición.",
-          "Sí, ya que ambos recursos son simultáneos.",
-          "No hasta que se haya producido la estimación presunta del recurso de reposición interpuesto.",
-          "Sí, y además cabe interponer el recurso de alzada ante el superior jerárquico.",
-        ],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "¿Qué tipo de recurso administrativo cabe contra la resolución de un recurso de alzada?",
-        options: [
-          "Potestativo de reposición.",
-          "Ninguno.",
-          "El recurso contencioso-administrativo.",
-          "Solo cabe el recurso extraordinario de revisión en los supuestos del 118.1 de la Ley 30/1992, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común.",
-        ],
-        correctAnswerIndex: 3,
-      },
-      {
-        questionText: "¿Suspende la interposición de cualquier recurso la ejecución del acto impugnado, de acuerdo con la Ley 30/1992, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común?",
-        options: [
-          "No, en ningún caso.",
-          "No, excepto en los casos en que una disposición establezca lo contrario.",
-          "No, salvo que se fundamente en alguna de las causas de nulidad de pleno derecho del artículo 63 de la Ley 30/1992, de Régimen Jurídico de las Administraciones Públicas y del Procedimiento Administrativo Común.",
-          "Sí, siempre.",
-        ],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "¿Cuál de los siguientes supuestos no es susceptible de recurso contencioso-administrativo, de conformidad con lo dispuesto en la Ley 29/1998, de 13 de julio, de la Jurisdicción Contencioso-Administrativa?",
-        options: [
-          "Las disposiciones de carácter general.",
-          "Los actos que se produzcan en aplicación de las disposiciones de carácter general.",
-          "La inactividad de la administración.",
-          "Los actos administrativos que no pongan fin a la vía administrativa.",
-        ],
-        correctAnswerIndex: 3,
-      },
-      {
-        questionText: "Será requisito necesario para autorizar la compatibilidad de actividades públicas el que la cantidad total percibida por ambos puestos o actividades no supere la remuneración prevista en los Presupuestos Generales del Estado para cargo de Director General, ni supere la correspondiente al principal, estimada en régimen de dedicación ordinaria, incrementada en:",
-        options: [
-          "Un 30 por 100, para los funcionarios del grupo D o personal de nivel equivalente.",
-          "Un 45 por 100, para los funcionarios del grupo D o personal de nivel equivalente.",
-          "Un 35 por 100, para los funcionarios del grupo D o personal de nivel equivalente.",
-          "Un 40 por 100, para los funcionarios del grupo D o personal de nivel equivalente.",
-        ],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "Según lo establecido en el artículo 29 de la Ley 1/1986, de 10 abril de Función Pública de la Comunidad de Madrid, ¿cuál de los siguiente supuestos no supone la pérdida de la condición de funcionario?",
-        options: [
-          "Renuncia verbal del interesado.",
-          "Pérdida de la nacionalidad española.",
-          "Jubilación forzosa.",
-          "Jubilación voluntaria.",
-        ],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "Señale cuál de los siguientes no es un Cuerpo de Administración Especial en la Comunidad de Madrid:",
-        options: [
-          "Cuerpo Superior de Gestión.",
-          "Cuerpo de Letrados de la Comunidad de Madrid.",
-          "Cuerpo de Inspectores de Hacienda de la Comunidad de Madrid.",
-          "Cuerpo de Técnicos Medioambientales.",
-        ],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "El funcionario con un hijo/a menor de doce meses tiene derecho a un permiso de una hora diaria de ausencia del trabajo para atenderlo. En el caso de que el padre y la madre presten servicio en la Administración de la Comunidad, ¿quién de los dos podrá ejercitar este derecho?",
-        options: [
-          "Siempre la madre.",
-          "Siempre el padre.",
-          "Sólo uno de ellos.",
-          "Ninguna de las respuestas es correcta.",
-        ],
-        correctAnswerIndex: 2,
-      },
-      {
-        questionText: "Según el Acuerdo Sectorial para el Personal Funcionario de Administración y Servicios al Servicio de la Administración General de la Comunidad de Madrid y sus Organismos Autónomos 2005-2007, si por razones del servicio los días de permiso por asuntos particulares no se hayan disfrutado durante el año en curso, ¿cuándo podrá un funcionario disfrutar de dichos días?",
-        options: [
-          "En el mes de enero del ejercicio siguiente.",
-          "Hasta el mes de abril del ejercicio siguiente.",
-          "Hasta el mes de julio del ejercicio siguiente.",
-          "Si no se disfrutan durante el año en curso, se pierde el derecho a los mismos.",
-        ],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "¿Cómo se crean, extinguen o modifican los Registros de la Comunidad de Madrid?",
-        options: [
-          "Mediante Decreto del Gobierno de la Comunidad de Madrid.",
-          "Mediante Orden del Consejero de Presidencia.",
-          "Mediante Orden del Consejero de Hacienda.",
-          "Mediante Decreto del Presidente de la Comunidad de Madrid",
-        ],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "¿En qué plazo máximo, contado desde la recepción de la solicitud de un ciudadano de la expedición de copias auténticas deberán expedirse las mismas o notificarse la resolución que deniegue dicha expedición?",
-        options: ["Quince días.", "Un mes.", "Dos meses.", "Tres meses."],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "¿Qué Centros de Archivo de competencia autonómica cuya consulta sea de interés para los ciudadanos pueden integrarse en la Red de Archivos de Uso Público de la Comunidad de Madrid?",
-        options: [
-          "Sólo los de titularidad pública.",
-          "Los de titularidad pública y privada.",
-          "Sólo los de titularidad privada.",
-          "Ninguna respuesta es correcta.",
-        ],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "Señale cuál de las siguientes no es una actividad de registro:",
-        options: [
-          "El envío masivo de comunicaciones en desarrollo de una actividad privada de carácter comercial.",
-          "La expedición de recibos de la presentación de comunicaciones.",
-          "La anotación de asientos de salida de escritos.",
-          "Todas las anteriores forman parte de la actividad de registro.",
-        ],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "¿Cuál de las siguientes extensiones en un fichero informático corresponde a una hoja de cálculo?",
-        options: ["WWW", "JPG", "MPG", "XLS"],
-        correctAnswerIndex: 3,
-      },
-      {
-        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? DESCOLLAR",
-        options: [
-          "Ganar la voluntad de uno con halagos para conseguir alguna cosa.",
-          "Mejorar una casta o raza de animales, cruzándolos con otros.",
-          "Dar la embarcación en arena o piedra, quedando sin movimiento.",
-          "Sobresalir.",
-        ],
-        correctAnswerIndex: 3,
-      },
-      {
-        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? FÉTIDO",
-        options: [
-          "Hediondo.",
-          "Dícese de la persona a quien se puede fiar.",
-          "Perteneciente o relativo al gato.",
-          "Que profesa determinada fe religiosa.",
-        ],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? INEFABLE",
-        options: [
-          "Vagabundo, ambulante, sin domicilio cierto.",
-          "Que constituye excepción a la regla común.",
-          "Dícese del que obra por mera rutina.",
-          "Que no se puede explicar con palabras.",
-        ],
-        correctAnswerIndex: 3,
-      },
-      {
-        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? PUERIL",
-        options: [
-          "Que ha llegado a la pubertad.",
-          "Falto de sensatez, fatuo.",
-          "De poco aprecio o importancia.",
-          "Propio de un niño o que parece un niño.",
-        ],
-        correctAnswerIndex: 3,
-      },
-      {
-        questionText: "Seleccione la opción (A, B, C o D) que contenga todas las palabras bien escritas.",
-        options: [
-          "legado | apabullar | hediondo | punción",
-          "heregía | célibe | lúgubre | infibulación",
-          "ardid | calumnia | hexaló | alondra",
-          "ampuloso | exigüo | tenue | implícito",
-        ],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "Seleccione la opción (A, B, C o D) que contenga todas las palabras bien escritas.",
-        options: [
-          "quizá | presagiar | edonismo | esto",
-          "pío | rinvovante | alumbramiento | prorrogar",
-          "boya | acicate | almanaque | siega",
-          "exangüe | vituperar | advenedizo | proceda",
-        ],
-        correctAnswerIndex: 2,
-      },
-      {
-        questionText: "Seleccione la opción (A, B, C o D) que contenga todas las palabras bien escritas.",
-        options: [
-          "arenga | heno | hilbanar | mahometano",
-          "infestado | herrumbroso | anhelo | ñu",
-          "ronroneo | báculo | grillete | averiguar",
-          "negligente | cíngaro | histriónico | behemente",
-        ],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
-        options: ["", "", "", ""],
-        correctAnswerIndex: 2,
-      },
-      {
-        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
-        options: ["", "", "", ""],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
-        options: ["", "", "", ""],
-        correctAnswerIndex: 2,
-      },
-      {
-        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
-        options: ["", "", "", ""],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
-        options: ["", "", "", ""],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "¿Cuál ha sido la media trimestral de llamadas sobre hacienda?",
-        options: ["500", "600", "700", "800"],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "¿En qué área se ha producido un mayor aumento porcentual de llamadas del primer trimestre al cuarto?",
-        options: ["Consumo", "Hacienda", "Sanidad", "Educación"],
-        correctAnswerIndex: 2,
-      },
-      {
-        questionText: "Si durante el año ha habido siete operadores para responder a las llamadas del área de educación ¿qué número de llamadas, en promedio, ha atendido cada uno de ellos trimestralmente? Responda con aquella opción de respuesta que más se aproxime a la cifra exacta.",
-        options: ["75", "89", "94", "102"],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "Teniendo en cuenta los datos que aparecen en la tabla siguiente y los contenidos en el gráfico anterior, ¿en qué área los operadores tuvieron una mayor carga de trabajo (número de llamadas atendidas por operador) durante el 4º trimestre?",
-        options: ["Consumo", "Hacienda", "Sanidad", "Educación"],
-        correctAnswerIndex: 2,
-      },
-      {
-        questionText: "En cada ejercicio, elija el código de símbolos (A, B, C o D) que se corresponda con la palabra escrita en mayúsculas. COFRADE",
-        options: ["COFRACE", "CPFRADE", "COFRADE", "CPFRACE"],
-        correctAnswerIndex: 2,
-      },
-      {
-        questionText: "En cada ejercicio, elija el código de símbolos (A, B, C o D) que se corresponda con la palabra escrita en mayúsculas. ADMIRADOR",
-        options: ["ADSIRADOK", "ADMIRADOK", "ADMIRADOR", "ADMIRADOL"],
-        correctAnswerIndex: 2,
-      },
-      {
-        questionText: "En cada ejercicio, elija el código de símbolos (A, B, C o D) que se corresponda con la palabra escrita en mayúsculas. CELEBRIDAD",
-        options: ["CEKFBRIDAD", "CEKEBRCDBD", "CEKFBRIDAB", "CELEBRIDAD"],
-        correctAnswerIndex: 3,
-      },
-      {
-        questionText: "En cada ejercicio, elija el código de símbolos (A, B, C o D) que se corresponda con la palabra escrita en mayúsculas. PECULIARIDAD",
-        options: ["PECULIARIDAD", "PECVLIARICAD", "PECVKIARIDAD", "PECULICRICAD"],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? FLÁCIDO",
-        options: [
-          "Que causa enfermedad o concierne a ella.",
-          "Flaco, flojo, sin consistencia.",
-          "Desembarazado, airoso y galán.",
-          "De poca sustancia, valor o importancia.",
-        ],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? TÉTRICO",
-        options: [
-          "Triste, grave y melancólico.",
-          "Que causa pavor.",
-          "Flaco y descolorido.",
-          "Decaído, falto de vigor y aliento.",
-        ],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? AFORISMO",
-        options: [
-          "Inclinación, amor a alguna persona o cosa.",
-          "Sentencia breve y doctrinal que se propone como regla en alguna ciencia.",
-          "Explicación o comentario de un texto oscuro o difícil de entender.",
-          "Rodeo o digresión antes de entrar en materia.",
-        ],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? ENJUTO",
-        options: [
-          "Duda, dificultad, enredo.",
-          "Delgado, seco o de pocas carnes.",
-          "Mezcla de varias cosas diversas entre sí.",
-          "Acción o efecto de encoger.",
-        ],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "¿Qué definición (A, B, C o D) se ajusta más a la palabra que aparece escrita en mayúsculas? INSTIGAR",
-        options: [
-          "Incitar, provocar o inducir a uno a que haga alguna cosa.",
-          "Echar poco a poco, gota a gota, un líquido en otra cosa.",
-          "Hollar con los pies algo.",
-          "Apuntar el nombre de una persona entre los de otras para un objeto determinado.",
-        ],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "En las siguientes oraciones algunas letras han sido sustituidas por un guión bajo ('_'). ¿En cuántas de las siguientes oraciones la letra que falta ('_') debería llevar tilde?",
-        options: ["1", "2", "3", "4"],
-        correctAnswerIndex: 3,
-      },
-      {
-        questionText: "En las siguientes oraciones algunas letras han sido sustituidas por un guión bajo ('_'). ¿En cuántas de las siguientes oraciones la letra que falta ('_') debería llevar tilde?",
-        options: ["1", "2", "3", "4"],
-        correctAnswerIndex: 2,
-      },
-      {
-        questionText: "En las siguientes oraciones algunas letras han sido sustituidas por un guión bajo ('_'). ¿En cuántos de los siguientes guiones bajos ('_') debería aparecer la letra 'h'?",
-        options: ["1", "2", "3", "4"],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "En las siguientes oraciones algunas letras han sido sustituidas por un guión bajo ('_'). ¿En cuántos de los siguientes guiones bajos ('_') debería aparecer la letra 'b'?",
-        options: ["1", "2", "3", "4"],
-        correctAnswerIndex: 3,
-      },
-      {
-        questionText: "En las siguientes oraciones algunas letras han sido sustituidas por un guión bajo ('_'). ¿En cuántos de los siguientes guiones bajos ('_') debería aparecer la letra 'y'?",
-        options: ["1", "2", "3", "4"],
-        correctAnswerIndex: 2,
-      },
-      {
-        questionText: "En las siguientes oraciones algunas letras han sido sustituidas por un guión bajo ('_'). ¿En cuántos de los siguientes guiones bajos ('_') debería aparecer la letra 'x'?",
-        options: ["1", "2", "3", "4"],
-        correctAnswerIndex: 2,
-      },
-      {
-        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
-        options: ["", "", "", ""],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
-        options: ["", "", "", ""],
-        correctAnswerIndex: 3,
-      },
-      {
-        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
-        options: ["", "", "", ""],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "En los siguientes ejercicios deberá descubrir cuál es la ley que determina la posición de las figuras dentro del recuadro y decidir cuál de las cuatro opciones propuestas (A, B, C o D) debe ocupar el lugar del interrogante.",
-        options: ["", "", "", ""],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "¿Qué departamento (A, B, C o D) ha gastado más dinero en envíos de cartas?",
-        options: ["A", "B", "C", "D"],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "¿Qué departamento (A, B, C o D) ha gastado más dinero en envíos de cartas?",
-        options: ["A", "B", "C", "D"],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "¿Qué departamento (A, B, C o D) ha gastado más dinero en envíos de cartas?",
-        options: ["A", "B", "C", "D"],
-        correctAnswerIndex: 2,
-      },
-      {
-        questionText: "¿Qué departamento (A, B, C o D) ha gastado más dinero en envíos de cartas?",
-        options: ["A", "B", "C", "D"],
-        correctAnswerIndex: 2,
-      },
-      {
-        questionText: "¿Qué departamento (A, B, C o D) ha gastado más dinero en envíos de cartas?",
-        options: ["A", "B", "C", "D"],
-        correctAnswerIndex: 2,
-      },
-      {
-        questionText: "Observe en cada ejercicio los cuatro cuadros con símbolos y escoja una respuesta (A, B, C o D) en función de los siguientes criterios: A. Si todos los cuadros son diferentes B. Si hay dos cuadros iguales C. Si hay tres cuadros iguales D. Si todos los cuadros son iguales",
-        options: ["A", "B", "C", "D"],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "Observe en cada ejercicio los cuatro cuadros con símbolos y escoja una respuesta (A, B, C o D) en función de los siguientes criterios: A. Si todos los cuadros son diferentes B. Si hay dos cuadros iguales C. Si hay tres cuadros iguales D. Si todos los cuadros son iguales",
-        options: ["A", "B", "C", "D"],
-        correctAnswerIndex: 0,
-      },
-      {
-        questionText: "Observe en cada ejercicio los cuatro cuadros con símbolos y escoja una respuesta (A, B, C o D) en función de los siguientes criterios: A. Si todos los cuadros son diferentes B. Si hay dos cuadros iguales C. Si hay tres cuadros iguales D. Si todos los cuadros son iguales",
-        options: ["A", "B", "C", "D"],
-        correctAnswerIndex: 1,
-      },
-      {
-        questionText: "Observe en cada ejercicio los cuatro cuadros con símbolos y escoja una respuesta (A, B, C o D) en función de los siguientes criterios: A. Si todos los cuadros son diferentes B. Si hay dos cuadros iguales C. Si hay tres cuadros iguales D. Si todos los cuadros son iguales",
-        options: ["A", "B", "C", "D"],
-        correctAnswerIndex: 3,
-      },
-      {
-        questionText: "Observe en cada ejercicio los cuatro cuadros con símbolos y escoja una respuesta (A, B, C o D) en función de los siguientes criterios: A. Si todos los cuadros son diferentes B. Si hay dos cuadros iguales C. Si hay tres cuadros iguales D. Si todos los cuadros son iguales",
-        options: ["A", "B", "C", "D"],
-        correctAnswerIndex: 1,
-      },
-    ],
+    ]
   };
     
     

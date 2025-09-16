@@ -18,7 +18,7 @@ import {
 import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '../seed-data';
 import { advoGeneralTest } from '../seed-data-new';
 import { officeTest } from '../seed-data-office';
-import { type TestResult, type Question, type Exam, type Category, CATEGORY_DEFINITIONS } from './firestore';
+import { type TestResult, type Question, type Exam, type Category, CATEGORY_DEFINITIONS } from '../definitions';
 
 
 /**

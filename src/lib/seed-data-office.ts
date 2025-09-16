@@ -1,5 +1,6 @@
 
-import type { Question } from './firebase/firestore';
+
+import type { Question } from './definitions';
 
 interface SeedExam {
     fileName: string;

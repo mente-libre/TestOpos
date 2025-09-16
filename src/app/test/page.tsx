@@ -7,7 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { getExamById, type Question, type TestResult } from '@/lib/firebase/firestore';
+import { getExamById } from '@/lib/firebase/firestore';
+import { type Question, type TestResult } from '@/lib/definitions';
 import { Loader2, CheckCircle, XCircle, RefreshCw, Eye, Wand2, Home } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { generateReviewTest, saveFinishedTest } from '@/app/actions';

@@ -4,7 +4,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { onAuthStateChange, type User } from '@/lib/firebase/auth';
-import { type TestResult } from '@/lib/firebase/firestore';
+import { type TestResult } from '@/lib/definitions';
 import { loadStatistics } from '@/app/actions';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 

@@ -11,7 +11,7 @@ import { onAuthStateChange, signOut } from '@/lib/firebase/auth';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { loadInitialData } from '@/app/actions';
-import { type Category } from '@/lib/firebase/firestore';
+import { type Category } from '@/lib/definitions';
 import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/ui/logo';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';

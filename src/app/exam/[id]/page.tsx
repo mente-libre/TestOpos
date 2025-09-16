@@ -3,7 +3,8 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { getExamById, type Exam } from '@/lib/firebase/firestore';
+import { getExamById } from '@/lib/firebase/firestore';
+import { type Exam } from '@/lib/definitions';
 import { onAuthStateChange, type User } from '@/lib/firebase/auth';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

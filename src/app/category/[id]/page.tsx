@@ -72,7 +72,7 @@ export default function CategoryPage() {
         {exams.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {exams.map((exam) => (
-               <Link href={`/exam/${exam.id}`} key={exam.id} passHref>
+               <Link href={`/test?examId=${exam.id}`} key={exam.id} passHref>
                 <Card className="hover:shadow-lg hover:-translate-y-1 transition-transform cursor-pointer h-full">
                   <CardHeader>
                     <div className="flex items-center gap-4">

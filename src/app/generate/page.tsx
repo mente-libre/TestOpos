@@ -12,14 +12,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
 import { Logo } from '@/components/ui/logo';
-import { CATEGORY_DEFINITIONS } from '@/lib/firebase/firestore';
-
-interface Question {
-  questionText: string;
-  options: string[];
-  correctAnswerIndex: number;
-  explanation?: string;
-}
+import { type Question } from '@/lib/definitions';
+import { CATEGORY_DEFINITIONS } from '@/lib/definitions';
 
 export default function GeneratePage() {
   const [isProcessing, setIsProcessing] = useState(false);
