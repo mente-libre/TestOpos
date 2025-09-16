@@ -1,83 +1,83 @@
 {
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
   "name": "TestOpos - Tests de Oposiciones con IA",
   "short_name": "TestOpos",
-  "description": "Genera y practica tests para oposiciones usando IA. La preparación más completa a tu alcance.",
+  "description": "Genera y practica tests para oposiciones usando Inteligencia Artificial. Prepárate de forma inteligente.",
   "start_url": "/",
-  "id": "/?source=pwa",
-  "background_color": "#ffffff",
-  "theme_color": "#2563eb",
   "display": "standalone",
-  "orientation": "portrait",
+  "background_color": "#f9fafb",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "id": "/?source=pwa",
   "scope": "/",
   "lang": "es-ES",
   "dir": "ltr",
-  "categories": [
-    "education",
-    "productivity"
+  "display_override": [
+    "standalone",
+    "minimal-ui"
   ],
+  "iarc_rating_id": "e84b072d-4540-42b0-9329-89d6a3f65d6b",
+  "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/icons/icon-48x48.png",
-      "sizes": "48x48",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-72x72.png",
+      "src": "icons/icon-72x72.png",
       "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "/icons/icon-96x96.png",
+      "src": "icons/icon-96x96.png",
       "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "/icons/icon-128x128.png",
+      "src": "icons/icon-128x128.png",
       "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "/icons/icon-144x144.png",
+      "src": "icons/icon-144x144.png",
       "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-384x384.png",
+      "src": "icons/icon-384x384.png",
       "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     }
   ],
   "screenshots": [
     {
       "src": "/screenshots/screenshot1.png",
-      "sizes": "1080x1920",
       "type": "image/png",
-      "label": "Página principal con categorías de exámenes."
+      "sizes": "1080x1920",
+      "form_factor": "narrow"
     },
     {
       "src": "/screenshots/screenshot2.png",
-      "sizes": "1080x1920",
       "type": "image/png",
-      "label": "Generador de tests con Inteligencia Artificial."
+      "sizes": "1920x1080",
+      "form_factor": "wide"
     }
+  ],
+  "categories": [
+    "education",
+    "productivity"
   ],
   "shortcuts": [
     {
@@ -95,16 +95,14 @@
       "icons": [{ "src": "/icons/shortcut-stats.png", "sizes": "96x96" }]
     }
   ],
-  "file_handlers": [
-    {
-      "action": "/test",
-      "accept": {
-        "text/plain": [".txt"]
-      }
+  "share_target": {
+    "action": "/share-target",
+    "method": "GET",
+    "params": {
+      "title": "name",
+      "text": "description",
+      "url": "link"
     }
-  ],
-  "launch_handler": {
-    "client_mode": "focus-existing"
   },
   "protocol_handlers": [
     {
@@ -112,24 +110,24 @@
       "url": "/test?examId=%s"
     }
   ],
-  "prefer_related_applications": false,
-  "related_applications": [],
-  "share_target": {
-    "action": "/shared-content-receiver",
-    "method": "GET",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
+  "file_handlers": [
+    {
+      "action": "/handle-file",
+      "accept": {
+        "application/pdf": [".pdf"]
+      }
     }
+  ],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
   },
-  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "related_applications": [],
   "widgets": [
     {
       "name": "Últimos Resultados",
-      "description": "Widget para ver tus últimos resultados.",
+      "description": "Widget para ver tus últimos resultados de tests.",
       "tag": "results",
-      "template": "results-template",
+      "template": "results-widget",
       "ms_ac_template": "widgets/results.json",
       "data": "widgets/results-data.json",
       "type": "application/json"
@@ -138,14 +136,11 @@
   "edge_side_panel": {
     "preferred_width": 480
   },
-  "display_override": [
-    "standalone"
-  ],
   "note_taking": {
     "new_note_url": "/new-note",
-    "edit_note_url": "/edit-note"
+    "needs_multipart": true
   },
   "scope_extensions": [
-    { "origin": "*.example.com" }
+    { "origin": "*.testopos.com" }
   ]
 }
