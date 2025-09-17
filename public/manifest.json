@@ -1,7 +1,7 @@
 {
   "name": "TestOpos - Tests de Oposiciones con IA",
   "short_name": "TestOpos",
-  "description": "La mejor app para preparar tus oposiciones con tests reales y generados por IA.",
+  "description": "La mejor app para preparar tus oposiciones con exámenes reales y tests generados por IA.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -26,33 +26,66 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshots/screenshot-narrow.png",
-      "sizes": "540x720",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Vista de la aplicación en móvil"
-    },
-     {
-      "src": "/screenshots/screenshot-wide.png",
-      "sizes": "1280x800",
-      "type": "image/png",
+      "src": "/screenshots/screenshot-desktop-1.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
       "form_factor": "wide",
-      "label": "Vista de la aplicación en escritorio"
+      "label": "Vista de la página principal en escritorio"
+    },
+    {
+      "src": "/screenshots/screenshot-mobile-1.jpg",
+      "sizes": "540x720",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Vista de la página principal en móvil"
     }
   ],
-  "id": "/?source=pwa",
-  "orientation": "any",
-  "dir": "auto",
-  "lang": "es-ES",
+  "orientation": "portrait-primary",
   "scope": "/",
+  "lang": "es-ES",
+  "id": "/?source=pwa",
+  "dir": "ltr",
+  "categories": [
+    "education",
+    "utilities"
+  ],
   "display_override": [
-    "window-controls-overlay",
-    "tabbed"
+    "standalone",
+    "window-controls-overlay"
   ],
   "edge_side_panel": {
     "preferred_width": 480
   },
-  "iarc_rating_id": "e5c89f2b-2a3b-4c1c-9076-02d9c1b9a9d7",
+  "iarc_rating_id": "e84b072d-8685-4129-9e13-102434926b42",
+  "launch_handler": {
+    "client_mode": [
+      "navigate-existing",
+      "auto"
+    ]
+  },
+  "note_taking": {
+    "new_note_url": "/new-note",
+    "accept": [
+      "text/plain",
+      "text/html"
+    ]
+  },
+  "prefer_related_applications": false,
+  "protocol_handlers": [
+    {
+      "protocol": "web+testopos",
+      "url": "/test?id=%s"
+    }
+  ],
+  "related_applications": [],
+  "scope_extensions": [
+    {
+      "origin": "*.testopos.com"
+    },
+    {
+      "origin": "testopos.es"
+    }
+  ],
   "share_target": {
     "action": "/shared-content-receiver/",
     "method": "GET",
@@ -62,45 +95,9 @@
       "url": "url"
     }
   },
-  "related_applications": [
-    {
-      "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=com.example.app1",
-      "id": "com.example.app1"
-    },
-    {
-      "platform": "itunes",
-      "url": "https://itunes.apple.com/app/example-app1/id123456789"
-    }
-  ],
-  "prefer_related_applications": false,
-  "protocol_handlers": [
-    {
-      "protocol": "web+testopos",
-      "url": "/protocol?type=%s"
-    }
-  ],
-  "launch_handler": {
-    "client_mode": "navigate-existing"
-  },
-  "file_handlers": [
-    {
-      "action": "/handle-pdf",
-      "accept": {
-        "application/pdf": [
-          ".pdf"
-        ]
-      }
-    }
-  ],
-  "categories": [
-    "education",
-    "productivity",
-    "utilities"
-  ],
   "shortcuts": [
     {
-      "name": "Generar nuevo test",
+      "name": "Generar Nuevo Test",
       "short_name": "Generar",
       "description": "Crear un nuevo test con IA",
       "url": "/generate",
@@ -112,7 +109,7 @@
       ]
     },
     {
-      "name": "Ver estadísticas",
+      "name": "Ver Estadísticas",
       "short_name": "Estadísticas",
       "description": "Revisar tu progreso y resultados",
       "url": "/stats",
@@ -124,27 +121,29 @@
       ]
     }
   ],
-  "note_taking": {
-    "new_note_url": "/new-note",
-    "needs_account": true
-  },
   "widgets": [
     {
-      "name": "Resumen de progreso",
-      "description": "Un vistazo rápido a tus últimas puntuaciones.",
-      "tag": "summary",
-      "template": "summary_template",
-      "ms_ac_template": "widgets/summary_template.json",
-      "data": "widgets/summary_data.json",
-      "type": "application/json"
-    }
-  ],
-  "scope_extensions": [
-    {
-      "origin": "*.testopos.com"
-    },
-    {
-      "origin": "opos.test.com"
+      "name": "Resumen de Estadísticas",
+      "description": "Widget que muestra un resumen de tu progreso.",
+      "tag": "stats-summary",
+      "template": "stats-widget",
+      "ms_ac_template": "/widgets/stats.json",
+      "data": "/widgets/stats-data.json",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "/screenshots/widget-stats.png",
+          "sizes": "320x160"
+        }
+      ],
+      "icons": [
+        {
+          "src": "/icons/widget-icon.png",
+          "sizes": "96x96"
+        }
+      ],
+      "auth": "true",
+      "update": 86400
     }
   ]
 }
