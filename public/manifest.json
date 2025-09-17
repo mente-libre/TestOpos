@@ -1,14 +1,18 @@
 {
-  "name": "TestOpos - Tests de Oposiciones con IA",
+  "name": "TestOpos - IA",
   "short_name": "TestOpos",
-  "description": "Practica y genera tests para tus oposiciones con la ayuda de la inteligencia artificial. Prepárate de forma inteligente.",
+  "description": "Practica y genera tests para tus oposiciones con la ayuda de la inteligencia artificial.",
   "start_url": "/",
-  "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
   "orientation": "portrait",
-  "id": "/?v=1",
+  "id": "/?utm_source=pwa",
+  "scope": "/",
+  "scope_extensions": [
+    { "origin": "*.firebaseapp.com" },
+    { "origin": "*.google.com" }
+  ],
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
@@ -19,39 +23,24 @@
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "display_override": [
+    "window-controls-overlay"
+  ],
+  "lang": "es-ES",
+  "dir": "ltr",
+  "iarc_rating_id": "e84b072d-4543-40b3-92f7-023a1a9e320d",
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.example.app1",
+      "id": "com.example.app1"
     },
     {
-      "src": "/icons/icon-192x192-maskable.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icons/icon-512x512-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "platform": "itunes",
+      "url": "https://itunes.apple.com/app/example-app1/id123456789"
     }
-  ],
-  "shortcuts": [
-    {
-      "name": "Generar Test con IA",
-      "short_name": "Generar IA",
-      "description": "Crea un nuevo test personalizado con inteligencia artificial.",
-      "url": "/generate",
-      "icons": [{ "src": "/icons/icon-wand-96.png", "sizes": "96x96" }]
-    }
-  ],
-  "file_handlers": [
-    {
-      "action": "/open-file",
-      "accept": {
-        "application/json": [".json"]
-      }
-    }
-  ],
-  "scope_extensions": [
-    { "origin": "*.test-opos.vercel.app" },
-    { "origin": "test-opos.vercel.app" }
   ]
 }
