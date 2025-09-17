@@ -1,146 +1,154 @@
 {
   "name": "TestOpos - Tests de Oposiciones con IA",
   "short_name": "TestOpos",
-  "description": "Practica y genera tests para tus oposiciones con la ayuda de la Inteligencia Artificial. Prepárate de forma inteligente.",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#2563eb",
-  "orientation": "portrait",
-  "id": "/?v=1",
-  "lang": "es-ES",
-  "dir": "ltr",
-  "scope": "/",
-  "categories": [
-    "education",
-    "productivity"
-  ],
-  "iarc_rating_id": "e84b072d-4522-4325-8573-044710186ee9",
-  "related_applications": [
+  "description": "Practica para tus oposiciones con tests reales y exámenes generados por inteligencia artificial. Analiza tu progreso y mejora tus resultados.",
+  "icons": [
     {
-      "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=com.example.app",
-      "id": "com.example.app"
+      "src": "/icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
     },
     {
-      "platform": "itunes",
-      "url": "https://itunes.apple.com/app/example-app/id123456789"
-    }
-  ],
-  "prefer_related_applications": false,
-  "scope_extensions": [
+      "src": "/icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
     {
-      "origin": "*.example.com"
+      "src": "/icons/maskable_icon.png",
+      "sizes": "196x196",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
+  "theme_color": "#2563eb",
+  "background_color": "#f9fafb",
+  "display": "standalone",
+  "start_url": "/",
+  "id": "/?source=pwa",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "es-ES",
+  "dir": "ltr",
   "display_override": [
     "window-controls-overlay",
     "minimal-ui"
   ],
-  "shortcuts": [
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "prefer_related_applications": false,
+  "related_applications": [
     {
-      "name": "Generar Test con IA",
-      "short_name": "Generar Test",
-      "description": "Crear un nuevo test personalizado con IA",
-      "url": "/generate",
-      "icons": [
-        {
-          "src": "/icons/icon-96x96.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.example.testopos",
+      "id": "com.example.testopos"
     },
     {
-      "name": "Ver Estadísticas",
-      "short_name": "Estadísticas",
-      "description": "Revisa tu progreso y resultados",
-      "url": "/stats",
-      "icons": [
-        {
-          "src": "/icons/icon-96x96.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
-    }
-  ],
-  "share_target": {
-    "action": "/share-target",
-    "method": "GET",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
-  },
-  "file_handlers": [
-    {
-      "action": "/open-file",
-      "accept": {
-        "application/json": [
-          ".json"
-        ]
-      }
-    }
-  ],
-  "icons": [
-    {
-      "src": "/icons/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icons/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "platform": "itunes",
+      "url": "https://itunes.apple.com/app/example-testopos/id123456789"
     }
   ],
   "screenshots": [
     {
       "src": "https://picsum.photos/seed/1/1080/1920",
-      "sizes": "1080x1920",
       "type": "image/jpeg",
+      "sizes": "1080x1920",
       "form_factor": "narrow",
-      "label": "Vista de la aplicación en móvil"
+      "label": "Pantalla de inicio de TestOpos"
     },
     {
-      "src": "https://picsum.photos/seed/2/1280/800",
-      "sizes": "1280x800",
+      "src": "https://picsum.photos/seed/2/1080/1920",
       "type": "image/jpeg",
+      "sizes": "1080x1920",
+      "form_factor": "narrow",
+      "label": "Realización de un test"
+    },
+    {
+      "src": "https://picsum.photos/seed/3/1280/800",
+      "type": "image/jpeg",
+      "sizes": "1280x800",
       "form_factor": "wide",
-      "label": "Vista de la aplicación en escritorio"
+      "label": "Estadísticas de progreso"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Generar Test con IA",
+      "short_name": "Test IA",
+      "description": "Crear un nuevo test personalizado con inteligencia artificial",
+      "url": "/generate",
+      "icons": [
+        {
+          "src": "/icons/shortcut-icon.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "categories": [
+    "education",
+    "productivity"
+  ],
+  "file_handlers": [
+    {
+      "action": "/open-file",
+      "accept": {
+        "application/json": [
+          ".test"
+        ]
+      },
+      "icons": [
+        {
+          "src": "/icons/file-handler-icon.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ],
+      "launch_type": "single-client"
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+testopos",
+      "url": "/test?id=%s"
+    }
+  ],
+  "widgets": [
+    {
+      "name": "Resumen de Estadísticas",
+      "description": "Consulta tu progreso reciente.",
+      "tag": "stats-widget",
+      "template": "stats-template",
+      "ms_ac_template": "widgets/stats-widget.json",
+      "data": "widgets/stats-data.json",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "/icons/widget-preview.png",
+          "sizes": "512x512",
+          "label": "Widget de Estadísticas"
+        }
+      ],
+      "icons": [
+        {
+          "src": "/icons/widget-icon.png",
+          "sizes": "192x192"
+        }
+      ],
+      "auth": false,
+      "update": 3600
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "note_taking": {
+    "new_note_url": "/new-note",
+    "needs_auth": true
+  },
+  "scope_extensions": [
+    { "origin": "*.testopos.com" },
+    { "origin": "testopos.firebaseapp.com" }
   ]
 }
