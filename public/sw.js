@@ -1,53 +1,51 @@
-const CACHE_NAME = 'testopos-cache-v1';
+// El nombre de la caché.
+const CACHE_NAME = 'testopos-v1';
+// La lista de archivos para cachear.
 const urlsToCache = [
   '/',
   '/manifest.json',
   '/favicon.ico',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png',
-  // Añade aquí otras rutas y recursos estáticos que quieras cachear
-  // Por ejemplo, las páginas principales:
-  '/login',
-  '/generate',
-  '/stats',
-  // Es importante no cachear rutas dinámicas como /category/[id] o /exam/[id] aquí
-  // a menos que sepas exactamente qué hacer con ellas.
+  '/logo.png',
+  '/icon-192x192.png',
+  '/icon-256x256.png',
+  '/icon-384x384.png',
+  '/icon-512x512.png',
 ];
 
-self.addEventListener('install', (event) => {
-  // Realiza la instalación del Service Worker
+// Evento de instalación: se abre la caché y se añaden los archivos.
+self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Cache abierto');
+      .then(cache => {
+        console.log('Cache abierta');
         return cache.addAll(urlsToCache);
       })
   );
 });
 
-self.addEventListener('fetch', (event) => {
+// Evento fetch: responde con los recursos de la caché si están disponibles.
+self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
-      .then((response) => {
-        // Si el recurso está en la caché, lo devuelve
+      .then(response => {
+        // Si el recurso está en la caché, se devuelve.
         if (response) {
           return response;
         }
 
-        // Si no está en caché, lo busca en la red
+        // Si no, se busca en la red.
         return fetch(event.request).then(
-          (response) => {
-            // Comprueba si hemos recibido una respuesta válida
+          response => {
+            // Si la respuesta no es válida, se devuelve directamente.
             if(!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
 
-            // Clona la respuesta. Una respuesta es un flujo y solo se puede consumir una vez.
-            // Necesitamos una copia para la caché y otra para el navegador.
+            // Se clona la respuesta para poder guardarla en la caché y devolverla.
             const responseToCache = response.clone();
 
             caches.open(CACHE_NAME)
-              .then((cache) => {
+              .then(cache => {
                 cache.put(event.request, responseToCache);
               });
 
@@ -55,18 +53,17 @@ self.addEventListener('fetch', (event) => {
           }
         );
       })
-    );
+  );
 });
 
-self.addEventListener('activate', (event) => {
+// Evento de activación: limpia cachés antiguas.
+self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
-
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
+    caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames.map((cacheName) => {
+        cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
-            // Borra las cachés antiguas
             return caches.delete(cacheName);
           }
         })
