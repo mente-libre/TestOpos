@@ -1,81 +1,83 @@
 {
-  "name": "TestOpos - Tests de Oposiciones con IA",
-  "short_name": "TestOpos",
-  "description": "Practica para tus oposiciones con tests reales y exámenes generados por IA. Analiza tu progreso y mejora tus resultados.",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#2563eb",
-  "orientation": "portrait-primary",
-  "scope": "/",
-  "id": "/?source=pwa",
-  "lang": "es-ES",
-  "dir": "ltr",
-  "icons": [
-    {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-maskable-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icons/icon-maskable-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshot1.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Vista de la aplicación en escritorio"
-    },
-    {
-      "src": "/screenshot2.png",
-      "sizes": "720x1280",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Vista de la aplicación en móvil"
-    }
-  ],
-  "related_applications": [
-    {
-      "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=com.example.app1",
-      "id": "com.example.app1"
-    },
-    {
-      "platform": "itunes",
-      "url": "https://itunes.apple.com/app/example-app1/id123456789"
-    }
-  ],
-  "prefer_related_applications": false,
-  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
-  "display_override": [
-    "fullscreen",
-    "minimal-ui"
-  ],
-  "scope_extensions": [
-    {
-      "origin": "*.example.com"
-    },
-    {
-      "origin": "example.com"
-    }
-  ]
+    "name": "TestOpos IA",
+    "short_name": "TestOpos",
+    "description": "Tu asistente IA para preparar oposiciones. Genera tests, practica y mejora.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#F5F5F5",
+    "theme_color": "#9370DB",
+    "lang": "es",
+    "dir": "ltr",
+    "orientation": "portrait-primary",
+    "id": "/?source=pwa",
+    "scope": "/",
+
+    "icons": [
+        {
+            "src": "/icons/icon-72x72.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-96x96.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-128x128.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-152x152.png",
+            "sizes": "152x152",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icons/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+
+    "screenshots": [
+        {
+            "src": "https://picsum.photos/seed/1/360/740",
+            "type": "image/jpeg",
+            "sizes": "360x740",
+            "form_factor": "narrow",
+            "label": "Vista de la aplicación en móvil"
+        },
+        {
+            "src": "https://picsum.photos/seed/2/1280/800",
+            "type": "image/jpeg",
+            "sizes": "1280x800",
+            "form_factor": "wide",
+            "label": "Vista de la aplicación en escritorio"
+        }
+    ],
+    "categories": [
+        "education",
+        "productivity"
+    ],
+    "scope_extensions": [
+        { "origin": "*.opos-test.com" },
+        { "origin": "opos-test.firebaseapp.com" }
+    ]
 }
