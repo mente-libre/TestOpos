@@ -1,17 +1,22 @@
 {
-  "name": "TestOpos - Tests de Oposiciones con IA",
-  "short_name": "TestOpos",
-  "description": "La mejor app para preparar tus oposiciones con exámenes reales y tests generados por IA.",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
   "theme_color": "#2563eb",
+  "background_color": "#f9fafb",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "name": "TestOpos - Oposiciones con IA",
+  "short_name": "TestOpos",
+  "description": "Practica para tus oposiciones con tests reales o generados por IA. Mejora tus resultados y prepárate de la forma más completa.",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
     },
     {
       "src": "/icons/icon-384x384.png",
@@ -26,124 +31,119 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshots/screenshot-desktop-1.jpg",
+      "src": "/screenshots/screenshot1.png",
       "sizes": "1280x720",
-      "type": "image/jpeg",
+      "type": "image/png",
       "form_factor": "wide",
-      "label": "Vista de la página principal en escritorio"
+      "label": "Vista de la página de inicio"
     },
     {
-      "src": "/screenshots/screenshot-mobile-1.jpg",
-      "sizes": "540x720",
-      "type": "image/jpeg",
+      "src": "/screenshots/screenshot2.png",
+      "sizes": "720x1280",
+      "type": "image/png",
       "form_factor": "narrow",
-      "label": "Vista de la página principal en móvil"
+      "label": "Vista de un examen en móvil"
     }
   ],
-  "orientation": "portrait-primary",
-  "scope": "/",
+  "shortcuts": [
+    {
+      "name": "Generar Test con IA",
+      "url": "/generate",
+      "description": "Crea un nuevo test personalizado con IA."
+    },
+    {
+      "name": "Ver Estadísticas",
+      "url": "/stats",
+      "description": "Revisa tu progreso y resultados."
+    }
+  ],
+  "id": "/",
+  "orientation": "portrait",
+  "dir": "auto",
   "lang": "es-ES",
-  "id": "/?source=pwa",
-  "dir": "ltr",
-  "categories": [
-    "education",
-    "utilities"
-  ],
-  "display_override": [
-    "standalone",
-    "window-controls-overlay"
-  ],
+  "categories": ["education", "productivity"],
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "display_override": ["standalone", "minimal-ui", "tabbed"],
   "edge_side_panel": {
     "preferred_width": 480
   },
-  "iarc_rating_id": "e84b072d-8685-4129-9e13-102434926b42",
-  "launch_handler": {
-    "client_mode": [
-      "navigate-existing",
-      "auto"
-    ]
-  },
   "note_taking": {
     "new_note_url": "/new-note",
-    "accept": [
-      "text/plain",
-      "text/html"
-    ]
+    "prevent_sharing": false
   },
-  "prefer_related_applications": false,
   "protocol_handlers": [
     {
       "protocol": "web+testopos",
-      "url": "/test?id=%s"
+      "url": "/protocol?q=%s"
     }
   ],
-  "related_applications": [],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "files",
+          "accept": ["application/pdf", "image/*"]
+        }
+      ]
+    }
+  },
+  "prefer_related_applications": false,
+  "file_handlers": [
+    {
+      "action": "/open-file",
+      "accept": {
+        "application/pdf": [".pdf"],
+        "text/plain": [".txt"]
+      },
+      "launch_type": "single-client"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.example.testopos",
+      "id": "com.example.testopos"
+    },
+    {
+      "platform": "itunes",
+      "url": "https://itunes.apple.com/app/testopos/id123456789"
+    }
+  ],
+  "widgets": [
+    {
+      "name": "Mis Estadísticas",
+      "description": "Widget para ver tus últimas estadísticas.",
+      "tag": "stats-widget",
+      "template": "stats-template",
+      "ms_ac_template": "widgets/stats.json",
+      "data": "widgets/stats-data.json",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "/widgets/stats-preview.png",
+          "sizes": "600x600",
+          "label": "Vista previa del widget de estadísticas"
+        }
+      ],
+      "auth": false,
+      "update": 86400
+    }
+  ],
   "scope_extensions": [
     {
       "origin": "*.testopos.com"
     },
     {
       "origin": "testopos.es"
-    }
-  ],
-  "share_target": {
-    "action": "/shared-content-receiver/",
-    "method": "GET",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
-  },
-  "shortcuts": [
-    {
-      "name": "Generar Nuevo Test",
-      "short_name": "Generar",
-      "description": "Crear un nuevo test con IA",
-      "url": "/generate",
-      "icons": [
-        {
-          "src": "/icons/shortcut-generate.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "Ver Estadísticas",
-      "short_name": "Estadísticas",
-      "description": "Revisar tu progreso y resultados",
-      "url": "/stats",
-      "icons": [
-        {
-          "src": "/icons/shortcut-stats.png",
-          "sizes": "192x192"
-        }
-      ]
-    }
-  ],
-  "widgets": [
-    {
-      "name": "Resumen de Estadísticas",
-      "description": "Widget que muestra un resumen de tu progreso.",
-      "tag": "stats-summary",
-      "template": "stats-widget",
-      "ms_ac_template": "/widgets/stats.json",
-      "data": "/widgets/stats-data.json",
-      "type": "application/json",
-      "screenshots": [
-        {
-          "src": "/screenshots/widget-stats.png",
-          "sizes": "320x160"
-        }
-      ],
-      "icons": [
-        {
-          "src": "/icons/widget-icon.png",
-          "sizes": "96x96"
-        }
-      ],
-      "auth": "true",
-      "update": 86400
     }
   ]
 }
