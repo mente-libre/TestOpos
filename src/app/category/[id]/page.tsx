@@ -30,7 +30,7 @@ export default function CategoryPage() {
       setIsLoading(true);
       const result = await getExamsForCategory(categoryId);
       if (result.success) {
-        setExams(result.exams);
+        setExams(result.exams || []);
         setCategoryName(result.categoryName || 'Categoría');
       } else {
         setError(result.error || 'No se pudieron cargar los exámenes.');
