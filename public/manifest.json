@@ -1,54 +1,66 @@
 {
-  "name": "TestOpos - Tu preparador de oposiciones con IA",
+  "name": "TestOpos - Tests de Oposiciones con IA",
   "short_name": "TestOpos",
-  "description": "Practica y genera tests para tus oposiciones con la ayuda de la inteligencia artificial. Analiza tu progreso y mejora tus resultados.",
+  "description": "Practica y genera tests para tus oposiciones con la ayuda de la IA. Mejora tu preparación y seguimiento.",
   "start_url": "/",
+  "id": "/?utm_source=pwa",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
+  "orientation": "any",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-maskable-192x192.png",
+      "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "https://picsum.photos/seed/testopos1/1280/720",
-      "sizes": "1280x720",
-      "type": "image/jpeg",
-      "form_factor": "wide",
-      "label": "Vista de la aplicación en escritorio"
+      "purpose": "maskable"
     },
     {
-      "src": "https://picsum.photos/seed/testopos2/720/1280",
-      "sizes": "720x1280",
-      "type": "image/jpeg",
-      "form_factor": "narrow",
-      "label": "Vista de la aplicación en móvil"
+      "src": "/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
-  "related_applications": [
+  "shortcuts": [
     {
-      "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=com.example.testopos",
-      "id": "com.example.testopos"
+      "name": "Generar Nuevo Test",
+      "short_name": "Nuevo Test",
+      "description": "Crear un nuevo test con la IA",
+      "url": "/generate",
+      "icons": [
+        {
+          "src": "/icons/shortcut-generate.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
-      "platform": "itunes",
-      "url": "https://itunes.apple.com/app/example-testopos/id123456789"
+      "name": "Ver Estadísticas",
+      "short_name": "Estadísticas",
+      "description": "Revisa tu progreso y resultados",
+      "url": "/stats",
+      "icons": [
+        {
+          "src": "/icons/shortcut-stats.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ],
-  "scope_extensions": [
-    { "origin": "*.example.com" },
-    { "origin": "testopos.firebaseapp.com" }
+  "categories": [
+    "education",
+    "productivity"
   ]
 }
