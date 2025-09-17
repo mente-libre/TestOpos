@@ -1,134 +1,162 @@
 {
-  "name": "TestOpos - Tests de Oposiciones con IA",
-  "short_name": "TestOpos",
-  "description": "La aplicación definitiva para preparar tus oposiciones. Genera tests personalizados con IA, practica con exámenes reales y sigue tu progreso para alcanzar tu plaza.",
-  "icons": [
-    {
-      "src": "/logo.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/logo.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "theme_color": "#2563eb",
-  "background_color": "#ffffff",
-  "display": "standalone",
-  "start_url": "/",
-  "id": "/?source=pwa",
-  "orientation": "portrait-primary",
-  "screenshots": [
-    {
-      "src": "/logo.png",
-      "type": "image/png",
-      "sizes": "540x720",
-      "form_factor": "narrow",
-      "label": "Homescreen"
-    },
-    {
-      "src": "/logo.png",
-      "type": "image/png",
-      "sizes": "1280x720",
-      "form_factor": "wide",
-      "label": "Homescreen"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Generar Test con IA",
-      "short_name": "Generar IA",
-      "description": "Crea un nuevo test personalizado con inteligencia artificial.",
-      "url": "/generate",
-      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "Ver Estadísticas",
-      "short_name": "Estadísticas",
-      "description": "Consulta tu progreso y resultados.",
-      "url": "/stats",
-      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
-    }
-  ],
-  "dir": "ltr",
-  "lang": "es-ES",
-  "scope": "/",
-  "note_taking": {
-    "new_note_url": "/generate",
-    "needs_editing_permission": false
-  },
-  "display_override": [
-    "standalone",
-    "minimal-ui",
-    "window-controls-overlay"
-  ],
-
-  "iarc_rating_id": "e84b072d-8393-47a3-a3f2-1a87b26b4720",
-  "share_target": {
-    "action": "/share-target",
-    "method": "POST",
-    "enctype": "multipart/form-data",
-    "params": {
-      "title": "name",
-      "text": "description",
-      "url": "link",
-      "files": [
+    "name": "TestOpos - Tests de Oposiciones con IA",
+    "short_name": "TestOpos",
+    "description": "La mejor app para preparar tus oposiciones con tests generados por IA.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#f9fafb",
+    "theme_color": "#2563eb",
+    "display_override": [
+        "window-controls-overlay"
+    ],
+    "icons": [
         {
-          "name": "media",
-          "accept": ["image/*", "video/*"]
+            "src": "/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icon-maskable-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/icon-maskable-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/badge.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "badge"
         }
-      ]
-    }
-  },
-  "related_applications": [
-    {
-      "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=com.example.app",
-      "id": "com.example.app"
-    }
-  ],
-  "prefer_related_applications": false,
-  "protocol_handlers": [
-    {
-      "protocol": "web+testopos",
-      "url": "/test?id=%s"
-    }
-  ],
-  "launch_handler": {
-    "client_mode": ["navigate-existing", "auto"]
-  },
-  "file_handlers": [
-    {
-      "action": "/open-file",
-      "accept": {
-        "application/pdf": [".pdf"]
-      }
-    }
-  ],
-  "categories": [
-    "education",
-    "utilities",
-    "productivity"
-  ],
-  "widgets": [
-    {
-      "name": "Últimos Resultados",
-      "description": "Widget para ver tus últimos resultados de tests.",
-      "tag": "results",
-      "template": "results-widget",
-      "ms_ac_template": "results-widget",
-      "data": "https://www.testopos.com/api/results?user=123",
-      "type": "application/json",
-      "auth": true,
-      "update": 86400
-    }
-  ],
-  "scope_extensions": [
-    { "origin": "*.testopos.com" },
-    { "origin": "testopos.es" }
-  ]
+    ],
+    "screenshots": [
+        {
+            "src": "/screenshot1.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Vista de la aplicación en escritorio"
+        },
+        {
+            "src": "/screenshot2.png",
+            "sizes": "720x1280",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Vista de la aplicación en móvil"
+        }
+    ],
+    "id": "/?source=pwa",
+    "orientation": "any",
+    "scope": "/",
+    "lang": "es-ES",
+    "dir": "ltr",
+    "categories": [
+        "education",
+        "productivity",
+        "utilities"
+    ],
+    "shortcuts": [
+        {
+            "name": "Crear nuevo test con IA",
+            "short_name": "Test IA",
+            "description": "Genera un nuevo examen con inteligencia artificial",
+            "url": "/generate",
+            "icons": [
+                {
+                    "src": "/shortcut-icon.png",
+                    "sizes": "96x96"
+                }
+            ]
+        },
+        {
+            "name": "Ver estadísticas",
+            "short_name": "Estadísticas",
+            "description": "Revisa tu progreso y resultados",
+            "url": "/stats"
+        }
+    ],
+    "related_applications": [],
+    "prefer_related_applications": false,
+    "launch_handler": {
+        "client_mode": "navigate-existing"
+    },
+    "note_taking": {
+        "new_note_url": "/new-note",
+        "accept": [
+            "text/html",
+            "text/plain"
+        ]
+    },
+    "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+    "share_target": {
+        "action": "/shared-content-receiver/",
+        "method": "GET",
+        "params": {
+            "title": "title",
+            "text": "text",
+            "url": "url"
+        }
+    },
+    "file_handlers": [
+        {
+            "action": "/handle-pdf",
+            "accept": {
+                "application/pdf": [
+                    ".pdf"
+                ]
+            }
+        }
+    ],
+    "protocol_handlers": [
+        {
+            "protocol": "web+testopos",
+            "url": "/protocol-handler?q=%s"
+        }
+    ],
+    "widgets": [
+        {
+            "name": "Últimos Resultados",
+            "description": "Widget para ver tus últimos resultados de tests.",
+            "tag": "results",
+            "template": "results-template",
+            "ms_ac_template": "widgets/results.json",
+            "data": "widgets/results-data.json",
+            "type": "application/json",
+            "screenshots": [
+                {
+                    "src": "/widget-screenshot.png",
+                    "sizes": "600x400",
+                    "label": "Vista previa del widget de resultados"
+                }
+            ],
+            "icons": [
+                {
+                    "src": "/widget-icon.png",
+                    "sizes": "96x96"
+                }
+            ],
+            "auth": false,
+            "update": 86400
+        }
+    ],
+    "edge_side_panel": {
+        "preferred_width": 480
+    },
+    "scope_extensions": [
+        {
+            "origin": "*.testopos.example.com"
+        }
+    ]
 }
