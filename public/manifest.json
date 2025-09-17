@@ -1,18 +1,12 @@
 {
-  "name": "TestOpos - IA",
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "TestOpos - Tests de Oposiciones con IA",
   "short_name": "TestOpos",
-  "description": "Practica y genera tests para tus oposiciones con la ayuda de la inteligencia artificial.",
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#f9fafb",
   "theme_color": "#2563eb",
-  "orientation": "portrait",
-  "id": "/?utm_source=pwa",
-  "scope": "/",
-  "scope_extensions": [
-    { "origin": "*.firebaseapp.com" },
-    { "origin": "*.google.com" }
-  ],
+  "description": "Practica para tus oposiciones con tests reales o generados por IA.",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
@@ -23,24 +17,36 @@
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
-    }
-  ],
-  "display_override": [
-    "window-controls-overlay"
-  ],
-  "lang": "es-ES",
-  "dir": "ltr",
-  "iarc_rating_id": "e84b072d-4543-40b3-92f7-023a1a9e320d",
-  "prefer_related_applications": false,
-  "related_applications": [
-    {
-      "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=com.example.app1",
-      "id": "com.example.app1"
     },
     {
-      "platform": "itunes",
-      "url": "https://itunes.apple.com/app/example-app1/id123456789"
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "https://picsum.photos/seed/1/360/640",
+      "sizes": "360x640",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Vista de la página de inicio en móvil"
+    },
+    {
+      "src": "https://picsum.photos/seed/2/1280/720",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Vista de la página de inicio en escritorio"
+    }
+  ],
+  "categories": [
+    "education",
+    "productivity"
+  ],
+  "scope_extensions": [
+    { "origin": "*.testopos.com" },
+    { "origin": "*.firebaseapp.com" }
   ]
 }
