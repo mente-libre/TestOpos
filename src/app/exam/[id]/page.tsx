@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { getExamById } from '@/lib/firebase/firestore';
+import { getExamById } from '@/app/actions';
 import { type Exam } from '@/lib/definitions';
 import { onAuthStateChange, type User } from '@/lib/firebase/auth';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -102,5 +102,3 @@ export default function ExamPage() {
     </div>
   );
 }
-
-    

@@ -1,12 +1,12 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, AlertCircle, CheckCircle, Wand2, ArrowLeft, RefreshCw } from 'lucide-react';
+import { Loader2, AlertCircle, CheckCircle, Wand2, ArrowLeft, RefreshCw, Info } from 'lucide-react';
 import { generateNewTest } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -14,6 +14,8 @@ import Link from 'next/link';
 import { Logo } from '@/components/ui/logo';
 import { type Question } from '@/lib/definitions';
 import { CATEGORY_DEFINITIONS } from '@/lib/definitions';
+
+const isAiAvailable = !!process.env.NEXT_PUBLIC_AI_AVAILABLE;
 
 export default function GeneratePage() {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -61,17 +63,13 @@ export default function GeneratePage() {
             description: `Se han creado ${result.questions.length} preguntas nuevas para "${categoryName}".`,
         });
       } else {
-        let errorMessage = result.error ?? 'Ha ocurrido un error desconocido durante la generación.';
-         if (errorMessage.includes('quota') || (result.error && result.error.includes('429'))) {
-            errorMessage = 'Has alcanzado el límite de peticiones a la IA por ahora. El plan gratuito tiene restricciones de uso. Por favor, espera unos minutos y vuelve a intentarlo.'
-        }
-        setError(errorMessage);
+        setError(result.error ?? 'Ha ocurrido un error desconocido durante la generación.');
         setQuestions(null);
       }
     } catch (e: any) {
       console.error(e);
       let errorMessage = 'No se pudo generar el test. Inténtalo de nuevo.';
-      if (e.message && (e.message.includes('quota') || e.message.includes('429'))) {
+       if (e.message && (e.message.includes('quota') || e.message.includes('429'))) {
         errorMessage = 'Has alcanzado el límite de peticiones a la IA por ahora. El plan gratuito tiene restricciones de uso. Por favor, espera unos minutos y vuelve a intentarlo.'
       }
       setError(errorMessage);
@@ -109,25 +107,38 @@ export default function GeneratePage() {
                 <CardTitle>Configura tu nuevo test</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid gap-6">
-                    <div>
-                        <label htmlFor="examCategory" className="block text-sm font-medium text-gray-700 mb-2">Elige una categoría como inspiración</label>
-                        <Select onValueChange={setSelectedCategory} value={selectedCategory}>
-                            <SelectTrigger id="examCategory">
-                                <SelectValue placeholder="Selecciona una categoría" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {CATEGORY_DEFINITIONS.map(cat => (
-                                    <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                </div>
-                <Button onClick={handleGenerateTest} disabled={isProcessing} className="w-full">
-                  {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {isProcessing ? 'Generando con IA...' : 'Generar Test'}
-                </Button>
+                {!isAiAvailable ? (
+                    <Alert>
+                        <Info className="h-4 w-4" />
+                        <AlertTitle>Función no disponible</AlertTitle>
+                        <AlertDescription>
+                            La generación de tests con IA no está configurada en este entorno. 
+                            Para activarla, necesitas añadir una clave de API de Google en las variables de entorno de tu proyecto.
+                        </AlertDescription>
+                    </Alert>
+                ) : (
+                    <>
+                        <div className="grid gap-6">
+                            <div>
+                                <label htmlFor="examCategory" className="block text-sm font-medium text-gray-700 mb-2">Elige una categoría como inspiración</label>
+                                <Select onValueChange={setSelectedCategory} value={selectedCategory}>
+                                    <SelectTrigger id="examCategory">
+                                        <SelectValue placeholder="Selecciona una categoría" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {CATEGORY_DEFINITIONS.map(cat => (
+                                            <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                        <Button onClick={handleGenerateTest} disabled={isProcessing || !selectedCategory} className="w-full">
+                        {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {isProcessing ? 'Generando con IA...' : 'Generar Test'}
+                        </Button>
+                    </>
+                )}
               </CardContent>
             </Card>
 
@@ -205,3 +216,5 @@ export default function GeneratePage() {
     </div>
   );
 }
+
+    

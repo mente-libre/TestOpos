@@ -1,144 +1,21 @@
 {
-  "name": "TestOpos - Tests de Oposiciones con IA",
-  "short_name": "TestOpos",
-  "description": "Genera y practica tests para oposiciones con la ayuda de inteligencia artificial. Analiza tu progreso y mejora tus resultados.",
+  "name": "OposTest IA",
+  "short_name": "OposTest",
+  "description": "App para generar tests de oposiciones con IA",
   "start_url": "/",
-  "id": "/?source=pwa",
   "display": "standalone",
-  "display_override": [
-    "standalone",
-    "minimal-ui"
-  ],
-  "background_color": "#ffffff",
-  "theme_color": "#2563eb",
-  "orientation": "portrait-primary",
-  "scope": "/",
-  "lang": "es-ES",
-  "dir": "ltr",
-  "categories": [
-    "education",
-    "business"
-  ],
-  "prefer_related_applications": false,
+  "background_color": "#F5F5F5",
+  "theme_color": "#9370DB",
   "icons": [
     {
-      "src": "/icons/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-192x192.png",
+      "src": "/logo.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-384x384.png",
-      "sizes": "384x384",
       "type": "image/png"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/logo.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "type": "image/png"
     }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshots/screenshot1.png",
-      "sizes": "1080x1920",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Página de inicio de TestOpos"
-    },
-    {
-      "src": "/screenshots/screenshot2.png",
-      "sizes": "1080x1920",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Generador de tests con IA"
-    },
-    {
-      "src": "/screenshots/screenshot3.png",
-      "sizes": "1920x1080",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Estadísticas de progreso"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Generar Nuevo Test",
-      "short_name": "Generar",
-      "description": "Crear un nuevo test con IA",
-      "url": "/generate",
-      "icons": [
-        {
-          "src": "/icons/shortcut-generate.png",
-          "sizes": "96x96"
-        }
-      ]
-    },
-    {
-      "name": "Ver Estadísticas",
-      "short_name": "Estadísticas",
-      "description": "Revisar tu progreso y resultados",
-      "url": "/stats",
-      "icons": [
-        {
-          "src": "/icons/shortcut-stats.png",
-          "sizes": "96x96"
-        }
-      ]
-    }
-  ],
-  "share_target": {
-    "action": "/share-handler",
-    "method": "POST",
-    "enctype": "multipart/form-data",
-    "params": {
-      "title": "name",
-      "text": "description",
-      "url": "link",
-      "files": [
-        {
-          "name": "files",
-          "accept": [
-            "application/pdf",
-            ".pdf"
-          ]
-        }
-      ]
-    }
-  },
-  "protocol_handlers": [
-    {
-      "protocol": "web+testopos",
-      "url": "/protocol-handler?action=%s"
-    }
-  ],
-  "launch_handler": {
-    "client_mode": "navigate-existing"
-  }
+  ]
 }

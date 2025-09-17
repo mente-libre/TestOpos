@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { getExamById } from '@/lib/firebase/firestore';
+import { getExamById } from '@/app/actions';
 import { type Question, type TestResult } from '@/lib/definitions';
 import { Loader2, CheckCircle, XCircle, RefreshCw, Eye, Wand2, Home } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
@@ -440,6 +440,7 @@ function TestPageContent() {
             <div>
               <p className="font-semibold mb-6 text-lg">{currentQuestion.questionText}</p>
               <RadioGroup
+                key={currentQuestionIndex}
                 value={answers[currentQuestionIndex]?.selectedIndex?.toString()}
                 onValueChange={(value) => handleSelectOption(currentQuestionIndex, parseInt(value))}
               >
@@ -495,11 +496,3 @@ function formatTime(seconds: number) {
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
-
-
-    
-
-
-    
-
-    

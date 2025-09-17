@@ -1,5 +1,8 @@
+
 import { initializeApp, getApp, getApps, FirebaseApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+
+// This file is now only used for CLIENT-SIDE auth, not Firestore.
+// Firestore will be accessed via server actions.
 
 const firebaseConfig = {
   projectId: "studio-4528893091-676f0",
@@ -7,7 +10,8 @@ const firebaseConfig = {
   storageBucket: "studio-4528893091-676f0.firebasestorage.app",
   apiKey: "AIzaSyAWQJQNadcpABNfvxGQXIEwRAAoDN-m9Iw",
   authDomain: "studio-4528893091-676f0.firebaseapp.com",
-  messagingSenderId: "675547564853"
+  messagingSenderId: "675547564853",
+  databaseURL: "https://studio-4528893091-676f0.firebaseio.com"
 };
 
 // Initialize Firebase
@@ -18,7 +22,4 @@ if (!getApps().length) {
   app = getApp();
 }
 
-const db = getFirestore(app);
-
-export { db };
 export default app;

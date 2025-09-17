@@ -1,26 +1,32 @@
 
 import { initializeApp, getApps, App, cert, getApp } from 'firebase-admin/app';
+import { getFirestore, Firestore } from 'firebase-admin/firestore';
+
+let app: App | undefined;
+let db: Firestore | undefined;
 
 const serviceAccountString = process.env.FIREBASE_SERVICE_ACCOUNT;
 
-let app: App | undefined;
-
 if (serviceAccountString) {
-    try {
-        const serviceAccount = JSON.parse(serviceAccountString);
-        if (!getApps().length) {
-          app = initializeApp({
-            credential: cert(serviceAccount),
-          });
-        } else {
-          app = getApp();
+    if (getApps().length === 0) {
+        try {
+            const serviceAccount = JSON.parse(serviceAccountString);
+            app = initializeApp({
+                credential: cert(serviceAccount)
+            });
+            db = getFirestore(app);
+        } catch (e) {
+            console.error('Failed to parse FIREBASE_SERVICE_ACCOUNT or initialize Firebase Admin. Falling back to no-db mode.', e);
+            app = undefined;
+            db = undefined;
         }
-    } catch (e) {
-        console.error('Failed to parse FIREBASE_SERVICE_ACCOUNT:', e);
+    } else {
+        app = getApp();
+        db = getFirestore(app);
     }
 } else {
-    console.warn("FIREBASE_SERVICE_ACCOUNT environment variable is not set. Firebase Admin SDK dependent features (like data seeding) will not work.");
+    console.warn("FIREBASE_SERVICE_ACCOUNT environment variable not set. Running in no-db mode. App will use local seed data.");
 }
 
 
-export { app };
+export { db };
