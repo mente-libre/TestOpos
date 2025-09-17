@@ -97,7 +97,7 @@ export async function loadInitialData() {
   }
 }
 
-export const getExamsForCategory = async (categoryId: string): Promise<{ success: boolean; exams: Exam[]; categoryName: string; error?: string; }> => {
+export const getExamsForCategory = async (categoryId: string): Promise<{ success: boolean; exams?: Exam[]; categoryName?: string; error?: string; }> => {
   const categoryName = CATEGORY_DEFINITIONS.find(c => c.id === categoryId)?.name || 'Categoría desconocida';
   const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, officeTest, madrid2023Test];
   let exams: Exam[] = [];
@@ -397,9 +397,5 @@ export async function getExamById(examId: string) {
         return { success: false, error: errorMessage };
     }
 }
-
-    
-
-    
 
     
