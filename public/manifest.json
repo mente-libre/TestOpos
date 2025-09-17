@@ -1,12 +1,13 @@
 {
-  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-  "name": "TestOpos - Tests de Oposiciones con IA",
+  "name": "TestOpos - Oposiciones con IA",
   "short_name": "TestOpos",
-  "start_url": ".",
+  "description": "Practica para tus oposiciones con tests reales y generados por IA.",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#f9fafb",
+  "background_color": "#ffffff",
   "theme_color": "#2563eb",
-  "description": "Practica para tus oposiciones con tests reales o generados por IA.",
+  "orientation": "portrait",
+  "id": "/?source=pwa",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
@@ -19,34 +20,16 @@
       "type": "image/png"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/icons/icon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-maskable-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     }
-  ],
-  "screenshots": [
-    {
-      "src": "https://picsum.photos/seed/1/360/640",
-      "sizes": "360x640",
-      "type": "image/jpeg",
-      "form_factor": "narrow",
-      "label": "Vista de la página de inicio en móvil"
-    },
-    {
-      "src": "https://picsum.photos/seed/2/1280/720",
-      "sizes": "1280x720",
-      "type": "image/jpeg",
-      "form_factor": "wide",
-      "label": "Vista de la página de inicio en escritorio"
-    }
-  ],
-  "categories": [
-    "education",
-    "productivity"
-  ],
-  "scope_extensions": [
-    { "origin": "*.testopos.com" },
-    { "origin": "*.firebaseapp.com" }
   ]
 }
