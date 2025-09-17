@@ -1,41 +1,37 @@
 {
-  "name": "TestOpos - Oposiciones con IA",
+  "name": "TestOpos - Tests de Oposiciones con IA",
   "short_name": "TestOpos",
-  "description": "Practica y genera tests para tus oposiciones con la ayuda de la inteligencia artificial.",
+  "description": "Genera tests para oposiciones usando IA y prepárate para el éxito.",
   "start_url": "/",
-  "id": "/?source=pwa",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
   "orientation": "portrait-primary",
+  "id": "/?source=pwa",
   "scope": "/",
   "lang": "es-ES",
-  "categories": [
-    "education",
-    "productivity"
-  ],
+  "dir": "ltr",
+  "categories": ["education", "productivity"],
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "related_applications": [],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "/icons/maskable-icon.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
     }
   ],
   "screenshots": [
@@ -51,69 +47,49 @@
       "sizes": "1920x1080",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Generador de Tests IA"
+      "label": "Página de Examen"
     }
   ],
   "shortcuts": [
     {
       "name": "Generar Test con IA",
       "short_name": "Generar IA",
-      "description": "Crea un nuevo test personalizado con inteligencia artificial",
+      "description": "Crear un nuevo test personalizado con IA",
       "url": "/generate",
-      "icons": [
-        {
-          "src": "/icons/shortcut-generate.png",
-          "sizes": "96x96"
-        }
-      ]
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Ver Estadísticas",
+      "name": "Ver mis Estadísticas",
       "short_name": "Estadísticas",
-      "description": "Revisa tu progreso y resultados",
+      "description": "Revisar el progreso y resultados",
       "url": "/stats",
-      "icons": [
-        {
-          "src": "/icons/shortcut-stats.png",
-          "sizes": "96x96"
-        }
-      ]
-    }
-  ],
-  "file_handlers": [
-    {
-      "action": "/upload-exam",
-      "accept": {
-        "application/pdf": [
-          ".pdf"
-        ],
-        "text/plain": [
-          ".txt"
-        ]
-      }
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     }
   ],
   "share_target": {
     "action": "/share-target",
-    "method": "POST",
-    "enctype": "multipart/form-data",
+    "method": "GET",
     "params": {
       "title": "title",
       "text": "text",
-      "url": "url",
-      "files": [
-        {
-          "name": "files",
-          "accept": [
-            "application/pdf",
-            ".pdf",
-            "text/plain",
-            ".txt"
-          ]
-        }
-      ]
+      "url": "url"
     }
   },
-  "related_applications": [],
-  "prefer_related_applications": false
+  "file_handlers": [
+    {
+      "action": "/open-file",
+      "accept": {
+        "application/pdf": [".pdf"]
+      }
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+testopos",
+      "url": "/protocol-handler?protocol=%s"
+    }
+  ]
 }
