@@ -1,33 +1,26 @@
 {
-  "theme_color": "#2563eb",
-  "background_color": "#ffffff",
-  "display": "standalone",
-  "scope": "/",
-  "start_url": "/",
-  "name": "TestOpos",
+  "name": "TestOpos - Tu preparador de oposiciones con IA",
   "short_name": "TestOpos",
-  "description": "Tu plataforma para preparar oposiciones con tests generados por IA.",
+  "description": "Practica y genera tests para tus oposiciones con la ayuda de la inteligencia artificial. Prepárate de forma inteligente.",
+  "start_url": "/",
+  "id": "/?utm_source=pwa",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay"
+  ],
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/icon-192x192.png",
+      "src": "/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icon-256x256.png",
-      "sizes": "256x256",
-      "type": "image/png"
-    },
-    {
-      "src": "/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png"
-    },
-    {
-      "src": "/icon-512x512.png",
+      "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ],
   "screenshots": [
@@ -46,36 +39,6 @@
       "label": "Vista de la aplicación en móvil"
     }
   ],
-  "shortcuts": [
-    {
-      "name": "Generar Nuevo Test",
-      "short_name": "Nuevo Test",
-      "description": "Crea un nuevo test con preguntas generadas por IA",
-      "url": "/generate",
-      "icons": [
-        {
-          "src": "/icon-192x192.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "Ver Estadísticas",
-      "short_name": "Estadísticas",
-      "description": "Revisa tu progreso y resultados",
-      "url": "/stats",
-      "icons": [
-        {
-          "src": "/icon-192x192.png",
-          "sizes": "192x192"
-        }
-      ]
-    }
-  ],
-  "categories": [
-    "education",
-    "productivity"
-  ],
   "related_applications": [
     {
       "platform": "play",
@@ -84,19 +47,14 @@
     }
   ],
   "prefer_related_applications": false,
-  "iarc_rating_id": "e84b072d-85c3-4d84-8563-04d8058269d0",
-  "display_override": [
-    "window-controls-overlay",
-    "standalone"
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "scope_extensions": [
+    { "origin": "*.example.com" }
   ],
   "lang": "es-ES",
   "dir": "ltr",
-  "scope_extensions": [
-    {
-      "origin": "*.testopos.com"
-    },
-    {
-      "origin": "testopos.ai"
-    }
+  "categories": [
+    "education",
+    "productivity"
   ]
 }
