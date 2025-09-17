@@ -11,7 +11,7 @@ import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminT
 import { advoGeneralTest } from '@/lib/seed-data-new';
 import { officeTest } from '@/lib/seed-data-office';
 import { madrid2023Test } from '@/lib/seed-data-madrid-2023';
-import { collection, getDocs, doc, getDoc, Timestamp, where, limit, orderBy, query } from 'firebase-admin/firestore';
+import { Timestamp } from 'firebase-admin/firestore';
 
 
 async function getUserId(): Promise<string | null> {
@@ -36,8 +36,8 @@ export async function getCategories(): Promise<{ success: boolean, categories?: 
   }
 
   try {
-    const examsRef = collection(db, 'exams');
-    const querySnapshot = await getDocs(examsRef);
+    const examsRef = db.collection('exams');
+    const querySnapshot = await examsRef.get();
 
     const categoryCounts: { [key: string]: number } = {};
     querySnapshot.docs.forEach(doc => {
@@ -104,9 +104,9 @@ export const getExamsForCategory = async (categoryId: string) => {
 
   if (db) {
       try {
-        const examsRef = collection(db, 'exams');
-        const q = query(examsRef, where('category', '==', categoryId));
-        const querySnapshot = await getDocs(q);
+        const examsRef = db.collection('exams');
+        const q = examsRef.where('category', '==', categoryId);
+        const querySnapshot = await q.get();
 
         if (!querySnapshot.empty) {
             exams = querySnapshot.docs.map(doc => {
@@ -152,9 +152,9 @@ export async function getQuestionsForCategory(categoryId: string): Promise<{ suc
   }
 
   try {
-    const examsRef = collection(db, 'exams');
-    const q = query(examsRef, where('category', '==', categoryId), limit(10));
-    const querySnapshot = await getDocs(q);
+    const examsRef = db.collection('exams');
+    const q = examsRef.where('category', '==', categoryId).limit(10);
+    const querySnapshot = await q.get();
 
     let allQuestions: Question[] = [];
     if (!querySnapshot.empty) {
@@ -316,9 +316,9 @@ export async function loadStatistics() {
          if (!userId) {
             return { success: false, error: "Debes iniciar sesión para ver tus estadísticas." };
         }
-        const resultsRef = collection(db, 'testResults');
-        const q = query(resultsRef, where('userId', '==', userId), orderBy('createdAt', 'desc'));
-        const querySnapshot = await getDocs(q);
+        const resultsRef = db.collection('testResults');
+        const q = resultsRef.where('userId', '==', userId).orderBy('createdAt', 'desc');
+        const querySnapshot = await q.get();
 
         const results = querySnapshot.docs.map(doc => {
             const data = doc.data();
@@ -373,10 +373,10 @@ export async function getExamById(examId: string) {
     }
 
     try {
-        const examRef = doc(db, 'exams', examId);
-        const docSnap = await getDoc(examRef);
+        const examRef = db.collection('exams').doc(examId);
+        const docSnap = await examRef.get();
 
-        if (!docSnap.exists()) {
+        if (!docSnap.exists) {
         return { success: false, error: 'No se encontró el examen.' };
         }
 
