@@ -1,10 +1,10 @@
 {
   "name": "TestOpos - Tests de Oposiciones con IA",
   "short_name": "TestOpos",
-  "description": "Genera y practica tests para oposiciones usando Inteligencia Artificial. Analiza tu progreso y mejora tus resultados.",
+  "description": "La plataforma líder para preparar tus oposiciones con exámenes reales y tests generados por inteligencia artificial. Analiza tu progreso y mejora tus resultados.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f9fafb",
+  "background_color": "#ffffff",
   "theme_color": "#2563eb",
   "orientation": "portrait-primary",
   "icons": [
@@ -36,10 +36,11 @@
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src: "/icons/icon-384x384.png",
+      "src": "/icons/icon-384x384.png",
       "sizes": "384x384",
       "type": "image/png"
     },
@@ -49,27 +50,38 @@
       "type": "image/png"
     }
   ],
-  "scope": "/",
-  "lang": "es-ES",
-  "dir": "ltr",
-  "categories": ["education", "business"],
-  "screenshots": [],
+  "screenshots": [
+    {
+      "src": "/screenshots/screenshot1.png",
+      "type": "image/png",
+      "sizes": "1080x1920",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshots/screenshot2.png",
+      "type": "image/png",
+      "sizes": "1920x1080",
+      "form_factor": "wide"
+    }
+  ],
   "shortcuts": [
     {
-      "name": "Generar Test con IA",
+      "name": "Generar Nuevo Test",
       "short_name": "Generar",
-      "description": "Crear un nuevo test personalizado con IA",
+      "description": "Crea un nuevo test con IA",
       "url": "/generate",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/shortcut-icon.png", "sizes": "96x96" }]
     },
     {
       "name": "Ver Estadísticas",
       "short_name": "Estadísticas",
       "description": "Revisa tu progreso y resultados",
       "url": "/stats",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/shortcut-stats.png", "sizes": "96x96" }]
     }
   ],
-  "related_applications": [],
-  "prefer_related_applications": false
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
+  "badge": "/icons/badge.png"
 }
