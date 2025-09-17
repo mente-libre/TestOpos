@@ -1,112 +1,114 @@
 {
-  "name": "TestOpos - Tu Preparador de Oposiciones con IA",
-  "short_name": "TestOpos",
-  "description": "Practica con exámenes reales, genera tests personalizados con IA y analiza tu progreso para conseguir tu plaza. Tu preparador de oposiciones inteligente.",
-  "start_url": "/",
-  "display": "standalone",
-  "display_override": [
-    "window-controls-overlay"
-  ],
-  "background_color": "#f9fafb",
   "theme_color": "#2563eb",
-  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "display": "standalone",
   "scope": "/",
-  "lang": "es-ES",
-  "dir": "ltr",
-  "id": "/?source=pwa",
-  "iarc_rating_id": "e5c8e3a3-0544-4869-9c59-99a36d9312b2",
-  "prefer_related_applications": false,
-  "scope_extensions": [
-    { "origin": "*.testopos.com" },
-    { "origin": "www.testopos.es" }
-  ],
-  "share_target": {
-    "action": "/share-target",
-    "method": "GET",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
-  },
+  "start_url": "/",
+  "name": "TestOpos - Tests de Oposiciones con IA",
+  "short_name": "TestOpos",
+  "description": "Practica para tus oposiciones con tests reales y exámenes generados por IA. Mejora tu preparación y sigue tu progreso.",
   "icons": [
     {
-      "src": "icons/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-192x192.png",
+      "src": "/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-384x384.png",
+      "src": "/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-384x384.png",
       "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "icons/icon-512x512.png",
+      "src": "/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     }
   ],
-  "screenshots": [
+  "id": "/?utm_source=pwa",
+  "orientation": "portrait",
+  "display_override": [
+    "standalone"
+  ],
+  "dir": "ltr",
+  "lang": "es-ES",
+  "iarc_rating_id": "e84b072d-b13c-4f5c-81b8-0d944c35a4d4",
+  "prefer_related_applications": false,
+  "shortcuts": [
     {
-      "src": "/screenshots/screenshot-desktop-1.png",
-      "type": "image/png",
-      "sizes": "1280x720",
-      "form_factor": "wide",
-      "label": "Vista de la página principal en escritorio"
+      "name": "Generar Nuevo Test",
+      "short_name": "Test IA",
+      "description": "Crea un nuevo test con preguntas generadas por IA",
+      "url": "/generate",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
-      "src": "/screenshots/screenshot-desktop-2.png",
-      "type": "image/png",
-      "sizes": "1280x720",
-      "form_factor": "wide",
-      "label": "Generador de Tests con IA"
-    },
+      "name": "Ver Estadísticas",
+      "short_name": "Estadísticas",
+      "description": "Consulta tu progreso y resultados",
+      "url": "/stats",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "categories": [
+    "education",
+    "productivity",
+    "utilities"
+  ],
+  "file_handlers": [
     {
-      "src": "/screenshots/screenshot-mobile-1.png",
-      "type": "image/png",
-      "sizes": "540x720",
-      "form_factor": "narrow",
-      "label": "Vista de un test en móvil"
-    },
+      "action": "/handle-file",
+      "accept": {
+        "application/json": [
+          ".testopos"
+        ]
+      }
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "protocol_handlers": [
     {
-      "src": "/screenshots/screenshot-mobile-2.png",
-      "type": "image/png",
-      "sizes": "540x720",
-      "form_factor": "narrow",
-      "label": "Resultados del test en móvil"
+      "protocol": "web+testopos",
+      "url": "/protocol-handler?action=%s"
+    }
+  ],
+  "related_applications": [],
+  "widgets": [
+    {
+      "name": "Resumen de Estadísticas",
+      "description": "Widget para ver tu puntuación media.",
+      "tag": "stats-widget",
+      "template": "stats-widget-template",
+      "ms_ac_template": "widgets/stats.json",
+      "data": "widgets/stats-data.json",
+      "type": "application/json"
+    }
+  ],
+  "edge_side_panel": {},
+  "note_taking": {
+    "new_note_url": "/new-note",
+    "needs_account": true
+  },
+  "scope_extensions": [
+    {
+      "origin": "*.testopos.app"
     }
   ]
 }
