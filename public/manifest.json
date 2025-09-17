@@ -1,24 +1,28 @@
 {
   "name": "TestOpos - Tests de Oposiciones con IA",
   "short_name": "TestOpos",
-  "description": "Practica y genera tests para tus oposiciones con la ayuda de la IA. Mejora tu preparación y seguimiento.",
+  "description": "Practica para tus oposiciones con tests reales y exámenes generados por IA. Analiza tu progreso y mejora tus resultados.",
   "start_url": "/",
-  "id": "/?utm_source=pwa",
-  "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
-  "orientation": "any",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "id": "/?source=pwa",
+  "lang": "es-ES",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/icons/icon-maskable-192x192.png",
@@ -33,34 +37,45 @@
       "purpose": "maskable"
     }
   ],
-  "shortcuts": [
+  "screenshots": [
     {
-      "name": "Generar Nuevo Test",
-      "short_name": "Nuevo Test",
-      "description": "Crear un nuevo test con la IA",
-      "url": "/generate",
-      "icons": [
-        {
-          "src": "/icons/shortcut-generate.png",
-          "sizes": "96x96"
-        }
-      ]
+      "src": "/screenshot1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Vista de la aplicación en escritorio"
     },
     {
-      "name": "Ver Estadísticas",
-      "short_name": "Estadísticas",
-      "description": "Revisa tu progreso y resultados",
-      "url": "/stats",
-      "icons": [
-        {
-          "src": "/icons/shortcut-stats.png",
-          "sizes": "96x96"
-        }
-      ]
+      "src": "/screenshot2.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Vista de la aplicación en móvil"
     }
   ],
-  "categories": [
-    "education",
-    "productivity"
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.example.app1",
+      "id": "com.example.app1"
+    },
+    {
+      "platform": "itunes",
+      "url": "https://itunes.apple.com/app/example-app1/id123456789"
+    }
+  ],
+  "prefer_related_applications": false,
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "display_override": [
+    "fullscreen",
+    "minimal-ui"
+  ],
+  "scope_extensions": [
+    {
+      "origin": "*.example.com"
+    },
+    {
+      "origin": "example.com"
+    }
   ]
 }
