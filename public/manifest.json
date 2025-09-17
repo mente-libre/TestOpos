@@ -1,83 +1,102 @@
 {
-    "name": "TestOpos IA",
-    "short_name": "TestOpos",
-    "description": "Tu asistente IA para preparar oposiciones. Genera tests, practica y mejora.",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#F5F5F5",
-    "theme_color": "#9370DB",
-    "lang": "es",
-    "dir": "ltr",
-    "orientation": "portrait-primary",
-    "id": "/?source=pwa",
-    "scope": "/",
-
-    "icons": [
+  "theme_color": "#2563eb",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "name": "TestOpos",
+  "short_name": "TestOpos",
+  "description": "Tu plataforma para preparar oposiciones con tests generados por IA.",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://picsum.photos/seed/1/1280/720",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Vista de la aplicación en escritorio"
+    },
+    {
+      "src": "https://picsum.photos/seed/2/720/1280",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Vista de la aplicación en móvil"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Generar Nuevo Test",
+      "short_name": "Nuevo Test",
+      "description": "Crea un nuevo test con preguntas generadas por IA",
+      "url": "/generate",
+      "icons": [
         {
-            "src": "/icons/icon-72x72.png",
-            "sizes": "72x72",
-            "type": "image/png"
-        },
-        {
-            "src": "/icons/icon-96x96.png",
-            "sizes": "96x96",
-            "type": "image/png"
-        },
-        {
-            "src": "/icons/icon-128x128.png",
-            "sizes": "128x128",
-            "type": "image/png"
-        },
-        {
-            "src": "/icons/icon-144x144.png",
-            "sizes": "144x144",
-            "type": "image/png"
-        },
-        {
-            "src": "/icons/icon-152x152.png",
-            "sizes": "152x152",
-            "type": "image/png"
-        },
-        {
-            "src": "/icons/icon-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "/icons/icon-384x384.png",
-            "sizes": "384x384",
-            "type": "image/png"
-        },
-        {
-            "src": "/icons/icon-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png"
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
         }
-    ],
-
-    "screenshots": [
+      ]
+    },
+    {
+      "name": "Ver Estadísticas",
+      "short_name": "Estadísticas",
+      "description": "Revisa tu progreso y resultados",
+      "url": "/stats",
+      "icons": [
         {
-            "src": "https://picsum.photos/seed/1/360/740",
-            "type": "image/jpeg",
-            "sizes": "360x740",
-            "form_factor": "narrow",
-            "label": "Vista de la aplicación en móvil"
-        },
-        {
-            "src": "https://picsum.photos/seed/2/1280/800",
-            "type": "image/jpeg",
-            "sizes": "1280x800",
-            "form_factor": "wide",
-            "label": "Vista de la aplicación en escritorio"
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
         }
-    ],
-    "categories": [
-        "education",
-        "productivity"
-    ],
-    "scope_extensions": [
-        { "origin": "*.opos-test.com" },
-        { "origin": "opos-test.firebaseapp.com" }
-    ]
+      ]
+    }
+  ],
+  "categories": [
+    "education",
+    "productivity"
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.example.testopos",
+      "id": "com.example.testopos"
+    }
+  ],
+  "prefer_related_applications": false,
+  "iarc_rating_id": "e84b072d-85c3-4d84-8563-04d8058269d0",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+  "lang": "es-ES",
+  "dir": "ltr",
+  "scope_extensions": [
+    {
+      "origin": "*.testopos.com"
+    },
+    {
+      "origin": "testopos.ai"
+    }
+  ]
 }
