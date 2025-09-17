@@ -1,35 +1,95 @@
 {
-  "name": "TestOpos - Oposiciones con IA",
+  "name": "TestOpos - Tests de Oposiciones con IA",
   "short_name": "TestOpos",
-  "description": "Practica para tus oposiciones con tests reales y generados por IA.",
+  "description": "Genera y practica tests para oposiciones usando Inteligencia Artificial.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#f9fafb",
   "theme_color": "#2563eb",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
   "id": "/?source=pwa",
+  "scope": "/",
+  "lang": "es",
+  "dir": "ltr",
+  "categories": [
+    "education",
+    "productivity"
+  ],
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "/icons/icon-maskable-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icons/icon-maskable-512x512.png",
+      "src": "/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://picsum.photos/seed/1/1080/1920",
+      "type": "image/jpeg",
+      "sizes": "1080x1920",
+      "form_factor": "narrow",
+      "label": "Vista Principal"
+    },
+    {
+      "src": "https://picsum.photos/seed/2/1080/1920",
+      "type": "image/jpeg",
+      "sizes": "1080x1920",
+      "form_factor": "narrow",
+      "label": "Página de Test"
+    },
+    {
+      "src": "https://picsum.photos/seed/3/1280/800",
+      "type": "image/jpeg",
+      "sizes": "1280x800",
+      "form_factor": "wide",
+      "label": "Vista de escritorio"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Generar Nuevo Test",
+      "short_name": "Generar",
+      "description": "Crea un nuevo test con IA",
+      "url": "/generate",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Ver Estadísticas",
+      "short_name": "Estadísticas",
+      "description": "Revisa tu progreso y resultados",
+      "url": "/stats",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }
