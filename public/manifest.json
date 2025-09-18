@@ -1,48 +1,70 @@
 {
-  "name": "TestOpos",
+  "name": "TestOpos - Tests de Oposiciones con IA",
   "short_name": "TestOpos",
-  "description": "Practica para tus oposiciones con tests reales y exámenes generados por inteligencia artificial. Analiza tu progreso y mejora tus resultados.",
+  "description": "Genera tests para oposiciones usando IA y prepárate de forma inteligente.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
-    },
-    {
-      "src": "/icons/maskable-icon.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ],
   "orientation": "portrait",
-  "id": "/?source=pwa",
-  "scope": "/",
+  "id": "/?v=1",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://testopos-app.web.app/manifest.json"
+    }
+  ],
+  "prefer_related_applications": false,
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "display_override": [
+    "window-controls-overlay",
+    "tabbed"
+  ],
   "lang": "es-ES",
   "dir": "ltr",
+  "scope": "/",
+  "screenshots": [
+    {
+      "src": "https://picsum.photos/seed/1/1080/1920",
+      "sizes": "1080x1920",
+      "type": "image/jpeg",
+      "platform": "narrow",
+      "label": "Vista principal de la aplicación"
+    },
+    {
+      "src": "https://picsum.photos/seed/2/1080/1920",
+      "sizes": "1080x1920",
+      "type": "image/jpeg",
+      "platform": "narrow",
+      "label": "Ejemplo de test en curso"
+    }
+  ],
   "categories": [
-    "education",
-    "utilities"
+    "education"
   ],
   "shortcuts": [
     {
-      "name": "Generar Test con IA",
-      "short_name": "Generar IA",
-      "description": "Crea un nuevo test personalizado con inteligencia artificial.",
+      "name": "Generar Nuevo Test",
+      "short_name": "Generar Test",
+      "description": "Crea un nuevo test con preguntas generadas por IA",
       "url": "/generate",
       "icons": [
         {
-          "src": "/icons/shortcut-icon.png",
-          "sizes": "96x96"
+          "src": "/wand-shortcut-icon.png",
+          "sizes": "96x96",
+          "type": "image/png"
         }
       ]
     }
@@ -54,41 +76,16 @@
         "application/json": [
           ".json"
         ]
-      }
+      },
+      "icons": [
+        {
+          "src": "/file-handler-icon.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ],
+      "launch_type": "single-client"
     }
-  ],
-  "screenshots": [
-    {
-      "src": "https://picsum.photos/seed/1/1080/1920",
-      "sizes": "1080x1920",
-      "type": "image/jpeg",
-      "form_factor": "narrow",
-      "label": "Vista de la aplicación en móvil"
-    },
-    {
-      "src": "https://picsum.photos/seed/2/1280/800",
-      "sizes": "1280x800",
-      "type": "image/jpeg",
-      "form_factor": "wide",
-      "label": "Vista de la aplicación en escritorio"
-    }
-  ],
-  "related_applications": [
-    {
-      "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=com.example.app1",
-      "id": "com.example.app1"
-    },
-    {
-      "platform": "itunes",
-      "url": "https://itunes.apple.com/app/example-app1/id123456789"
-    }
-  ],
-  "prefer_related_applications": false,
-  "iarc_rating_id": "e84b072d-8543-4d43-8578-f961a090757a",
-  "display_override": [
-    "window-controls-overlay",
-    "minimal-ui"
   ],
   "launch_handler": {
     "client_mode": "navigate-existing"
@@ -96,44 +93,43 @@
   "protocol_handlers": [
     {
       "protocol": "web+testopos",
-      "url": "/protocol?type=%s"
+      "url": "/protocol?q=%s"
     }
   ],
   "widgets": [
     {
-      "name": "Últimos Resultados",
-      "description": "Widget para ver tus últimos resultados.",
-      "tag": "results",
-      "template": "results-template",
-      "ms_ac_template": "widgets/results.json",
-      "data": "widgets/results-data.json",
-      "type": "application/json"
+      "name": "Resumen de Estadísticas",
+      "description": "Muestra tus últimas estadísticas de tests.",
+      "tag": "stats-widget",
+      "template": "stats-widget-template",
+      "ms_ac_template": "widgets/stats.json",
+      "data": "widgets/stats-data.json",
+      "type": "application/json",
+      "auth": true,
+      "update": 3600
     }
   ],
   "edge_side_panel": {
-    "preferred_width": 480
+    "preferred_width": 400
   },
   "note_taking": {
     "new_note_url": "/new-note",
-    "new_note_accept": [
-      {
-        "media_type": "text/html",
-        "action": "/new-note-with-content",
-        "media_formats": [
-          "html"
-        ]
-      }
+    "accept": [
+      "text/html",
+      "text/plain"
     ]
   },
-  "scope_extensions": [
-    {
-      "origin": "*.example.com"
-    },
-    {
-      "origin": "sub.example.com"
-    },
-    {
-      "origin": "example.co.uk"
+  "share_target": {
+    "action": "/share-target",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
     }
+  },
+  "scope_extensions": [
+    { "origin": "*.testopos-app.web.app" },
+    { "origin": "*.firebaseapp.com" }
   ]
 }
