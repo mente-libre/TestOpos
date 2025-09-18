@@ -1,297 +1,180 @@
-
 {
-  "name": "OposTest IA",
-  "short_name": "OposTest",
-  "start_url": ".",
-  "display": "standalone",
-  "background_color": "#F5F5F5",
-  "theme_color": "#9370DB",
+  "name": "TestOpos",
+  "short_name": "TestOpos",
   "description": "App para generar tests de oposiciones con IA",
-  "display_override": [
-    "window-controls-overlay",
-    "minimal-ui",
-    "tabbed"
-  ],
-  "icons": [
-    {
-      "src": "/icons/SmallTile.scale-100.png",
-      "sizes": "71x71"
-    },
-    {
-      "src": "/icons/SmallTile.scale-125.png",
-      "sizes": "89x89"
-    },
-    {
-      "src": "/icons/SmallTile.scale-150.png",
-      "sizes": "107x107"
-    },
-    {
-      "src": "/icons/SmallTile.scale-200.png",
-      "sizes": "142x142"
-    },
-    {
-      "src": "/icons/SmallTile.scale-400.png",
-      "sizes": "284x284"
-    },
-    {
-      "src": "/icons/LargeTile.scale-100.png",
-      "sizes": "310x310"
-    },
-    {
-      "src": "/icons/LargeTile.scale-125.png",
-      "sizes": "388x388"
-    },
-    {
-      "src": "/icons/LargeTile.scale-150.png",
-      "sizes": "465x465"
-    },
-    {
-      "src": "/icons/LargeTile.scale-200.png",
-      "sizes": "620x620"
-    },
-    {
-      "src": "/icons/LargeTile.scale-400.png",
-      "sizes": "1240x1240"
-    },
-    {
-      "src": "/icons/16.png",
-      "sizes": "16x16"
-    },
-    {
-      "src": "/icons/20.png",
-      "sizes": "20x20"
-    },
-    {
-      "src": "/icons/29.png",
-      "sizes": "29x29"
-    },
-    {
-      "src": "/icons/32.png",
-      "sizes": "32x32"
-    },
-    {
-      "src": "/icons/40.png",
-      "sizes": "40x40"
-    },
-    {
-      "src": "/icons/50.png",
-      "sizes": "50x50"
-    },
-    {
-      "src": "/icons/57.png",
-      "sizes": "57x57"
-    },
-    {
-      "src": "/icons/58.png",
-      "sizes": "58x58"
-    },
-    {
-      "src": "/icons/60.png",
-      "sizes": "60x60"
-    },
-    {
-      "src": "/icons/64.png",
-      "sizes": "64x64"
-    },
-    {
-      "src": "/icons/72.png",
-      "sizes": "72x72"
-    },
-    {
-      "src": "/icons/76.png",
-      "sizes": "76x76"
-    },
-    {
-      "src": "/icons/80.png",
-      "sizes": "80x80"
-    },
-    {
-      "src": "/icons/87.png",
-      "sizes": "87x87"
-    },
-    {
-      "src": "/icons/100.png",
-      "sizes": "100x100"
-    },
-    {
-      "src": "/icons/114.png",
-      "sizes": "114x114"
-    },
-    {
-      "src": "/icons/120.png",
-      "sizes": "120x120"
-    },
-    {
-      "src": "/icons/128.png",
-      "sizes": "128x128"
-    },
-    {
-      "src": "/icons/144.png",
-      "sizes": "144x144"
-    },
-    {
-      "src": "/icons/152.png",
-      "sizes": "152x152"
-    },
-    {
-      "src": "/icons/167.png",
-      "sizes": "167x167"
-    },
-    {
-      "src": "/icons/180.png",
-      "sizes": "180x180"
-    },
-    {
-      "src": "/icons/192.png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "/icons/256.png",
-      "sizes": "256x256"
-    },
-    {
-      "src": "/icons/512.png",
-      "sizes": "512x512"
-    },
-    {
-      "src": "/icons/1024.png",
-      "sizes": "1024x1024"
-    },
-    {
-      "src": "/icons/android-launchericon-512-512.png",
-      "sizes": "512x512"
-    },
-    {
-      "src": "/icons/android-launchericon-192-192.png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "/icons/android-launchericon-144-144.png",
-      "sizes": "144x144"
-    },
-    {
-      "src": "/icons/android-launchericon-96-96.png",
-      "sizes": "96x96"
-    },
-    {
-      "src": "/icons/android-launchericon-72-72.png",
-      "sizes": "72x72"
-    },
-    {
-      "src": "/icons/android-launchericon-48-48.png",
-      "sizes": "48x48"
-    }
-  ],
-  "orientation": "portrait",
-  "id": "/?utm_source=pwa",
-  "related_applications": [
-    {
-      "platform": "webapp",
-      "url": "https://test-opos.vercel.app/manifest.json"
-    }
-  ],
-  "prefer_related_applications": true,
-  "scope": "/",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
   "lang": "es-ES",
   "dir": "ltr",
+  "orientation": "portrait-primary",
+  "id": "/?source=pwa",
+  "scope": "/",
   "categories": [
-    "education"
+    "education",
+    "productivity"
   ],
   "screenshots": [
     {
-      "src": "https://picsum.photos/seed/pwa-ss1/1080/1920",
-      "sizes": "1080x1920",
+      "src": "/screenshots/screenshot-wide.png",
+      "sizes": "1280x720",
       "type": "image/png",
-      "label": "Pantalla de Inicio de la App"
+      "form_factor": "wide",
+      "label": "Vista de la aplicación en escritorio"
     },
     {
-      "src": "https://picsum.photos/seed/pwa-ss2/1080/1920",
-      "sizes": "1080x1920",
+      "src": "/screenshots/screenshot-narrow.png",
+      "sizes": "720x1280",
       "type": "image/png",
-      "label": "Página para generar un test con IA"
+      "form_factor": "narrow",
+      "label": "Vista de la aplicación en móvil"
     }
   ],
   "shortcuts": [
     {
       "name": "Generar Test con IA",
+      "short_name": "Generar Test",
+      "description": "Crear un nuevo test personalizado con inteligencia artificial",
       "url": "/generate",
-      "description": "Crea un nuevo test personalizado.",
       "icons": [
         {
-          "src": "/icons/shortcut-generate.png",
+          "src": "/icons/icon-96x96.png",
           "sizes": "96x96"
         }
       ]
     }
   ],
   "share_target": {
-    "action": "/share-target/",
-    "method": "POST",
-    "enctype": "multipart/form-data",
+    "action": "/share-target",
+    "method": "GET",
     "params": {
-      "title": "name",
-      "text": "description",
-      "url": "link",
-      "files": [
-        {
-          "name": "media",
-          "accept": [
-            "application/json",
-            "application/pdf"
-          ]
-        }
-      ]
+      "title": "title",
+      "text": "text",
+      "url": "url"
     }
   },
-  "iarc_rating_id": "e84b072d-8686-4c38-812b-346a6843656c",
-  "scope_extensions": [
+  "file_handlers": [
     {
-      "origin": "*.vercel.app"
-    },
-    {
-      "origin": "*.google.com"
+      "action": "/open-file",
+      "accept": {
+        "application/json": [
+          ".json"
+        ]
+      }
     }
+  ],
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://test-opos.vercel.app/manifest.json"
+    }
+  ],
+  "prefer_related_applications": false,
+  "protocol_handlers": [
+    {
+      "protocol": "web+testopos",
+      "url": "/protocol-handler?url=%s"
+    }
+  ],
+  "scope_extensions": [
+    { "origin": "*.test-opos.vercel.app" }
   ],
   "widgets": [
     {
-      "name": "Generador Rápido",
-      "description": "Accede directamente al generador de tests.",
-      "tag": "generator",
-      "template": "generator-template",
-      "ms_ac_template": "widgets/generator.json",
-      "data": "widgets/generator-data.json",
+      "name": "Últimos Resultados",
+      "description": "Widget para ver tus últimos resultados de tests.",
+      "tag": "results",
+      "template": "results-template",
+      "ms_ac_template": "widgets/results.json",
+      "data": "widgets/results-data.json",
       "type": "application/json",
-      "screenshots": [
-        {
-          "src": "https://picsum.photos/seed/widget-ss/600/400",
-          "sizes": "600x400",
-          "label": "Vista previa del widget Generador Rápido"
-        }
-      ],
-      "icons": [
-        {
-          "src": "/icons/72.png",
-          "sizes": "72x72"
-        }
-      ],
-      "auth": false,
+      "auth": true,
       "update": 86400
     }
   ],
   "launch_handler": {
     "client_mode": "navigate-existing"
   },
-  "protocol_handlers": [
-    {
-      "protocol": "web+opostest",
-      "url": "/protocol?type=%s"
-    }
-  ],
   "edge_side_panel": {
     "preferred_width": 400
   },
   "note_taking": {
     "new_note_url": "/new-note",
-    "needs_account": true
-  }
+    "needs_custom_browser_UI": false
+  },
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "icons": [
+    {
+      "src": "/icons/icon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-48x48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "logo.svg",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ]
 }
