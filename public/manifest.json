@@ -1,20 +1,196 @@
+
 {
-  "name": "TestOpos",
-  "short_name": "TestOpos",
-  "description": "Genera tests para oposiciones usando IA y prepárate para el éxito.",
-  "start_url": "/",
+  "name": "OposTest IA",
+  "short_name": "OposTest",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#2563eb",
+  "background_color": "#F5F5F5",
+  "theme_color": "#9370DB",
+  "description": "App para generar tests de oposiciones con IA",
+  "display_override": [
+    "window-controls-overlay",
+    "minimal-ui",
+    "tabbed"
+  ],
   "icons": [
     {
-      "src": "logo.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
+      "src": "/icons/SmallTile.scale-100.png",
+      "sizes": "71x71"
+    },
+    {
+      "src": "/icons/SmallTile.scale-125.png",
+      "sizes": "89x89"
+    },
+    {
+      "src": "/icons/SmallTile.scale-150.png",
+      "sizes": "107x107"
+    },
+    {
+      "src": "/icons/SmallTile.scale-200.png",
+      "sizes": "142x142"
+    },
+    {
+      "src": "/icons/SmallTile.scale-400.png",
+      "sizes": "284x284"
+    },
+    {
+      "src": "/icons/LargeTile.scale-100.png",
+      "sizes": "310x310"
+    },
+    {
+      "src": "/icons/LargeTile.scale-125.png",
+      "sizes": "388x388"
+    },
+    {
+      "src": "/icons/LargeTile.scale-150.png",
+      "sizes": "465x465"
+    },
+    {
+      "src": "/icons/LargeTile.scale-200.png",
+      "sizes": "620x620"
+    },
+    {
+      "src": "/icons/LargeTile.scale-400.png",
+      "sizes": "1240x1240"
+    },
+    {
+      "src": "/icons/16.png",
+      "sizes": "16x16"
+    },
+    {
+      "src": "/icons/20.png",
+      "sizes": "20x20"
+    },
+    {
+      "src": "/icons/29.png",
+      "sizes": "29x29"
+    },
+    {
+      "src": "/icons/32.png",
+      "sizes": "32x32"
+    },
+    {
+      "src": "/icons/40.png",
+      "sizes": "40x40"
+    },
+    {
+      "src": "/icons/50.png",
+      "sizes": "50x50"
+    },
+    {
+      "src": "/icons/57.png",
+      "sizes": "57x57"
+    },
+    {
+      "src": "/icons/58.png",
+      "sizes": "58x58"
+    },
+    {
+      "src": "/icons/60.png",
+      "sizes": "60x60"
+    },
+    {
+      "src": "/icons/64.png",
+      "sizes": "64x64"
+    },
+    {
+      "src": "/icons/72.png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "/icons/76.png",
+      "sizes": "76x76"
+    },
+    {
+      "src": "/icons/80.png",
+      "sizes": "80x80"
+    },
+    {
+      "src": "/icons/87.png",
+      "sizes": "87x87"
+    },
+    {
+      "src": "/icons/100.png",
+      "sizes": "100x100"
+    },
+    {
+      "src": "/icons/114.png",
+      "sizes": "114x114"
+    },
+    {
+      "src": "/icons/120.png",
+      "sizes": "120x120"
+    },
+    {
+      "src": "/icons/128.png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "/icons/144.png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "/icons/152.png",
+      "sizes": "152x152"
+    },
+    {
+      "src": "/icons/167.png",
+      "sizes": "167x167"
+    },
+    {
+      "src": "/icons/180.png",
+      "sizes": "180x180"
+    },
+    {
+      "src": "/icons/192.png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icons/256.png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "/icons/512.png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/icons/1024.png",
+      "sizes": "1024x1024"
+    },
+    {
+      "src": "/icons/android-launchericon-512-512.png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/icons/android-launchericon-192-192.png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icons/android-launchericon-144-144.png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "/icons/android-launchericon-96-96.png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/icons/android-launchericon-72-72.png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "/icons/android-launchericon-48-48.png",
+      "sizes": "48x48"
     }
   ],
   "orientation": "portrait",
-  "id": "/?v=1",
+  "id": "/?utm_source=pwa",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://test-opos.vercel.app/manifest.json"
+    }
+  ],
+  "prefer_related_applications": true,
   "scope": "/",
   "lang": "es-ES",
   "dir": "ltr",
@@ -23,47 +199,99 @@
   ],
   "screenshots": [
     {
-      "src": "https://picsum.photos/seed/screenshot1/1080/1920",
+      "src": "https://picsum.photos/seed/pwa-ss1/1080/1920",
       "sizes": "1080x1920",
       "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Vista Principal"
+      "label": "Pantalla de Inicio de la App"
     },
     {
-      "src": "https://picsum.photos/seed/screenshot2/1920/1080",
-      "sizes": "1920x1080",
+      "src": "https://picsum.photos/seed/pwa-ss2/1080/1920",
+      "sizes": "1080x1920",
       "type": "image/png",
-      "form_factor": "wide",
-      "label": "Generador de Tests"
+      "label": "Página para generar un test con IA"
     }
   ],
   "shortcuts": [
     {
       "name": "Generar Test con IA",
-      "short_name": "Generar",
-      "description": "Crea un nuevo test personalizado con inteligencia artificial",
       "url": "/generate",
+      "description": "Crea un nuevo test personalizado.",
       "icons": [
         {
-          "src": "logo.svg",
-          "sizes": "any"
+          "src": "/icons/shortcut-generate.png",
+          "sizes": "96x96"
         }
       ]
     }
   ],
   "share_target": {
-    "action": "/share-target",
-    "method": "GET",
+    "action": "/share-target/",
+    "method": "POST",
+    "enctype": "multipart/form-data",
     "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
+      "title": "name",
+      "text": "description",
+      "url": "link",
+      "files": [
+        {
+          "name": "media",
+          "accept": [
+            "application/json",
+            "application/pdf"
+          ]
+        }
+      ]
     }
   },
-  "display_override": [
-    "window-controls-overlay"
+  "iarc_rating_id": "e84b072d-8686-4c38-812b-346a6843656c",
+  "scope_extensions": [
+    {
+      "origin": "*.vercel.app"
+    },
+    {
+      "origin": "*.google.com"
+    }
   ],
-  "related_applications": [],
-  "prefer_related_applications": false,
-  "iarc_rating_id": "e84b072d-8323-4422-92d3-05c742b87a8f"
+  "widgets": [
+    {
+      "name": "Generador Rápido",
+      "description": "Accede directamente al generador de tests.",
+      "tag": "generator",
+      "template": "generator-template",
+      "ms_ac_template": "widgets/generator.json",
+      "data": "widgets/generator-data.json",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "https://picsum.photos/seed/widget-ss/600/400",
+          "sizes": "600x400",
+          "label": "Vista previa del widget Generador Rápido"
+        }
+      ],
+      "icons": [
+        {
+          "src": "/icons/72.png",
+          "sizes": "72x72"
+        }
+      ],
+      "auth": false,
+      "update": 86400
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+opostest",
+      "url": "/protocol?type=%s"
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "note_taking": {
+    "new_note_url": "/new-note",
+    "needs_account": true
+  }
 }
