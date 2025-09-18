@@ -8,102 +8,95 @@
   "theme_color": "#2563eb",
   "icons": [
     {
-      "src": "/icon-192x192.png",
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icon-512x512.png",
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "/icon-maskable-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icon-maskable-512x512.png",
+      "src": "/icons/maskable-icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "orientation": "portrait",
+  "id": "/?source=pwa",
+  "scope": "/",
+  "lang": "es-ES",
+  "dir": "ltr",
+  "categories": [
+    "education",
+    "utilities"
+  ],
+  "shortcuts": [
+    {
+      "name": "Generar Test con IA",
+      "short_name": "Generar IA",
+      "description": "Crea un nuevo test personalizado con inteligencia artificial.",
+      "url": "/generate",
+      "icons": [
+        {
+          "src": "/icons/shortcut-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/handle-file",
+      "accept": {
+        "application/json": [
+          ".json"
+        ]
+      }
     }
   ],
   "screenshots": [
     {
       "src": "https://picsum.photos/seed/1/1080/1920",
-      "type": "image/jpeg",
       "sizes": "1080x1920",
-      "form_factor": "narrow"
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Vista de la aplicación en móvil"
     },
     {
-      "src": "https://picsum.photos/seed/2/1920/1080",
+      "src": "https://picsum.photos/seed/2/1280/800",
+      "sizes": "1280x800",
       "type": "image/jpeg",
-      "sizes": "1920x1080",
-      "form_factor": "wide"
+      "form_factor": "wide",
+      "label": "Vista de la aplicación en escritorio"
     }
   ],
-  "categories": ["education", "utilities"],
-  "id": "/?v=1",
-  "orientation": "portrait-primary",
   "related_applications": [
     {
       "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=com.example.testopos",
-      "id": "com.example.testopos"
+      "url": "https://play.google.com/store/apps/details?id=com.example.app1",
+      "id": "com.example.app1"
     },
     {
       "platform": "itunes",
-      "url": "https://itunes.apple.com/app/example-testopos/id123456789"
+      "url": "https://itunes.apple.com/app/example-app1/id123456789"
     }
   ],
   "prefer_related_applications": false,
-  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
-  "display_override": ["window-controls-overlay", "minimal-ui"],
-  "lang": "es-ES",
-  "dir": "ltr",
-  "scope": "/",
-  "shortcuts": [
-    {
-      "name": "Generar Test con IA",
-      "short_name": "Generar",
-      "description": "Crear un nuevo test de oposiciones usando inteligencia artificial",
-      "url": "/generate",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
-    }
+  "iarc_rating_id": "e84b072d-8543-4d43-8578-f961a090757a",
+  "display_override": [
+    "window-controls-overlay",
+    "minimal-ui"
   ],
-  "file_handlers": [
-    {
-      "action": "/handle-test-file",
-      "accept": {
-        "application/json": [".testopos"]
-      }
-    }
-  ],
-  "share_target": {
-    "action": "/share-handler",
-    "method": "POST",
-    "enctype": "multipart/form-data",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url",
-      "files": [
-        {
-          "name": "files",
-          "accept": ["application/json"]
-        }
-      ]
-    }
-  },
   "launch_handler": {
     "client_mode": "navigate-existing"
   },
   "protocol_handlers": [
     {
       "protocol": "web+testopos",
-      "url": "/protocol-handler?test=%s"
+      "url": "/protocol?type=%s"
     }
   ],
   "widgets": [
@@ -114,7 +107,7 @@
       "template": "results-template",
       "ms_ac_template": "widgets/results.json",
       "data": "widgets/results-data.json",
-      "type": "application/ms-adaptive-card"
+      "type": "application/json"
     }
   ],
   "edge_side_panel": {
@@ -122,10 +115,25 @@
   },
   "note_taking": {
     "new_note_url": "/new-note",
-    "needs_editing_surface": true
+    "new_note_accept": [
+      {
+        "media_type": "text/html",
+        "action": "/new-note-with-content",
+        "media_formats": [
+          "html"
+        ]
+      }
+    ]
   },
   "scope_extensions": [
-    { "origin": "*.test-opos.vercel.app" },
-    { "origin": "test-opos.firebaseapp.com" }
+    {
+      "origin": "*.example.com"
+    },
+    {
+      "origin": "sub.example.com"
+    },
+    {
+      "origin": "example.co.uk"
+    }
   ]
 }
