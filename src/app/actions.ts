@@ -8,22 +8,7 @@ import { type TestResult, type Question, type Exam, type Category } from '@/lib/
 import { getAuth } from 'firebase-admin/auth';
 import { db } from '@/lib/firebase/firebase-admin';
 import { CATEGORY_DEFINITIONS } from '@/lib/definitions';
-import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '@/lib/seed-data';
-import { ebepTest } from '@/lib/seed-data-ebep';
-import { seguridadSocialTest } from '@/lib/seed-data-seguridad-social';
-import { tema14Test } from '@/lib/seed-data-tema14';
-import { ley39Test } from '@/lib/seed-data-ley39-2015';
-import { ley29Test } from '@/lib/seed-data-ley29-1998';
-import { ley19Test } from '@/lib/seed-data-ley19-2013';
-import { ley3Test } from '@/lib/seed-data-ley3-2007';
-import { madrid2017Test } from '@/lib/seed-data-madrid-2017';
-import { madrid2023Test } from '@/lib/seed-data-madrid-2023';
-import { madrid2025Test } from '@/lib/seed-data-madrid-2025';
-import { ley9Test } from '@/lib/seed-data-ley9-1990';
-import { ley1Test } from '@/lib/seed-data-ley1-1983';
-import { constitucionTest } from '@/lib/seed-data-constitucion';
-import { ley9_2017Test } from '@/lib/seed-data-ley9-2017';
-import { lo3_1983Test } from '@/lib/seed-data-lo3-1983';
+import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, ley19Test, ley3Test, madrid2017Test, madrid2023Test, madrid2025Test, ley9Test, ley1Test, constitucionTest, ley9_2017Test, lo3_1983Test } from '@/lib/seed-data';
 import { Timestamp } from 'firebase-admin/firestore';
 import { headers } from 'next/headers';
 
@@ -63,7 +48,7 @@ const allSeedExams = [
     constitucionTest,
     ley9_2017Test,
     lo3_1983Test,
-];
+].filter(Boolean); // Filter out any undefined entries
 
 export async function getCategories(): Promise<{ success: boolean, categories?: Category[], error?: string }>{
   if (!db) {
@@ -458,7 +443,7 @@ export async function loadStatistics() {
 
 
 function findTestByName(fileName: string) {
-    return allSeedExams.find(e => e.fileName === fileName);
+    return allSeedExams.find(e => e && e.fileName === fileName);
 }
 
 export async function getExamById(examId: string) {
@@ -514,3 +499,5 @@ export async function getExamById(examId: string) {
         return { success: false, error: errorMessage };
     }
 }
+
+  
