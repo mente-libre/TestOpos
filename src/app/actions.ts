@@ -421,5 +421,3 @@ export async function getExamById(examId: string) {
         return { success: false, error: errorMessage };
     }
 }
-
-    
