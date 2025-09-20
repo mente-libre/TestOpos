@@ -46,4 +46,5 @@ export const signOut = async () => {
     }
 }
 
+export { getAuth };
 export type { User };

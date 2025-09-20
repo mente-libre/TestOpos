@@ -13,7 +13,7 @@ import { Loader2, CheckCircle, XCircle, RefreshCw, Eye, Wand2, Home } from 'luci
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { onAuthStateChange, type User } from '@/lib/firebase/auth';
+import { onAuthStateChange, type User, getAuth } from '@/lib/firebase/auth';
 import { getAuthHeaders } from '@/lib/utils';
 
 
@@ -32,16 +32,9 @@ interface Results {
 }
 
 // Wrapper to call server action with auth headers
-async function saveFinishedTestWithAuth(result: Omit<TestResult, 'id' | 'createdAt' | 'userId'>) {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (!user) {
-        console.warn("User not logged in, results will not be saved.");
-        return; // Or handle appropriately
-    }
-    const resultToSave = { ...result, userId: user.uid };
+async function saveFinishedTestWithAuth(result: Omit<TestResult, 'id' | 'createdAt'>) {
     // We can't pass headers to server actions directly, but getUserId in actions.ts will handle it
-    await saveFinishedTest(resultToSave);
+    await saveFinishedTest(result);
 }
 
 // Wrapper to call server action with auth headers
@@ -167,13 +160,14 @@ function TestPageContent() {
 
       // Save results to Firestore if user is logged in
       if(results && user) {
-        const resultToSave: Omit<TestResult, 'id' | 'createdAt' | 'userId'> = {
+        const resultToSave: Omit<TestResult, 'id' | 'createdAt'> = {
             testTitle: title,
             score: results.score,
             correctCount: results.correctCount,
             incorrectCount: results.incorrectCount,
             unansweredCount: results.unansweredCount,
             totalQuestions: questions.length,
+            userId: user.uid
         };
         saveFinishedTestWithAuth(resultToSave); // Fire-and-forget, don't block UI
       }
@@ -523,3 +517,4 @@ function formatTime(seconds: number) {
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
+
