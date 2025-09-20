@@ -10,6 +10,7 @@ import { CATEGORY_DEFINITIONS } from '@/lib/definitions';
 import { madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006 } from '@/lib/seed-data';
 import { advoGeneralTest } from '@/lib/seed-data-new';
 import { advoGeneralTestMedium } from '@/lib/seed-data-ebep-medium';
+import { advoGeneralTestHard } from '@/lib/seed-data-ebep-hard';
 import { officeTest } from '@/lib/seed-data-office';
 import { madrid2023Test } from '@/lib/seed-data-madrid-2023';
 import { madrid2025Test } from '@/lib/seed-data-madrid-2025';
@@ -34,7 +35,7 @@ async function getUserId(): Promise<string | null> {
 }
 
 export async function getCategories(): Promise<{ success: boolean, categories?: Category[], error?: string }>{
-  const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, advoGeneralTestMedium, officeTest, madrid2023Test, madrid2025Test, madrid2017Test];
+  const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, advoGeneralTestMedium, advoGeneralTestHard, officeTest, madrid2023Test, madrid2025Test, madrid2017Test];
   if (!db) {
     console.warn("getCategories: Firestore is not initialized. Falling back to local data.");
     const fallbackCategories = CATEGORY_DEFINITIONS.map(def => ({
@@ -96,7 +97,7 @@ export async function loadInitialData() {
     
     // Fallback if firestore is empty or there was an error loading categories
     console.warn("Database is empty or failed to load. Using local fallback data for categories.");
-    const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, advoGeneralTestMedium, officeTest, madrid2023Test, madrid2025Test, madrid2017Test];
+    const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, advoGeneralTestMedium, advoGeneralTestHard, officeTest, madrid2023Test, madrid2025Test, madrid2017Test];
     const categoryCounts: { [key: string]: number } = {};
 
     seedExams.forEach(exam => {
@@ -121,7 +122,7 @@ export async function loadInitialData() {
 
 export const getExamsForCategory = async (categoryId: string): Promise<{ success: boolean; exams: Exam[]; categoryName: string; error?: string; }> => {
   const categoryName = CATEGORY_DEFINITIONS.find(c => c.id === categoryId)?.name || 'Categoría desconocida';
-  const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, advoGeneralTestMedium, officeTest, madrid2023Test, madrid2025Test, madrid2017Test];
+  const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, advoGeneralTestMedium, advoGeneralTestHard, officeTest, madrid2023Test, madrid2025Test, madrid2017Test];
   let exams: Exam[] = [];
 
   if (db) {
@@ -167,7 +168,7 @@ export const getExamsForCategory = async (categoryId: string): Promise<{ success
 
 
 export async function getQuestionsForCategory(categoryId: string): Promise<{ success: boolean, questions: Question[], error?: string }> {
-  const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, advoGeneralTestMedium, officeTest, madrid2023Test, madrid2025Test, madrid2017Test];
+  const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, advoGeneralTestMedium, advoGeneralTestHard, officeTest, madrid2023Test, madrid2025Test, madrid2017Test];
   if (!db) {
     console.warn(`getQuestionsForCategory: Firestore not available. Using fallback for category ${categoryId}.`);
     const fallbackQuestions = allSeedExams.filter(e => e.category === categoryId).flatMap(e => e.questions).slice(0, 100);
@@ -368,7 +369,7 @@ export async function getExamById(examId: string) {
     // This block handles loading seed data.
     if (examId.startsWith('seed-')) {
         console.warn(`Loading exam '${examId}' from local seed data.`);
-        const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, advoGeneralTestMedium, officeTest, madrid2023Test, madrid2025Test, madrid2017Test];
+        const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, advoGeneralTestMedium, advoGeneralTestHard, officeTest, madrid2023Test, madrid2025Test, madrid2017Test];
         // e.g., "seed-madrid-0"
         const [, category, indexStr] = examId.split('-');
         const index = parseInt(indexStr, 10);
