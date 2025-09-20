@@ -11,7 +11,7 @@ interface SeedExam {
 const optionMap: { [key: string]: number } = { a: 0, b: 1, c: 2, d: 3 };
 
 const rawAdvoGeneralTest = {
-    fileName: "Test generado desde PDF - EBEP",
+    fileName: "EBEP - Nivel Fácil (RD 5/2015)",
     category: "estado",
     questions: [
         {

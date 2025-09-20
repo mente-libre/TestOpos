@@ -8,7 +8,7 @@ interface SeedExam {
 }
 
 const rawEbepHardTest = {
-    fileName: "Test EBEP - Nivel Difícil",
+    fileName: "EBEP - Nivel Difícil (RD 5/2015)",
     category: "estado",
     questions: [
     {

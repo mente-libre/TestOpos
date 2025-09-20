@@ -8,7 +8,7 @@ interface SeedExam {
 }
 
 const rawEbepMediumTest = {
-    fileName: "Test EBEP - Nivel Medio",
+    fileName: "EBEP - Nivel Medio (RD 5/2015)",
     category: "estado",
     questions: [
     {
