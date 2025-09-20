@@ -1,4 +1,3 @@
-
 'use server';
 
 import { generateTestFromExam } from '@/ai/flows/generate-test-from-exam-flow';
@@ -14,6 +13,7 @@ import { tema14Test } from '@/lib/seed-data-tema14';
 import { ley39Test } from '@/lib/seed-data-ley39-2015';
 import { ley29Test } from '@/lib/seed-data-ley29-1998';
 import { ley19Test } from '@/lib/seed-data-ley19-2013';
+import { ley3Test } from '@/lib/seed-data-ley3-2007';
 import { madrid2017Test } from '@/lib/seed-data-madrid-2017';
 import { madrid2023Test } from '@/lib/seed-data-madrid-2023';
 import { madrid2025Test } from '@/lib/seed-data-madrid-2025';
@@ -48,6 +48,7 @@ const allSeedExams = [
     ley39Test, 
     ley29Test, 
     ley19Test,
+    ley3Test,
     ley9Test,
     madrid2017Test,
     madrid2023Test,
@@ -74,6 +75,13 @@ export async function getCategories(): Promise<{ success: boolean, categories?: 
         if (exam.category) {
             categoryCounts[exam.category] = (categoryCounts[exam.category] || 0) + 1;
         }
+    });
+
+    // Also count seed exams for a complete picture
+    allSeedExams.forEach(exam => {
+      if (exam && exam.category) {
+        categoryCounts[exam.category] = (categoryCounts[exam.category] || 0) + 1;
+      }
     });
 
     const categories: Category[] = CATEGORY_DEFINITIONS.map(def => ({
@@ -104,10 +112,8 @@ export async function loadInitialData() {
             
             const categoriesResult = await getCategories();
             if (categoriesResult.success && categoriesResult.categories) {
-                // If firestore has data, use it.
-                if (categoriesResult.categories.some(c => c.examCount > 0)) {
-                    return { success: true, categories: categoriesResult.categories, userCount };
-                }
+                // If firestore has data, use it, combined with local.
+                 return { success: true, categories: categoriesResult.categories, userCount };
             }
         } catch (error) {
             console.error('Error loading data from Firestore:', error);
@@ -143,6 +149,18 @@ export const getExamsForCategory = async (categoryId: string): Promise<{ success
   const categoryName = CATEGORY_DEFINITIONS.find(c => c.id === categoryId)?.name || 'Categoría desconocida';
   let exams: Exam[] = [];
 
+  // Combine seed exams with firestore exams, ensuring no duplicates if IDs overlap
+  const seedExamsForCategory = allSeedExams
+    .filter(exam => exam.category === categoryId)
+    .map((seedExam) => ({
+        id: `seed-${seedExam.fileName}`,
+        userId: 'system',
+        fileName: seedExam.fileName,
+        category: seedExam.category,
+        questions: seedExam.questions,
+        createdAt: new Date().getTime(), // Use a consistent timestamp for local data
+    }));
+
   if (db) {
       try {
         const examsRef = db.collection('exams');
@@ -150,7 +168,7 @@ export const getExamsForCategory = async (categoryId: string): Promise<{ success
         const querySnapshot = await q.get();
 
         if (!querySnapshot.empty) {
-            exams = querySnapshot.docs.map(doc => {
+            const firestoreExams = querySnapshot.docs.map(doc => {
                 const data = doc.data();
                 const createdAt = data.createdAt;
                 return {
@@ -159,28 +177,20 @@ export const getExamsForCategory = async (categoryId: string): Promise<{ success
                     createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt,
                 } as Exam;
             });
+            // Merge, giving precedence to Firestore exams if IDs conflict (unlikely with 'seed-' prefix)
+             const examIds = new Set(firestoreExams.map(e => e.id));
+             const uniqueSeedExams = seedExamsForCategory.filter(e => !examIds.has(e.id));
+             exams = [...firestoreExams, ...uniqueSeedExams];
+        } else {
+            exams = seedExamsForCategory;
         }
       } catch (error) {
-        console.error('Error in getExamsForCategory, falling back to seed data:', error);
-        // Do not return an error here, just proceed to local fallback.
+        console.error('Error in getExamsForCategory, falling back to only seed data:', error);
+        exams = seedExamsForCategory; // Fallback to only seed data on error
       }
+  } else {
+      exams = seedExamsForCategory; // No DB, use only seed data
   }
-
-  // Combine seed exams with firestore exams, ensuring no duplicates if IDs overlap
-  const seedExamsForCategory = allSeedExams
-    .filter(exam => exam.category === categoryId)
-    .map((seedExam, index) => ({
-        id: `seed-${seedExam.fileName}`,
-        userId: 'system',
-        fileName: seedExam.fileName,
-        category: seedExam.category,
-        questions: seedExam.questions,
-        createdAt: new Date().getTime(),
-    }));
-
-  const examIds = new Set(exams.map(e => e.id));
-  const uniqueSeedExams = seedExamsForCategory.filter(e => !examIds.has(e.id));
-  exams = [...exams, ...uniqueSeedExams];
   
   if (exams.length === 0) {
       console.warn(`No exams found anywhere for category '${categoryId}'.`);
@@ -356,8 +366,7 @@ export async function saveFinishedTest(result: Omit<TestResult, 'id' | 'createdA
 export async function loadStatistics() {
     if (!db) {
         console.warn("Cannot load statistics, Firestore not initialized.");
-        // Return success with empty stats to prevent client-side error.
-        return { success: true, stats: [] };
+        return { success: false, error: "La base de datos no está disponible. No se pueden cargar las estadísticas." };
     }
     try {
         const userId = await getUserId();
@@ -394,6 +403,8 @@ export async function getExamById(examId: string) {
       return { success: false, error: 'Exam ID is required.' };
     }
 
+    // Always prioritize local seed data if the ID matches the seed format.
+    // This prevents DB dependency for core exams.
     if (examId.startsWith('seed-')) {
         const testName = decodeURIComponent(examId.replace(/^seed-/, ''));
         const seedExam = findTestByName(testName);
@@ -407,8 +418,7 @@ export async function getExamById(examId: string) {
                 questions: seedExam.questions,
                 createdAt: new Date().getTime(),
             };
-            // No need to stringify-parse here if we construct it carefully
-            return { success: true, exam };
+            return { success: true, exam: JSON.parse(JSON.stringify(exam)) };
         }
     }
 
@@ -421,21 +431,6 @@ export async function getExamById(examId: string) {
         const docSnap = await examRef.get();
 
         if (!docSnap.exists) {
-            // If not in DB, maybe it's a seed exam that wasn't found above.
-            // This is a fallback, the primary `seed-` check should catch it.
-             const testName = decodeURIComponent(examId.replace(/^seed-/, ''));
-             const seedExam = findTestByName(testName);
-             if (seedExam) {
-                 const exam: Exam = {
-                    id: `seed-${seedExam.fileName}`,
-                    userId: 'system',
-                    fileName: seedExam.fileName,
-                    category: seedExam.category,
-                    questions: seedExam.questions,
-                    createdAt: new Date().getTime(),
-                };
-                return { success: true, exam };
-             }
             return { success: false, error: 'No se encontró el examen.' };
         }
 
@@ -458,5 +453,3 @@ export async function getExamById(examId: string) {
         return { success: false, error: errorMessage };
     }
 }
-
-    

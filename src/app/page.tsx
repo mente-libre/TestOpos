@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -152,7 +151,7 @@ export default function Home() {
              <Card>
                 <CardContent className="pt-6 flex flex-col items-center text-center">
                     <div className="bg-blue-100 p-3 rounded-full mb-3"><BookOpen className="h-8 w-8 text-blue-600" /></div>
-                    <p className="text-3xl font-bold">{categories.reduce((acc, cat) => acc + cat.examCount, 0)}</p>
+                    <p className="text-3xl font-bold">{categories.reduce((acc, cat) => acc + (cat.examCount || 0), 0)}</p>
                     <p className="text-muted-foreground">Tests Disponibles</p>
                 </CardContent>
             </Card>
@@ -324,6 +323,19 @@ export default function Home() {
                 </CardContent>
                 <CardFooter>
                     <Button className="w-full" onClick={() => handleStartThemedTest('Ley 19/2013 - Transparencia y Buen Gobierno')}>
+                        Realizar Test
+                    </Button>
+                </CardFooter>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Ley Orgánica 3/2007 - Igualdad</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">Test completo sobre la Ley Orgánica para la igualdad efectiva de mujeres y hombres.</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" onClick={() => handleStartThemedTest('Ley Orgánica 3/2007 - Igualdad')}>
                         Realizar Test
                     </Button>
                 </CardFooter>
