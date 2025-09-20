@@ -251,6 +251,45 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card>
                 <CardHeader>
+                    <CardTitle>Constitución Española</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">Test completo sobre la Constitución Española de 1978.</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" onClick={() => handleStartThemedTest('Constitución Española')}>
+                        Realizar Test
+                    </Button>
+                </CardFooter>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Estatuto de Autonomía de Madrid</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">Test completo sobre la Ley Orgánica 3/1983, del Estatuto de Autonomía.</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" onClick={() => handleStartThemedTest('Estatuto de Autonomía de la Comunidad de Madrid')}>
+                        Realizar Test
+                    </Button>
+                </CardFooter>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Gobierno y Administración de Madrid</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">Test completo sobre la Ley 1/1983, del Gobierno y Administración.</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" onClick={() => handleStartThemedTest('Ley 1/1983 - Gobierno y Administración de la Comunidad de Madrid')}>
+                        Realizar Test
+                    </Button>
+                </CardFooter>
+            </Card>
+            <Card>
+                <CardHeader>
                     <CardTitle>Estatuto Básico del Empleado Público (EBEP)</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -336,6 +375,19 @@ export default function Home() {
                 </CardContent>
                 <CardFooter>
                     <Button className="w-full" onClick={() => handleStartThemedTest('Ley Orgánica 3/2007 - Igualdad')}>
+                        Realizar Test
+                    </Button>
+                </CardFooter>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Ley 9/2017 - Contratos del Sector Público</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">Test completo sobre la Ley 9/2017, de Contratos del Sector Público.</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" onClick={() => handleStartThemedTest('Ley 9/2017, de 8 de noviembre, de Contratos del Sector Público')}>
                         Realizar Test
                     </Button>
                 </CardFooter>
