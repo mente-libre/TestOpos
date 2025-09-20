@@ -17,6 +17,7 @@ import { ley19Test } from '@/lib/seed-data-ley19-2013';
 import { madrid2017Test } from '@/lib/seed-data-madrid-2017';
 import { madrid2023Test } from '@/lib/seed-data-madrid-2023';
 import { madrid2025Test } from '@/lib/seed-data-madrid-2025';
+import { ley9Test } from '@/lib/seed-data-ley9-1990';
 import { Timestamp } from 'firebase-admin/firestore';
 import { headers } from 'next/headers';
 
@@ -36,8 +37,24 @@ async function getUserId(): Promise<string | null> {
     }
 }
 
+const allSeedExams = [
+    madridAdminTest, 
+    estadoConstitutionTest, 
+    madridAdminTest2, 
+    madridAdminTest2006, 
+    ebepTest, 
+    seguridadSocialTest, 
+    tema14Test, 
+    ley39Test, 
+    ley29Test, 
+    ley19Test,
+    ley9Test,
+    madrid2017Test,
+    madrid2023Test,
+    madrid2025Test
+];
+
 export async function getCategories(): Promise<{ success: boolean, categories?: Category[], error?: string }>{
-  const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, ley19Test, madrid2017Test, madrid2023Test, madrid2025Test];
   if (!db) {
     console.warn("getCategories: Firestore is not initialized. Falling back to local data.");
     const fallbackCategories = CATEGORY_DEFINITIONS.map(def => ({
@@ -76,7 +93,7 @@ export async function getCategories(): Promise<{ success: boolean, categories?: 
 
 export async function loadInitialData() {
   try {
-    const categoriesResult = await getCategories();
+    let categories: Category[] = [];
     let userCount = 0;
 
     if (db) {
@@ -84,26 +101,26 @@ export async function loadInitialData() {
             const usersSnapshot = await db.collection('testResults').get();
             const uniqueUsers = new Set(usersSnapshot.docs.map(doc => doc.data().userId));
             userCount = uniqueUsers.size;
+            
+            const categoriesResult = await getCategories();
+            if (categoriesResult.success && categoriesResult.categories) {
+                // If firestore has data, use it.
+                if (categoriesResult.categories.some(c => c.examCount > 0)) {
+                    return { success: true, categories: categoriesResult.categories, userCount };
+                }
+            }
         } catch (error) {
-            console.error('Error loading user count:', error);
-            // Non-critical, so we can continue with userCount = 0
+            console.error('Error loading data from Firestore:', error);
+            // Non-critical, fall back to local data.
         }
     }
     
-    if (categoriesResult.success && categoriesResult.categories) {
-       // If firestore has data, use it.
-       if (categoriesResult.categories.some(c => c.examCount > 0)) {
-         return { success: true, categories: categoriesResult.categories, userCount };
-       }
-    }
-    
-    // Fallback if firestore is empty or there was an error loading categories
+    // Fallback if firestore is empty, not available, or there was an error
     console.warn("Database is empty or failed to load. Using local fallback data for categories.");
-    const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, ley19Test, madrid2017Test, madrid2023Test, madrid2025Test];
+    
     const categoryCounts: { [key: string]: number } = {};
-
-    seedExams.forEach(exam => {
-      if (exam.category) {
+    allSeedExams.forEach(exam => {
+      if (exam && exam.category) {
         categoryCounts[exam.category] = (categoryCounts[exam.category] || 0) + 1;
       }
     });
@@ -124,7 +141,6 @@ export async function loadInitialData() {
 
 export const getExamsForCategory = async (categoryId: string): Promise<{ success: boolean; exams: Exam[]; categoryName: string; error?: string; }> => {
   const categoryName = CATEGORY_DEFINITIONS.find(c => c.id === categoryId)?.name || 'Categoría desconocida';
-  const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, ley19Test, madrid2017Test, madrid2023Test, madrid2025Test];
   let exams: Exam[] = [];
 
   if (db) {
@@ -175,7 +191,6 @@ export const getExamsForCategory = async (categoryId: string): Promise<{ success
 
 
 export async function getQuestionsForCategory(categoryId: string): Promise<{ success: boolean, questions: Question[], error?: string }> {
-  const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, ley19Test, madrid2017Test, madrid2023Test, madrid2025Test];
   if (!db) {
     console.warn(`getQuestionsForCategory: Firestore not available. Using fallback for category ${categoryId}.`);
     const fallbackQuestions = allSeedExams.filter(e => e.category === categoryId).flatMap(e => e.questions).slice(0, 100);
@@ -341,6 +356,7 @@ export async function saveFinishedTest(result: Omit<TestResult, 'id' | 'createdA
 export async function loadStatistics() {
     if (!db) {
         console.warn("Cannot load statistics, Firestore not initialized.");
+        // Return success with empty stats to prevent client-side error.
         return { success: true, stats: [] };
     }
     try {
@@ -368,7 +384,6 @@ export async function loadStatistics() {
     }
 }
 
-const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, ley19Test, madrid2017Test, madrid2023Test, madrid2025Test];
 
 function findTestByName(fileName: string) {
     return allSeedExams.find(e => e.fileName === fileName);
@@ -392,7 +407,8 @@ export async function getExamById(examId: string) {
                 questions: seedExam.questions,
                 createdAt: new Date().getTime(),
             };
-            return { success: true, exam: JSON.parse(JSON.stringify(exam)) };
+            // No need to stringify-parse here if we construct it carefully
+            return { success: true, exam };
         }
     }
 
@@ -405,17 +421,34 @@ export async function getExamById(examId: string) {
         const docSnap = await examRef.get();
 
         if (!docSnap.exists) {
+            // If not in DB, maybe it's a seed exam that wasn't found above.
+            // This is a fallback, the primary `seed-` check should catch it.
+             const testName = decodeURIComponent(examId.replace(/^seed-/, ''));
+             const seedExam = findTestByName(testName);
+             if (seedExam) {
+                 const exam: Exam = {
+                    id: `seed-${seedExam.fileName}`,
+                    userId: 'system',
+                    fileName: seedExam.fileName,
+                    category: seedExam.category,
+                    questions: seedExam.questions,
+                    createdAt: new Date().getTime(),
+                };
+                return { success: true, exam };
+             }
             return { success: false, error: 'No se encontró el examen.' };
         }
 
         const data = docSnap.data();
-        
-        // Firestore Timestamps need to be converted for JSON serialization
-        const plainData = JSON.parse(JSON.stringify(data));
+        if (!data) {
+            return { success: false, error: 'Datos del examen no encontrados.' };
+        }
 
-        const exam = { 
+        const createdAt = data.createdAt;
+        const exam: Exam = { 
             id: docSnap.id, 
-            ...plainData,
+            ...data,
+            createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt,
         } as Exam;
         
         return { success: true, exam: JSON.parse(JSON.stringify(exam)) };
@@ -425,3 +458,5 @@ export async function getExamById(examId: string) {
         return { success: false, error: errorMessage };
     }
 }
+
+    
