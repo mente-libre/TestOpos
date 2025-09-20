@@ -9,7 +9,7 @@ interface SeedExam {
 
 const rawSeguridadSocialMedioTest = {
   "fileName": "Tema 28 - Seguridad Social (Medio)",
-  "category": "otros",
+  "category": "madrid",
   "questions": [
     {
       "id": 1,

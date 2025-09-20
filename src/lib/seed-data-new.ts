@@ -12,7 +12,7 @@ const optionMap: { [key: string]: number } = { a: 0, b: 1, c: 2, d: 3 };
 
 const rawAdvoGeneralTest = {
     fileName: "EBEP - Nivel Fácil (RD 5/2015)",
-    category: "estado",
+    category: "madrid",
     questions: [
         {
             "questionText": "Pregunta sobre: Real Decreto Legislativo 5/2015, de 30 de octubre, por el que se \naprueba el texto refundido de la Ley del Estatuto Básico del \nEmpleado Público...",

@@ -5,7 +5,7 @@ import { Timestamp } from 'firebase/firestore';
 
 // Centralized category definitions, safe for client and server use
 export const CATEGORY_DEFINITIONS = [
-    { id: "madrid", name: "Comunidad de Madrid" },
+    { id: "madrid", name: "Auxiliar Administrativo Comunidad de Madrid" },
     { id: "valencia", name: "Comunidad Valenciana" },
     { id: "andalucia", name: "Andalucía" },
     { id: "estado", name: "Administración del Estado" },

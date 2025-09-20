@@ -9,7 +9,7 @@ interface SeedExam {
 
 const rawEbepHardTest = {
     fileName: "EBEP - Nivel Difícil (RD 5/2015)",
-    category: "estado",
+    category: "madrid",
     questions: [
     {
       "questionText": "Pregunta sobre: Real Decreto Legislativo 5/2015, de 30 de octubre, por el que se \naprueba el texto refundido de la Ley del Estatuto Básico del \nEmpleado Público...",

@@ -9,7 +9,7 @@ interface SeedExam {
 
 const rawSeguridadSocialFacilTest = {
     fileName: "Tema 28 - Seguridad Social (Fácil)",
-    category: "otros",
+    category: "madrid",
     questions: [
       {
         "numero": 1,
