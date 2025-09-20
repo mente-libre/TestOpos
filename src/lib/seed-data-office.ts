@@ -7,10 +7,8 @@ interface SeedExam {
     questions: Question[];
 }
 
-const optionMap: { [key: string]: number } = { A: 0, B: 1, C: 2, D: 3 };
-
-const rawOfficeTest = {
-    fileName: "Test Microsoft Office (Word y Excel)",
+const rawSeguridadSocialFacilTest = {
+    fileName: "Tema 28 - Seguridad Social (Fácil)",
     category: "otros",
     questions: [
       {
@@ -136,10 +134,10 @@ const rawOfficeTest = {
     ]
 };
 
-export const officeTest: SeedExam = {
-    fileName: rawOfficeTest.fileName,
-    category: rawOfficeTest.category,
-    questions: rawOfficeTest.questions.map(q => {
+export const seguridadSocialTestFacil: SeedExam = {
+    fileName: rawSeguridadSocialFacilTest.fileName,
+    category: rawSeguridadSocialFacilTest.category,
+    questions: rawSeguridadSocialFacilTest.questions.map(q => {
         return {
             questionText: q.pregunta,
             options: q.opciones as [string, string, string, string],
