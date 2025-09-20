@@ -121,7 +121,8 @@ export default function Home() {
               ) : (
                 <>
                   <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => router.push('/login')}><Share2 className="mr-2 h-4 w-4" /> Compartir</Button>
-                  <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => router.push('/stats')}><Award className="mr-2 h-4 w-4" /> Ranking</Button>
+                  <Button variant="ghost" size="sm" className="hidden sm
+:inline-flex" onClick={() => router.push('/stats')}><Award className="mr-2 h-4 w-4" /> Ranking</Button>
                   <Button className="bg-slate-700 hover:bg-slate-600 text-white font-bold" onClick={() => router.push('/login')}><ArrowRight className="mr-2 h-4 w-4" /> Iniciar Sesión</Button>
                 </>
               )}
@@ -182,7 +183,22 @@ export default function Home() {
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold flex items-center gap-2"><Folder className="h-5 w-5" /> Tests por Temas</h3>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Estatuto Básico del Empleado Público (EBEP)</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground mb-4">
+                            Desafía tus conocimientos sobre el Real Decreto Legislativo 5/2015.
+                        </p>
+                    </CardContent>
+                    <CardFooter className="flex flex-col sm:flex-row gap-2">
+                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('EBEP - Nivel Fácil (RD 5/2015)')}>Fácil</Button>
+                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('EBEP - Nivel Medio (RD 5/2015)')}>Medio</Button>
+                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('EBEP - Nivel Difícil (RD 5/2015)')}>Difícil</Button>
+                    </CardFooter>
+                </Card>
                  <Card>
                     <CardHeader>
                         <CardTitle>Tema 28 - El Sistema Español de la Seguridad Social</CardTitle>
@@ -291,3 +307,5 @@ export default function Home() {
 }
 
   
+
+    
