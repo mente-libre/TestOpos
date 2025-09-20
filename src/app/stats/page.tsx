@@ -4,16 +4,14 @@
 import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { onAuthStateChange, type User } from '@/lib/firebase/auth';
-import { type TestResult } from '@/lib/definitions';
-import { loadStatistics } from '@/app/actions';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
-import { getAuthHeaders } from '@/lib/utils';
-
+import { type TestResult, type UserRanking } from '@/lib/definitions';
+import { loadStatistics, loadRankingData } from '@/app/actions';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Loader2, ArrowLeft, TrendingUp, Target, ListChecks } from 'lucide-react';
+import { Loader2, ArrowLeft, TrendingUp, Target, ListChecks, Trophy } from 'lucide-react';
 import { Logo } from '@/components/ui/logo';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -25,16 +23,10 @@ interface OverallStats {
     correctQuestions: number;
 }
 
-// Wrapper function to call server action with auth headers
-async function loadStatisticsWithAuth() {
-    // We can't pass headers to server actions directly, but getUserId in actions.ts will handle it
-    return loadStatistics();
-}
-
-
 export default function StatsPage() {
     const [user, setUser] = useState<User | null>(null);
-    const [stats, setStats] = useState<TestResult[]>([]);
+    const [personalStats, setPersonalStats] = useState<TestResult[]>([]);
+    const [ranking, setRanking] = useState<UserRanking[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -42,37 +34,62 @@ export default function StatsPage() {
         const unsubscribe = onAuthStateChange((firebaseUser) => {
             setUser(firebaseUser);
             if (!firebaseUser) {
-                setIsLoading(false);
+                // For non-logged-in users, we might just show the ranking
+                fetchRanking();
             }
         });
         return () => unsubscribe();
     }, []);
+    
+    const fetchRanking = async () => {
+        setIsLoading(true);
+        const rankingResult = await loadRankingData();
+        if (rankingResult.success && rankingResult.ranking) {
+            setRanking(rankingResult.ranking);
+        } else {
+            setError(rankingResult.error || 'No se pudo cargar el ranking.');
+        }
+        setIsLoading(false);
+    };
+
 
     useEffect(() => {
-        if (user) {
-            const fetchStats = async () => {
-                setIsLoading(true);
-                const result = await loadStatisticsWithAuth();
-                if (result.success && result.stats) {
-                    // Sort stats by date ascending for the chart
-                    const sortedStats = result.stats.sort((a, b) => (a.createdAt as number) - (b.createdAt as number));
-                    setStats(sortedStats);
+        const fetchAllData = async () => {
+             setIsLoading(true);
+             setError(null);
+
+            // Fetch global ranking
+            const rankingResult = await loadRankingData();
+            if (rankingResult.success && rankingResult.ranking) {
+                setRanking(rankingResult.ranking);
+            } else {
+                 setError(rankingResult.error || 'No se pudo cargar el ranking.');
+            }
+
+            // Fetch personal stats if user is logged in
+            if (user) {
+                const statsResult = await loadStatistics();
+                if (statsResult.success && statsResult.stats) {
+                    const sortedStats = statsResult.stats.sort((a, b) => (a.createdAt as number) - (b.createdAt as number));
+                    setPersonalStats(sortedStats);
                 } else {
-                    setError(result.error || 'No se pudieron cargar las estadísticas.');
+                    // Don't overwrite ranking error if it exists
+                    if (!error) setError(statsResult.error || 'No se pudieron cargar las estadísticas personales.');
                 }
-                setIsLoading(false);
-            };
-            fetchStats();
+            }
+             setIsLoading(false);
         }
+        
+       fetchAllData();
     }, [user]);
 
     const overallStats: OverallStats | null = useMemo(() => {
-        if (!stats || stats.length === 0) return null;
+        if (!personalStats || personalStats.length === 0) return null;
 
-        const totalTests = stats.length;
-        const totalScore = stats.reduce((acc, current) => acc + current.score, 0);
-        const totalQuestions = stats.reduce((acc, current) => acc + current.totalQuestions, 0);
-        const correctQuestions = stats.reduce((acc, current) => acc + current.correctCount, 0);
+        const totalTests = personalStats.length;
+        const totalScore = personalStats.reduce((acc, current) => acc + current.score, 0);
+        const totalQuestions = personalStats.reduce((acc, current) => acc + current.totalQuestions, 0);
+        const correctQuestions = personalStats.reduce((acc, current) => acc + current.correctCount, 0);
 
         return {
             totalTests,
@@ -80,39 +97,28 @@ export default function StatsPage() {
             totalQuestions,
             correctQuestions,
         };
-    }, [stats]);
+    }, [personalStats]);
     
     const chartData = useMemo(() => {
-        if (!stats) return [];
-        return stats.map((stat, index) => ({
+        if (!personalStats) return [];
+        return personalStats.map((stat, index) => ({
             name: `Test ${index + 1}`,
             puntuacion: stat.score,
             fecha: format(new Date(stat.createdAt as number), 'dd/MM/yy')
         }));
-    }, [stats]);
+    }, [personalStats]);
 
 
     if (isLoading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
                 <Loader2 className="mr-2 h-8 w-8 animate-spin" />
-                <p>Cargando estadísticas...</p>
+                <p>Cargando datos...</p>
             </div>
         );
     }
     
-    if (!user) {
-         return (
-            <div className="flex flex-col justify-center items-center min-h-screen text-center">
-                <p className="text-red-500 mb-4">Debes iniciar sesión para ver tus estadísticas.</p>
-                <Link href="/login" passHref>
-                <Button>Iniciar Sesión</Button>
-                </Link>
-            </div>
-        );
-    }
-
-    if (error) {
+     if (error) {
         return (
             <div className="flex flex-col justify-center items-center min-h-screen text-center">
                 <p className="text-red-500 mb-4">{error}</p>
@@ -122,6 +128,7 @@ export default function StatsPage() {
             </div>
         );
     }
+
 
     return (
         <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -141,13 +148,14 @@ export default function StatsPage() {
             <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-12">
-                        <BarChart className="h-12 w-12 text-primary mx-auto mb-4"/>
-                        <h1 className="text-4xl font-bold mb-2">Tus Estadísticas</h1>
-                        <p className="text-lg text-muted-foreground">Analiza tu progreso y descubre dónde mejorar.</p>
+                        <Trophy className="h-12 w-12 text-primary mx-auto mb-4"/>
+                        <h1 className="text-4xl font-bold mb-2">Ranking y Estadísticas</h1>
+                        <p className="text-lg text-muted-foreground">Compara tu progreso con otros y analiza tu rendimiento.</p>
                     </div>
 
-                    {stats && stats.length > 0 && overallStats ? (
-                        <div className="space-y-8">
+                    {user && personalStats && personalStats.length > 0 && overallStats && (
+                        <div className="mb-12">
+                             <h2 className="text-3xl font-bold mb-6 text-center sm:text-left">Tus Estadísticas Personales</h2>
                              <div className="grid gap-6 md:grid-cols-3">
                                 <Card>
                                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -181,7 +189,7 @@ export default function StatsPage() {
                                 </Card>
                             </div>
 
-                            <Card>
+                            <Card className="mt-6">
                                 <CardHeader>
                                     <CardTitle>Evolución de Puntuación</CardTitle>
                                     <CardDescription>Tu rendimiento a lo largo del tiempo.</CardDescription>
@@ -199,43 +207,42 @@ export default function StatsPage() {
                                     </ResponsiveContainer>
                                 </CardContent>
                             </Card>
-
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Historial de Tests</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead>Fecha</TableHead>
-                                                <TableHead>Título del Test</TableHead>
-                                                <TableHead className="text-center">Puntuación</TableHead>
-                                                <TableHead className="text-center">Correctas</TableHead>
-                                                <TableHead className="text-center">Incorrectas</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {stats.slice().reverse().map(result => (
-                                                <TableRow key={result.id}>
-                                                    <TableCell>{format(new Date(result.createdAt as number), 'PPP', { locale: es })}</TableCell>
-                                                    <TableCell className="font-medium">{result.testTitle}</TableCell>
-                                                    <TableCell className="text-center font-bold">{result.score}%</TableCell>
-                                                    <TableCell className="text-center text-green-600">{result.correctCount}</TableCell>
-                                                    <TableCell className="text-center text-red-600">{result.incorrectCount}</TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </CardContent>
-                            </Card>
-
                         </div>
+                    )}
+                    
+                    {ranking && ranking.length > 0 ? (
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-2xl">Ranking Global de Usuarios</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead className="w-[50px] text-center">Pos.</TableHead>
+                                            <TableHead>Usuario</TableHead>
+                                            <TableHead className="text-center">Puntuación Media</TableHead>
+                                            <TableHead className="text-center">Tests Realizados</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {ranking.map((player, index) => (
+                                            <TableRow key={player.userId} className={player.userId === user?.uid ? 'bg-primary/10' : ''}>
+                                                <TableCell className="text-center font-bold">{index + 1}</TableCell>
+                                                <TableCell className="font-medium">{player.userName}</TableCell>
+                                                <TableCell className="text-center font-bold text-primary">{player.averageScore}%</TableCell>
+                                                <TableCell className="text-center">{player.testsTaken}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </CardContent>
+                        </Card>
                     ) : (
-                        <div className="text-center py-16 border-2 border-dashed rounded-lg">
-                            <p className="text-muted-foreground">Aún no has completado ningún test.</p>
+                         <div className="text-center py-16 border-2 border-dashed rounded-lg">
+                            <p className="text-muted-foreground">Aún no hay suficientes datos para mostrar un ranking.</p>
                             <Link href="/" passHref>
-                                <Button variant="link" className="mt-4">Empieza tu primer test para ver tus estadísticas</Button>
+                                <Button variant="link" className="mt-4">¡Sé el primero en completar un test!</Button>
                             </Link>
                         </div>
                     )}
@@ -244,3 +251,6 @@ export default function StatsPage() {
         </div>
     );
 }
+
+
+    

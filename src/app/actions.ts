@@ -192,7 +192,7 @@ export const getExamsForCategory = async (categoryId: string): Promise<{ success
 export async function getQuestionsForCategory(categoryId: string): Promise<{ success: boolean, questions: Question[], error?: string }> {
   if (!db) {
     console.warn(`getQuestionsForCategory: Firestore not available. Using fallback for category ${categoryId}.`);
-    const fallbackQuestions = allSeedExams.filter(e => e.category === categoryId).flatMap(e => e.questions).slice(0, 100);
+    const fallbackQuestions = allSeedExams.filter(e => e && e.category === categoryId).flatMap(e => e.questions).slice(0, 100);
     return { success: true, questions: fallbackQuestions };
   }
 
@@ -210,7 +210,7 @@ export async function getQuestionsForCategory(categoryId: string): Promise<{ suc
 
     if (allQuestions.length === 0) {
       console.warn(`No questions in Firestore for ${categoryId}, using fallback.`);
-      allQuestions = allSeedExams.filter(e => e.category === categoryId).flatMap(e => e.questions).slice(0, 100);
+      allQuestions = allSeedExams.filter(e => e && e.category === categoryId).flatMap(e => e.questions).slice(0, 100);
     }
 
     return { success: true, questions: allQuestions };
@@ -500,4 +500,61 @@ export async function getExamById(examId: string) {
     }
 }
 
+export interface UserRanking {
+    userId: string;
+    userName: string;
+    averageScore: number;
+    testsTaken: number;
+}
+
+export async function loadRankingData(): Promise<{ success: boolean; ranking?: UserRanking[], error?: string }>{
+  if (!db) {
+    return { success: false, error: "La base de datos no está disponible para el ranking." };
+  }
+
+  try {
+    const resultsSnapshot = await db.collection('testResults').get();
+    if (resultsSnapshot.empty) {
+      return { success: true, ranking: [] };
+    }
+
+    // Aggregate results by user
+    const userStats: { [userId: string]: { totalScore: number, testsTaken: number } } = {};
+    resultsSnapshot.docs.forEach(doc => {
+      const result = doc.data() as TestResult;
+      if (!userStats[result.userId]) {
+        userStats[result.userId] = { totalScore: 0, testsTaken: 0 };
+      }
+      userStats[result.userId].totalScore += result.score;
+      userStats[result.userId].testsTaken += 1;
+    });
+
+    // Get user names from Firebase Auth
+    const userIds = Object.keys(userStats);
+    const userAuthRecords = await getAuth().getUsers(userIds.map(uid => ({ uid })));
+    const userNames: { [userId: string]: string } = {};
+    userAuthRecords.users.forEach(user => {
+      userNames[user.uid] = user.displayName || user.email || 'Usuario Anónimo';
+    });
+
+    // Create ranking
+    const ranking: UserRanking[] = userIds.map(userId => ({
+      userId,
+      userName: userNames[userId] || 'Usuario Anónimo',
+      averageScore: Math.round(userStats[userId].totalScore / userStats[userId].testsTaken),
+      testsTaken: userStats[userId].testsTaken,
+    }));
+
+    // Sort by average score descending
+    ranking.sort((a, b) => b.averageScore - a.averageScore);
+
+    return { success: true, ranking };
+  } catch (error) {
+    console.error("Error loading ranking data:", error);
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, error: "No se pudo cargar el ranking. " + errorMessage };
+  }
+}
   
+
+    

@@ -50,3 +50,14 @@ export interface TestResult {
   totalQuestions: number;
   createdAt: Timestamp | number;
 }
+
+// Type for the aggregated user ranking data
+export interface UserRanking {
+    userId: string;
+    userName: string;
+    averageScore: number;
+    testsTaken: number;
+}
+
+
+    
