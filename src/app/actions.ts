@@ -70,7 +70,7 @@ export async function getCategories(): Promise<{ success: boolean, categories?: 
     console.warn("getCategories: Firestore is not initialized. Falling back to local data.");
     const fallbackCategories = CATEGORY_DEFINITIONS.map(def => ({
       ...def,
-      examCount: allSeedExams.filter(e => e.category === def.id).length,
+      examCount: allSeedExams.filter(e => e && e.category === def.id).length,
     }));
     return { success: true, categories: fallbackCategories };
   }
@@ -156,7 +156,7 @@ export const getExamsForCategory = async (categoryId: string): Promise<{ success
 
   // Combine seed exams with firestore exams, ensuring no duplicates if IDs overlap
   const seedExamsForCategory = allSeedExams
-    .filter(exam => exam.category === categoryId)
+    .filter(exam => exam && exam.category === categoryId)
     .map((seedExam) => ({
         id: `seed-${seedExam.fileName}`,
         userId: 'system',
