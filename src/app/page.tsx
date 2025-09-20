@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Bot, BarChart3, User, LogOut, Loader2, Folder, Wand2, Menu, Calendar, ExternalLink } from 'lucide-react';
+import { Bot, BarChart3, User, LogOut, Loader2, Folder, Wand2, Menu, Calendar, ExternalLink, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { onAuthStateChange, signOut } from '@/lib/firebase/auth';
 import type { User as FirebaseUser } from 'firebase/auth';
@@ -77,12 +77,12 @@ export default function Home() {
     const cardContent = (
       <Card 
         className={`group hover:shadow-lg hover:-translate-y-1 transition-transform h-full ${
-          isDisabled ? 'opacity-50 cursor-not-allowed bg-muted' : 'cursor-pointer'
+          isDisabled ? 'opacity-50 cursor-not-allowed bg-secondary/30' : 'cursor-pointer bg-secondary/30 hover:bg-secondary/60'
         }`}
       >
         <CardContent className="pt-6 flex flex-col items-center text-center">
-          <Folder className="h-16 w-16 text-primary/70 group-hover:text-primary transition-colors mb-4" />
-          <h4 className="font-semibold text-lg">{category.name}</h4>
+          <Folder className="h-12 w-12 text-accent group-hover:text-accent/80 transition-colors mb-4" />
+          <h4 className="font-semibold text-lg text-primary">{category.name}</h4>
           <p className="text-sm text-muted-foreground">{category.examCount} {category.examCount === 1 ? 'examen' : 'exámenes'}</p>
         </CardContent>
       </Card>
@@ -101,30 +101,29 @@ export default function Home() {
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
-      <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md">
+    <div className="flex flex-col min-h-screen bg-background text-foreground dark">
+      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-                <Logo />
+                <Link href="/" passHref><Logo /></Link>
             </div>
-             <nav className="hidden md:flex items-center space-x-4">
-                <a href="#exams-section" className="text-secondary font-medium hover:text-primary transition-colors">Exámenes</a>
-                <Link href="/generate" className="text-secondary font-medium hover:text-primary transition-colors">Generador IA</Link>
-                <Link href="/stats" className="text-secondary font-medium hover:text-primary transition-colors">Estadísticas</Link>
-                <a href="#" className="text-secondary font-medium hover:text-primary transition-colors">Ayuda</a>
+             <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
+                <Link href="#exams-section" className="text-foreground/60 hover:text-foreground/80 transition-colors">Exámenes</Link>
+                <Link href="/generate" className="text-foreground/60 hover:text-foreground/80 transition-colors">Generador IA</Link>
+                <Link href="/stats" className="text-foreground/60 hover:text-foreground/80 transition-colors">Estadísticas</Link>
               </nav>
 
             <div className="flex items-center gap-4">
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="hidden md:flex items-center gap-2">
+                    <Button variant="ghost" className="hidden md:flex items-center gap-2 text-foreground/80 hover:text-foreground">
                       <User className="h-5 w-5" />
                       <span>{user.displayName || 'Mi Cuenta'}</span>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
+                  <DropdownMenuContent className="dark">
                     <DropdownMenuItem onClick={signOut}>
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Cerrar Sesión</span>
@@ -134,33 +133,32 @@ export default function Home() {
               ) : (
                 <div className="hidden md:flex items-center gap-2">
                   <Link href="/login" passHref>
-                    <Button variant="outline">Iniciar Sesión</Button>
+                    <Button variant="ghost" className="text-foreground/80 hover:text-foreground">Iniciar Sesión</Button>
                   </Link>
                   <Link href="/register" passHref>
-                    <Button>Registrarse</Button>
+                    <Button className="bg-accent hover:bg-accent/80 text-accent-foreground">Registrarse</Button>
                   </Link>
                 </div>
               )}
                <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" size="icon" className="md:hidden">
+                  <Button variant="ghost" size="icon" className="md:hidden text-foreground/80 hover:text-foreground">
                     <Menu className="h-6 w-6" />
                     <span className="sr-only">Abrir menú</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right">
+                <SheetContent side="right" className="dark">
                    <div className="flex flex-col h-full">
                     <div className="flex-grow">
                         <nav className="grid gap-4 text-lg font-medium mt-8">
-                           <a href="#exams-section" className="flex items-center gap-2 text-secondary hover:text-primary transition-colors">Exámenes</a>
-                            <Link href="/generate" className="flex items-center gap-2 text-secondary hover:text-primary transition-colors">Generador IA</Link>
-                            <Link href="/stats" className="flex items-center gap-2 text-secondary hover:text-primary transition-colors">Estadísticas</Link>
-                            <a href="#" className="flex items-center gap-2 text-secondary hover:text-primary transition-colors">Ayuda</a>
+                           <Link href="#exams-section" className="flex items-center gap-2 text-foreground/80 hover:text-foreground transition-colors">Exámenes</Link>
+                            <Link href="/generate" className="flex items-center gap-2 text-foreground/80 hover:text-foreground transition-colors">Generador IA</Link>
+                            <Link href="/stats" className="flex items-center gap-2 text-foreground/80 hover:text-foreground transition-colors">Estadísticas</Link>
                         </nav>
                     </div>
                     <div className="mt-auto">
                         {user ? (
-                             <Button variant="ghost" onClick={signOut} className="w-full justify-start gap-2">
+                             <Button variant="ghost" onClick={signOut} className="w-full justify-start gap-2 text-foreground/80 hover:text-foreground">
                                 <LogOut className="h-5 w-5" />
                                 <span>Cerrar Sesión</span>
                             </Button>
@@ -170,7 +168,7 @@ export default function Home() {
                                     <Button variant="outline" className="w-full">Iniciar Sesión</Button>
                                 </Link>
                                 <Link href="/register" passHref>
-                                    <Button className="w-full">Registrarse</Button>
+                                    <Button className="w-full bg-accent hover:bg-accent/80 text-accent-foreground">Registrarse</Button>
                                 </Link>
                             </div>
                         )}
@@ -183,72 +181,77 @@ export default function Home() {
         </div>
       </header>
 
-      <main>
-        <section className="py-16 md:py-24 text-center bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900">
+      <main className="flex-grow">
+        <section className="py-24 md:py-32 text-center">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Prepara tus oposiciones con IA</h1>
-            <p className="max-w-3xl mx-auto text-lg text-secondary mb-8">
-              Practica con exámenes reales o deja que nuestra IA genere nuevos tests para ti. La preparación más completa a tu alcance.
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-primary">Prepara tu Futuro, Supera tu Oposición</h1>
+            <p className="max-w-3xl mx-auto text-lg md:text-xl text-muted-foreground mb-10">
+              La plataforma definitiva para practicar con exámenes reales y generar tests ilimitados con inteligencia artificial. Tu éxito empieza aquí.
             </p>
-             <div className="flex flex-col sm:flex-row justify-center gap-4">
+             <div className="flex justify-center gap-4">
                 <Link href="#exams-section" passHref>
-                    <Button size="lg">
-                      Ver Exámenes
-                    </Button>
-                </Link>
-                 <Link href="/generate" passHref>
-                    <Button size="lg" variant="outline" className="bg-white">
-                        <Wand2 className="mr-2 h-5 w-5 text-primary"/>
-                        Generar Test con IA
+                    <Button size="lg" className="bg-accent hover:bg-accent/80 text-accent-foreground">
+                      Empezar a Practicar <ArrowRight className="ml-2 h-5 w-5"/>
                     </Button>
                 </Link>
              </div>
           </div>
         </section>
 
-        <section className="py-16 md:py-24">
+        <section className="py-24 md:py-32 bg-secondary/20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-center mb-12">Cómo funciona</h2>
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <Card className="text-center hover:shadow-lg hover:-translate-y-1 transition-transform">
+            <h2 className="text-3xl font-bold text-center mb-12 text-primary">Las Herramientas para tu Éxito</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              <Card className="text-center bg-transparent border-0 shadow-none">
                 <CardHeader>
-                  <div className="mx-auto bg-primary/10 rounded-full h-16 w-16 flex items-center justify-center mb-4">
-                    <Bot className="h-8 w-8 text-primary" />
+                  <div className="mx-auto bg-accent/10 rounded-full h-16 w-16 flex items-center justify-center mb-4">
+                    <Folder className="h-8 w-8 text-accent" />
                   </div>
-                  <h3 className="text-xl font-semibold">IA genera tests</h3>
+                  <h3 className="text-xl font-semibold text-primary">Exámenes Reales</h3>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground">Nuestra IA crea tests personalizados con preguntas y respuestas basadas en exámenes reales.</p>
+                  <p className="text-muted-foreground">Accede a un banco de exámenes de convocatorias anteriores para practicar en condiciones reales.</p>
                 </CardContent>
               </Card>
-              <Card className="text-center hover:shadow-lg hover:-translate-y-1 transition-transform">
+              <Card className="text-center bg-transparent border-0 shadow-none">
                 <CardHeader>
-                  <div className="mx-auto bg-primary/10 rounded-full h-16 w-16 flex items-center justify-center mb-4">
-                    <BarChart3 className="h-8 w-8 text-primary" />
+                  <div className="mx-auto bg-accent/10 rounded-full h-16 w-16 flex items-center justify-center mb-4">
+                    <Bot className="h-8 w-8 text-accent" />
                   </div>
-                  <h3 className="text-xl font-semibold">Analiza tu progreso</h3>
+                  <h3 className="text-xl font-semibold text-primary">Generador IA de Tests</h3>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground">Obtén estadísticas detalladas de tu rendimiento, identifica tus puntos débiles y mejora.</p>
+                  <p className="text-muted-foreground">Crea tests personalizados e ilimitados para reforzar las áreas que más necesitas.</p>
+                </CardContent>
+              </Card>
+              <Card className="text-center bg-transparent border-0 shadow-none">
+                <CardHeader>
+                  <div className="mx-auto bg-accent/10 rounded-full h-16 w-16 flex items-center justify-center mb-4">
+                    <BarChart3 className="h-8 w-8 text-accent" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-primary">Análisis de Progreso</h3>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">Obtén estadísticas detalladas de tu rendimiento para identificar tus puntos fuertes y débiles.</p>
                 </CardContent>
               </Card>
             </div>
           </div>
         </section>
 
-        <section id="exams-section" className="py-16 md:py-24 bg-light dark:bg-gray-800">
+        <section id="exams-section" className="py-24 md:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-center mb-12">Tus exámenes</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-primary">Elige tu Categoría</h2>
 
             {isLoading ? (
               <div className="flex justify-center items-center p-8">
-                  <Loader2 className="mr-2 h-8 w-8 animate-spin" />
-                  <p>Cargando tus datos...</p>
+                  <Loader2 className="mr-2 h-8 w-8 animate-spin text-accent" />
+                  <p className="text-muted-foreground">Cargando categorías...</p>
               </div>
             ) : error ? (
                 <div className="text-center text-red-500 py-10">
                     <p className="mb-4">Error al cargar los exámenes: {error}</p>
-                    <Button onClick={() => window.location.reload()}>Reintentar</Button>
+                    <Button onClick={() => window.location.reload()} variant="outline">Reintentar</Button>
                 </div>
             ) : (
                 categories.length > 0 ? (
@@ -261,7 +264,7 @@ export default function Home() {
                     <div className="text-center text-muted-foreground py-10">
                         <p className="mb-4">Aún no hay exámenes disponibles.</p>
                         <Link href="/generate" passHref>
-                            <Button>
+                            <Button className="bg-accent hover:bg-accent/80 text-accent-foreground">
                                 <Wand2 className="mr-2 h-4 w-4"/>
                                 Genera tu primer test con IA
                             </Button>
@@ -272,63 +275,11 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="oposiciones-section" className="py-16 md:py-24">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <Calendar className="h-12 w-12 text-primary mx-auto mb-4"/>
-              <h2 className="text-3xl font-bold">Próximas Convocatorias</h2>
-              <p className="text-lg text-muted-foreground mt-2">Ejemplos de las últimas convocatorias publicadas.</p>
-            </div>
-            
-            <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-xl">Auxiliar Administrativo (Estado)</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                        <p className="text-muted-foreground"><strong>Plazas:</strong> 1.150</p>
-                        <p className="text-muted-foreground"><strong>Requisitos:</strong> Título de Graduado en ESO o equivalente.</p>
-                        <Badge variant="secondary">Inscripción Abierta</Badge>
-                    </CardContent>
-                </Card>
-                 <Card>
-                    <CardHeader>
-                        <CardTitle className="text-xl">Policía Nacional (Escala Básica)</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                        <p className="text-muted-foreground"><strong>Plazas:</strong> 2.458</p>
-                        <p className="text-muted-foreground"><strong>Requisitos:</strong> Título de Bachiller o equivalente.</p>
-                        <Badge variant="destructive">Cerrada</Badge>
-                    </CardContent>
-                </Card>
-                 <Card>
-                    <CardHeader>
-                        <CardTitle className="text-xl">Administrativo (Comunidad de Madrid)</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                        <p className="text-muted-foreground"><strong>Plazas:</strong> 550</p>
-                        <p className="text-muted-foreground"><strong>Requisitos:</strong> Título de Bachiller o Técnico.</p>
-                        <Badge variant="secondary">Próximamente</Badge>
-                    </CardContent>
-                </Card>
-            </div>
-            <div className="text-center mt-12">
-                <a href="https://oposiciones.es/?utm_source=google&utm_medium=cpc&utm_campaign=oposiciones-es_global_es_gsn&MLL=5175&utm_term=oposiciones&gad_source=1&gad_campaignid=16767538026&gbraid=0AAAAACaR6YSB1u3xKeZ5GYZVLzedQ05zT&gclid=Cj0KCQjw8p7GBhCjARIsAEhghZ1DU5zTTkInhijrrtX3d89HdhaqX93OQxPy2RCY_zMryvjnZG4MEbQaAnruEALw_wcB" target="_blank" rel="noopener noreferrer">
-                    <Button size="lg">
-                        Ver todas las convocatorias
-                        <ExternalLink className="ml-2 h-5 w-5"/>
-                    </Button>
-                </a>
-            </div>
-          </div>
-        </section>
-
       </main>
 
-      <footer className="bg-dark text-white py-8 text-center mt-auto">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <p>© 2024 TestOpos - Preparación inteligente para oposiciones</p>
-            <p className="text-sm text-gray-400 mt-2">Una app segura y eficaz para tu preparación</p>
+      <footer className="border-t border-border/40 py-8">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-muted-foreground">
+            <p>© 2024 TestOpos. Preparación inteligente para oposiciones.</p>
         </div>
       </footer>
     </div>
