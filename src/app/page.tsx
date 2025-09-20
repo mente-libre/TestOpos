@@ -179,60 +179,6 @@ export default function Home() {
             </Card>
         </div>
 
-        <div className="mb-12">
-            <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold flex items-center gap-2"><Folder className="h-5 w-5" /> Tests por Temas</h3>
-            </div>
-             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Estatuto Básico del Empleado Público (EBEP)</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-sm text-muted-foreground mb-4">
-                            Desafía tus conocimientos sobre el Real Decreto Legislativo 5/2015.
-                        </p>
-                    </CardContent>
-                    <CardFooter className="flex flex-col sm:flex-row gap-2">
-                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('EBEP - Nivel Fácil (RD 5/2015)')}>Fácil</Button>
-                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('EBEP - Nivel Medio (RD 5/2015)')}>Medio</Button>
-                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('EBEP - Nivel Difícil (RD 5/2015)')}>Difícil</Button>
-                    </CardFooter>
-                </Card>
-                 <Card>
-                    <CardHeader>
-                        <CardTitle>Tema 28 - El Sistema Español de la Seguridad Social</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-sm text-muted-foreground mb-4">
-                            Pon a prueba tus conocimientos sobre la estructura, financiación y acción protectora de la Seguridad Social.
-                        </p>
-                    </CardContent>
-                    <CardFooter className="flex flex-col sm:flex-row gap-2">
-                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('Tema 28 - Seguridad Social (Fácil)')}>Fácil</Button>
-                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('Tema 28 - Seguridad Social (Medio)')}>Medio</Button>
-                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('Tema 28 - Seguridad Social (Difícil)')}>Difícil</Button>
-                    </CardFooter>
-                </Card>
-                 <Card>
-                    <CardHeader>
-                        <CardTitle>Tema 14 - Las Fuentes del Derecho</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-sm text-muted-foreground mb-4">
-                            Evalúa tu comprensión sobre la ley, la costumbre, los principios generales y la jerarquía normativa.
-                        </p>
-                    </CardContent>
-                    <CardFooter className="flex flex-col sm:flex-row gap-2">
-                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('Tema 14 - Fuentes del Derecho (Fácil)')}>Fácil</Button>
-                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('Tema 14 - Fuentes del Derecho (Medio)')}>Medio</Button>
-                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('Tema 14 - Fuentes del Derecho (Difícil)')} disabled>Difícil</Button>
-                    </CardFooter>
-                </Card>
-            </div>
-        </div>
-
-
         <div className="mb-6">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold flex items-center gap-2"><ListChecks className="h-5 w-5" /> Exámenes Completos y por Categoría</h3>
@@ -305,7 +251,3 @@ export default function Home() {
     </div>
   );
 }
-
-  
-
-    
