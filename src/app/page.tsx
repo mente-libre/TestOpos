@@ -82,7 +82,7 @@ export default function Home() {
       >
         <CardContent className="pt-6 flex flex-col items-center text-center">
           <Folder className="h-12 w-12 text-accent group-hover:text-accent/80 transition-colors mb-4" />
-          <h4 className="font-semibold text-lg text-primary">{category.name}</h4>
+          <h4 className="font-semibold text-lg text-primary-foreground">{category.name}</h4>
           <p className="text-sm text-muted-foreground">{category.examCount} {category.examCount === 1 ? 'examen' : 'exámenes'}</p>
         </CardContent>
       </Card>
@@ -101,7 +101,7 @@ export default function Home() {
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground dark">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -123,7 +123,7 @@ export default function Home() {
                       <span>{user.displayName || 'Mi Cuenta'}</span>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="dark">
+                  <DropdownMenuContent>
                     <DropdownMenuItem onClick={signOut}>
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Cerrar Sesión</span>
@@ -147,7 +147,7 @@ export default function Home() {
                     <span className="sr-only">Abrir menú</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="dark">
+                <SheetContent side="right">
                    <div className="flex flex-col h-full">
                     <div className="flex-grow">
                         <nav className="grid gap-4 text-lg font-medium mt-8">
@@ -184,7 +184,7 @@ export default function Home() {
       <main className="flex-grow">
         <section className="py-24 md:py-32 text-center">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-primary">Prepara tu Futuro, Supera tu Oposición</h1>
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-primary-foreground">Prepara tu Futuro, Supera tu Oposición</h1>
             <p className="max-w-3xl mx-auto text-lg md:text-xl text-muted-foreground mb-10">
               La plataforma definitiva para practicar con exámenes reales y generar tests ilimitados con inteligencia artificial. Tu éxito empieza aquí.
             </p>
@@ -200,14 +200,14 @@ export default function Home() {
 
         <section className="py-24 md:py-32 bg-secondary/20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-center mb-12 text-primary">Las Herramientas para tu Éxito</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-primary-foreground">Las Herramientas para tu Éxito</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
               <Card className="text-center bg-transparent border-0 shadow-none">
                 <CardHeader>
                   <div className="mx-auto bg-accent/10 rounded-full h-16 w-16 flex items-center justify-center mb-4">
                     <Folder className="h-8 w-8 text-accent" />
                   </div>
-                  <h3 className="text-xl font-semibold text-primary">Exámenes Reales</h3>
+                  <h3 className="text-xl font-semibold text-primary-foreground">Exámenes Reales</h3>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">Accede a un banco de exámenes de convocatorias anteriores para practicar en condiciones reales.</p>
@@ -218,7 +218,7 @@ export default function Home() {
                   <div className="mx-auto bg-accent/10 rounded-full h-16 w-16 flex items-center justify-center mb-4">
                     <Bot className="h-8 w-8 text-accent" />
                   </div>
-                  <h3 className="text-xl font-semibold text-primary">Generador IA de Tests</h3>
+                  <h3 className="text-xl font-semibold text-primary-foreground">Generador IA de Tests</h3>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">Crea tests personalizados e ilimitados para reforzar las áreas que más necesitas.</p>
@@ -229,7 +229,7 @@ export default function Home() {
                   <div className="mx-auto bg-accent/10 rounded-full h-16 w-16 flex items-center justify-center mb-4">
                     <BarChart3 className="h-8 w-8 text-accent" />
                   </div>
-                  <h3 className="text-xl font-semibold text-primary">Análisis de Progreso</h3>
+                  <h3 className="text-xl font-semibold text-primary-foreground">Análisis de Progreso</h3>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">Obtén estadísticas detalladas de tu rendimiento para identificar tus puntos fuertes y débiles.</p>
@@ -241,7 +241,7 @@ export default function Home() {
 
         <section id="exams-section" className="py-24 md:py-32">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-center mb-12 text-primary">Elige tu Categoría</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 text-primary-foreground">Elige tu Categoría</h2>
 
             {isLoading ? (
               <div className="flex justify-center items-center p-8">
