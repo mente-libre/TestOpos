@@ -13,6 +13,9 @@ import { lo3_1983Test as lo3_1983Test_imported } from './seed-data-lo3-1983';
 import { constitucionTest as constitucionTest_imported } from './seed-data-constitucion';
 import { ley9_2017Test as ley9_2017Test_imported } from './seed-data-ley9-2017';
 import { ley9Test as ley9_1990Test } from './seed-data-ley9-1990';
+import { madrid2017Test } from './seed-data-madrid-2017';
+import { madrid2023Test } from './seed-data-madrid-2023';
+import { madrid2025Test } from './seed-data-madrid-2025';
 
 interface SeedExam {
     fileName: string;
@@ -498,12 +501,7 @@ export const madridAdminTest2006: SeedExam = {
   };
     
     
-export const ley9Test = ley9_1990Test;
-export const ley1Test = ley1_1983Test;
-export const lo3_1983Test = lo3_1983Test_imported;
-export const constitucionTest = constitucionTest_imported;
-export const ley9_2017Test = ley9_2017Test_imported;
-export const ley3Test = ley3_2007Test;
-export const ley19Test = ley19_2013Test;
-export const ley29Test = ley29_1998Test;
-export const ley39Test = ley39_2015Test;
+export { ebepTest, seguridadSocialTest, tema14Test, ley39_2015Test as ley39Test, ley29_1998Test as ley29Test, ley19_2013Test as ley19Test, lo3_1983Test_imported as lo3_1983Test, constitucionTest_imported as constitucionTest, ley9_2017Test_imported as ley9_2017Test, ley9_1990Test as ley9Test, ley3_2007Test as ley3Test, ley1_1983Test as ley1Test };
+export { madrid2017Test } from './seed-data-madrid-2017';
+export { madrid2023Test } from './seed-data-madrid-2023';
+export { madrid2025Test } from './seed-data-madrid-2025';
