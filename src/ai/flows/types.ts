@@ -55,3 +55,22 @@ export const GenerateReviewTestOutputSchema = z.object({
 export type GenerateReviewTestOutput = z.infer<
   typeof GenerateReviewTestOutputSchema
 >;
+
+export const GenerateMixedTestInputSchema = z.object({
+  context: z.string().describe('A string containing questions and answers from all available exams to provide context.'),
+});
+export type GenerateMixedTestInput = z.infer<
+  typeof GenerateMixedTestInputSchema
+>;
+
+export const GenerateMixedTestOutputSchema = z.object({
+  questions: z
+    .array(QuestionSchema)
+    .length(60)
+    .describe(
+      'An array of 60 new and varied question objects generated based on the context.'
+    ),
+});
+export type GenerateMixedTestOutput = z.infer<
+  typeof GenerateMixedTestOutputSchema
+>;

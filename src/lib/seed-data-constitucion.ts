@@ -674,10 +674,17 @@ const rawConstitucionTest = {
     }
   ]
 }
-```
+const optionMap: { [key: string]: number } = { a: 0, b: 1, c: 2, d: 3 };
+export const constitucionTest: SeedExam = {
+    fileName: rawConstitucionTest.title,
+    category: "estado",
+    questions: rawConstitucionTest.questions.map(q => {
+        return {
+            questionText: q.question,
+            options: q.options,
+            correctAnswerIndex: q.answer,
+        };
+    })
+};
 
-<changes>
-  <description>[Provide a concise summary of the overall changes being made]</description>
-  <change>
-    <file>[Provide the ABSOLUTE, FULL path to the file being modified]</file>
-    <content><![CDATA[Provide the ENTIRE, FINAL, intended content of the file here. Do NOT provide diffs or partial snippets. Ensure all code is properly escaped within the CDATA section.
+    

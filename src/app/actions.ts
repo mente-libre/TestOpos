@@ -1,7 +1,9 @@
+
 'use server';
 
 import { generateTestFromExam } from '@/ai/flows/generate-test-from-exam-flow';
 import { generateReviewTest as generateReviewTestFlow } from '@/ai/flows/generate-review-test-flow';
+import { generateMixedTest as generateMixedTestFlow } from '@/ai/flows/generate-mixed-test-flow';
 import { type TestResult, type Question, type Exam, type Category } from '@/lib/definitions';
 import { getAuth } from 'firebase-admin/auth';
 import { db } from '@/lib/firebase/firebase-admin';
@@ -18,6 +20,10 @@ import { madrid2017Test } from '@/lib/seed-data-madrid-2017';
 import { madrid2023Test } from '@/lib/seed-data-madrid-2023';
 import { madrid2025Test } from '@/lib/seed-data-madrid-2025';
 import { ley9Test } from '@/lib/seed-data-ley9-1990';
+import { ley1Test } from '@/lib/seed-data-ley1-1983';
+import { constitucionTest } from '@/lib/seed-data-constitucion';
+import { ley9_2017Test } from '@/lib/seed-data-ley9-2017';
+import { lo3_1983Test } from '@/lib/seed-data-lo3-1983';
 import { Timestamp } from 'firebase-admin/firestore';
 import { headers } from 'next/headers';
 
@@ -52,7 +58,11 @@ const allSeedExams = [
     ley9Test,
     madrid2017Test,
     madrid2023Test,
-    madrid2025Test
+    madrid2025Test,
+    ley1Test,
+    constitucionTest,
+    ley9_2017Test,
+    lo3_1983Test,
 ];
 
 export async function getCategories(): Promise<{ success: boolean, categories?: Category[], error?: string }>{
@@ -112,17 +122,12 @@ export async function loadInitialData() {
             
             const categoriesResult = await getCategories();
             if (categoriesResult.success && categoriesResult.categories) {
-                // If firestore has data, use it, combined with local.
                  return { success: true, categories: categoriesResult.categories, userCount };
             }
         } catch (error) {
             console.error('Error loading data from Firestore:', error);
-            // Non-critical, fall back to local data.
         }
     }
-    
-    // Fallback if firestore is empty, not available, or there was an error
-    console.warn("Database is empty or failed to load. Using local fallback data for categories.");
     
     const categoryCounts: { [key: string]: number } = {};
     allSeedExams.forEach(exam => {
@@ -177,7 +182,6 @@ export const getExamsForCategory = async (categoryId: string): Promise<{ success
                     createdAt: createdAt instanceof Timestamp ? createdAt.toMillis() : createdAt,
                 } as Exam;
             });
-            // Merge, giving precedence to Firestore exams if IDs conflict (unlikely with 'seed-' prefix)
              const examIds = new Set(firestoreExams.map(e => e.id));
              const uniqueSeedExams = seedExamsForCategory.filter(e => !examIds.has(e.id));
              exams = [...firestoreExams, ...uniqueSeedExams];
@@ -289,6 +293,65 @@ export async function generateNewTest(category: string) {
         };
     }
 }
+
+export async function generateNewMixedTest() {
+    if (!process.env.GOOGLE_API_KEY || process.env.GOOGLE_API_KEY === 'YOUR_API_KEY_HERE') {
+        return { 
+            success: false, 
+            error: 'La funcionalidad de generación con IA no está configurada. Falta una clave de API de Google válida.' 
+        };
+    }
+
+    try {
+        // Gather a sample of questions from all seed exams
+        const allQuestions = allSeedExams.flatMap(exam => exam.questions);
+        
+        // Shuffle and take a sample of 100 questions for context to avoid overly large payloads
+        const shuffled = allQuestions.sort(() => 0.5 - Math.random());
+        const sampledQuestions = shuffled.slice(0, 100);
+
+        if (sampledQuestions.length === 0) {
+            return {
+                success: false,
+                error: 'No hay preguntas disponibles para generar un test variado.'
+            };
+        }
+
+        const context = sampledQuestions
+            .map(q => `Pregunta: ${q.questionText}\nRespuesta Correcta: ${q.options[q.correctAnswerIndex]}`)
+            .join('\n---\n');
+        
+        const generationResult = await generateMixedTestFlow({ context });
+
+        if (!generationResult?.questions || generationResult.questions.length === 0) {
+            return { 
+                success: false, 
+                error: 'La IA no pudo generar un test variado. Inténtalo de nuevo.' 
+            };
+        }
+        
+        return { success: true, questions: generationResult.questions };
+
+    } catch (error) {
+        console.error('Error in generateNewMixedTest:', error);
+        let errorMessage = 'Ocurrió un error inesperado al generar el test variado.';
+        if (error instanceof Error) {
+            const lowerCaseError = error.message.toLowerCase();
+            if (lowerCaseError.includes('quota') || lowerCaseError.includes('429')) {
+                errorMessage = 'Has alcanzado el límite de peticiones a la IA por ahora. El plan gratuito tiene restricciones de uso. Por favor, espera unos minutos y vuelve a intentarlo.';
+            } else if (lowerCaseError.includes('503') || lowerCaseError.includes('overloaded') || lowerCaseError.includes('unavailable')) {
+                errorMessage = 'El servicio de IA está sobrecargado en este momento. Por favor, inténtalo de nuevo en unos minutos.';
+            } else {
+                errorMessage = error.message;
+            }
+        }
+        return { 
+            success: false, 
+            error: errorMessage 
+        };
+    }
+}
+
 
 export async function generateReviewTest(failedQuestions: Question[]) {
     // A robust check to see if the API key is missing or is just a placeholder.
@@ -403,8 +466,6 @@ export async function getExamById(examId: string) {
       return { success: false, error: 'Exam ID is required.' };
     }
 
-    // Always prioritize local seed data if the ID matches the seed format.
-    // This prevents DB dependency for core exams.
     if (examId.startsWith('seed-')) {
         const testName = decodeURIComponent(examId.replace(/^seed-/, ''));
         const seedExam = findTestByName(testName);

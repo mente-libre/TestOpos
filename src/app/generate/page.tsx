@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, AlertCircle, CheckCircle, Wand2, ArrowLeft, RefreshCw, Info } from 'lucide-react';
-import { generateNewTest } from '@/app/actions';
+import { generateNewMixedTest } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
@@ -21,7 +21,6 @@ export default function GeneratePage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
   
   const { toast } = useToast();
   const router = useRouter();
@@ -31,9 +30,8 @@ export default function GeneratePage() {
     if (!questions || questions.length === 0) return;
 
     try {
-      const categoryName = CATEGORY_DEFINITIONS.find(c => c.id === selectedCategory)?.name || 'General';
       sessionStorage.setItem('testQuestions', JSON.stringify(questions));
-      sessionStorage.setItem('testTitle', `Test IA: ${categoryName}`);
+      sessionStorage.setItem('testTitle', `Test General Variado (IA)`);
       router.push('/test');
     } catch (error) {
       console.error('Failed to save generated test to session storage', error);
@@ -42,25 +40,19 @@ export default function GeneratePage() {
   };
 
   const handleGenerateTest = async () => {
-    if (!selectedCategory) {
-      setError('Por favor, selecciona una categoría para usar como base.');
-      return;
-    }
-    
     setIsProcessing(true);
     setQuestions(null);
     setError(null);
 
     try {
-      const result = await generateNewTest(selectedCategory);
+      const result = await generateNewMixedTest();
 
       if (result.success && result.questions) {
         setQuestions(result.questions);
         setError(null);
-        const categoryName = CATEGORY_DEFINITIONS.find(c => c.id === selectedCategory)?.name;
         toast({
             title: '¡Test generado con IA!',
-            description: `Se han creado ${result.questions.length} preguntas nuevas para "${categoryName}".`,
+            description: `Se han creado ${result.questions.length} preguntas nuevas de temas variados.`,
         });
       } else {
         setError(result.error ?? 'Ha ocurrido un error desconocido durante la generación.');
@@ -99,12 +91,12 @@ export default function GeneratePage() {
           <div className="text-center mb-12">
             <Wand2 className="h-12 w-12 text-primary mx-auto mb-4"/>
             <h1 className="text-4xl font-bold mb-2">Generador de Tests con IA</h1>
-            <p className="text-lg text-muted-foreground">Crea exámenes únicos y personalizados a partir de nuestro banco de preguntas.</p>
+            <p className="text-lg text-muted-foreground">Crea un examen único y variado de 60 preguntas a partir de todo nuestro banco de temarios.</p>
           </div>
           
           <Card className="mb-8">
               <CardHeader>
-                <CardTitle>Configura tu nuevo test</CardTitle>
+                <CardTitle>Generar Test General Variado</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 {!isAiAvailable ? (
@@ -118,24 +110,10 @@ export default function GeneratePage() {
                     </Alert>
                 ) : (
                     <>
-                        <div className="grid gap-6">
-                            <div>
-                                <label htmlFor="examCategory" className="block text-sm font-medium text-gray-700 mb-2">Elige una categoría como inspiración</label>
-                                <Select onValueChange={setSelectedCategory} value={selectedCategory}>
-                                    <SelectTrigger id="examCategory">
-                                        <SelectValue placeholder="Selecciona una categoría" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {CATEGORY_DEFINITIONS.map(cat => (
-                                            <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-                        <Button onClick={handleGenerateTest} disabled={isProcessing || !selectedCategory} className="w-full">
-                        {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        {isProcessing ? 'Generando con IA...' : 'Generar Test'}
+                        <p className="text-muted-foreground">Pulsa el botón para que la IA genere un test de 60 preguntas mezclando todos los temas disponibles. ¡Ideal para un repaso general!</p>
+                        <Button onClick={handleGenerateTest} disabled={isProcessing} className="w-full">
+                          {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                          {isProcessing ? 'Generando con IA...' : 'Generar Test de 60 Preguntas'}
                         </Button>
                     </>
                 )}
@@ -163,7 +141,7 @@ export default function GeneratePage() {
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div className="flex items-center gap-3">
                         <CheckCircle className="h-6 w-6 text-green-500" />
-                        <h3 className="text-xl font-semibold">Test generado para "{CATEGORY_DEFINITIONS.find(c => c.id === selectedCategory)?.name}"</h3>
+                        <h3 className="text-xl font-semibold">Test General Variado generado</h3>
                     </div>
                     <div className="flex gap-2 w-full sm:w-auto">
                         <Button variant="outline" onClick={handleGenerateTest} disabled={isProcessing} className="flex-1">
@@ -216,5 +194,3 @@ export default function GeneratePage() {
     </div>
   );
 }
-
-    
