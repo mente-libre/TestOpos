@@ -82,6 +82,10 @@ export default function Home() {
     router.push(`/category/${categoryId}`);
   }
 
+  const handleStartThemedTest = (testName: string) => {
+    router.push(`/exam/seed-${encodeURIComponent(testName)}`);
+  };
+
   return (
      <div className="min-h-screen bg-secondary/30">
       <header className="bg-[#2D3748] text-white">
@@ -174,6 +178,30 @@ export default function Home() {
             </Card>
         </div>
 
+        <div className="mb-12">
+            <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold flex items-center gap-2"><Folder className="h-5 w-5" /> Tests por Temas</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                 <Card>
+                    <CardHeader>
+                        <CardTitle>Tema 28 - El Sistema Español de la Seguridad Social</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground mb-4">
+                            Pon a prueba tus conocimientos sobre la estructura, financiación y acción protectora de la Seguridad Social.
+                        </p>
+                    </CardContent>
+                    <CardFooter className="flex flex-col sm:flex-row gap-2">
+                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('Tema 28 - Seguridad Social (Fácil)')}>Fácil</Button>
+                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('Tema 28 - Seguridad Social (Medio)')}>Medio</Button>
+                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('Tema 28 - Seguridad Social (Difícil)')}>Difícil</Button>
+                    </CardFooter>
+                </Card>
+            </div>
+        </div>
+
+
         <div className="mb-6">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold flex items-center gap-2"><ListChecks className="h-5 w-5" /> Tests por Categoría</h3>
@@ -246,3 +274,5 @@ export default function Home() {
     </div>
   );
 }
+
+  

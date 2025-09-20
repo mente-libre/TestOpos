@@ -362,16 +362,38 @@ export async function loadStatistics() {
     }
 }
 
+const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, advoGeneralTestMedium, advoGeneralTestHard, seguridadSocialTestFacil, seguridadSocialTestMedio, seguridadSocialTestHard, madrid2023Test, madrid2025Test, madrid2017Test];
+
+function findTestByName(fileName: string) {
+    return allSeedExams.find(e => e.fileName === fileName);
+}
 
 export async function getExamById(examId: string) {
     if (!examId) {
       return { success: false, error: 'Exam ID is required.' };
     }
 
-    // This block handles loading seed data.
     if (examId.startsWith('seed-')) {
+        const testName = examId.replace(/^seed-/, '');
+        const seedExam = findTestByName(testName);
+        
+        if (seedExam) {
+             const exam: Exam = {
+                id: examId,
+                userId: 'system',
+                fileName: seedExam.fileName,
+                category: seedExam.category,
+                questions: seedExam.questions,
+                createdAt: new Date().getTime(),
+            };
+            return { success: true, exam: JSON.parse(JSON.stringify(exam)) };
+        }
+    }
+
+
+    // This block handles loading seed data.
+    if (examId.startsWith('old-seed-')) {
         console.warn(`Loading exam '${examId}' from local seed data.`);
-        const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, advoGeneralTestMedium, advoGeneralTestHard, seguridadSocialTestFacil, seguridadSocialTestMedio, seguridadSocialTestHard, madrid2023Test, madrid2025Test, madrid2017Test];
         // e.g., "seed-madrid-0"
         const [, category, indexStr] = examId.split('-');
         const index = parseInt(indexStr, 10);
@@ -425,3 +447,5 @@ export async function getExamById(examId: string) {
 }
 
     
+
+  
