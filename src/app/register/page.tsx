@@ -1,12 +1,29 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
+import { signInWithGoogle } from "@/lib/firebase/auth";
+import { useRouter } from "next/navigation";
 
 
 export default function RegisterPage() {
+  const router = useRouter();
+
+  const handleGoogleSignIn = async () => {
+    try {
+        const user = await signInWithGoogle();
+        if (user) {
+          router.push("/");
+        }
+    } catch (error) {
+        console.error("Error during Google sign-in:", error);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
       <Card className="w-full max-w-sm">
@@ -40,6 +57,9 @@ export default function RegisterPage() {
             </div>
             <Button type="submit" className="w-full">
               Crear cuenta
+            </Button>
+            <Button variant="outline" className="w-full" onClick={handleGoogleSignIn}>
+              Registrarse con Google
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
