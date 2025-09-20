@@ -206,6 +206,26 @@ export default function Home() {
                 </Button>
             </div>
         </div>
+        
+        <div className="mb-12">
+          <h3 className="text-xl font-bold flex items-center gap-2 mb-4"><Folder className="h-5 w-5" /> Tests por Temario</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Estatuto Básico del Empleado Público (EBEP)</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">Test completo sobre el Real Decreto Legislativo 5/2015.</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" onClick={() => handleStartThemedTest('Test sobre Estatuto Básico del Empleado Público')}>
+                        Realizar Test
+                    </Button>
+                </CardFooter>
+            </Card>
+          </div>
+        </div>
+
 
         {isLoading ? (
           <div className="flex justify-center items-center py-10">
