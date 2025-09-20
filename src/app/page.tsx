@@ -207,6 +207,46 @@ export default function Home() {
             </div>
         </div>
         
+         {isLoading ? (
+          <div className="flex justify-center items-center py-10">
+            <Loader2 className="mr-2 h-8 w-8 animate-spin" />
+            <p>Cargando tests...</p>
+          </div>
+        ) : error ? (
+           <Card className="text-center p-8 bg-red-50 border-red-200">
+                <p className="text-red-600 font-semibold">Error al cargar los datos</p>
+                <p className="text-red-500 mt-2">{error}</p>
+            </Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {categories.filter(cat => cat.examCount > 0).map((category) => (
+                <Card key={category.id} className="flex flex-col">
+                    <CardHeader>
+                        <div className="flex items-start gap-4">
+                            <div className={`p-3 rounded-lg ${CATEGORY_COLORS[category.id] || CATEGORY_COLORS.default}`}>
+                                {CATEGORY_ICONS[category.id] || CATEGORY_ICONS.default}
+                            </div>
+                            <div>
+                                <CardTitle className="text-lg mb-1">{category.name}</CardTitle>
+                                <Badge variant="outline">{category.examCount} {category.examCount > 1 ? 'exámenes' : 'examen'}</Badge>
+                            </div>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                        <p className="text-sm text-muted-foreground mb-4">
+                            Exámenes disponibles para la categoría de {category.name}. ¡Prepárate para el éxito!
+                        </p>
+                    </CardContent>
+                    <CardFooter>
+                         <Button className="w-full bg-slate-800 hover:bg-slate-700 text-white" onClick={() => handleStartTest(category.id)}>
+                            Ver Exámenes
+                         </Button>
+                    </CardFooter>
+                </Card>
+            ))}
+          </div>
+        )}
+
         <div className="mb-12">
           <h3 className="text-xl font-bold flex items-center gap-2 mb-4"><Folder className="h-5 w-5" /> Tests por Temario</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -288,49 +328,21 @@ export default function Home() {
                     </Button>
                 </CardFooter>
             </Card>
+              <Card>
+                <CardHeader>
+                    <CardTitle>Ley 9/1990 - Hacienda de la Comunidad de Madrid</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">Test completo sobre la Ley 9/1990, Reguladora de la Hacienda de la Comunidad de Madrid.</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" onClick={() => handleStartThemedTest('LEY 9/1990, de 8 de noviembre, REGULADORA DE LA HACIENDA DE LA COMUNIDAD DE MADRID')}>
+                        Realizar Test
+                    </Button>
+                </CardFooter>
+            </Card>
           </div>
         </div>
-
-
-        {isLoading ? (
-          <div className="flex justify-center items-center py-10">
-            <Loader2 className="mr-2 h-8 w-8 animate-spin" />
-            <p>Cargando tests...</p>
-          </div>
-        ) : error ? (
-           <Card className="text-center p-8 bg-red-50 border-red-200">
-                <p className="text-red-600 font-semibold">Error al cargar los datos</p>
-                <p className="text-red-500 mt-2">{error}</p>
-            </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {categories.filter(cat => cat.examCount > 0).map((category, index) => (
-                <Card key={category.id} className="flex flex-col">
-                    <CardHeader>
-                        <div className="flex items-start gap-4">
-                            <div className={`p-3 rounded-lg ${CATEGORY_COLORS[category.id] || CATEGORY_COLORS.default}`}>
-                                {CATEGORY_ICONS[category.id] || CATEGORY_ICONS.default}
-                            </div>
-                            <div>
-                                <CardTitle className="text-lg mb-1">{category.name}</CardTitle>
-                                <Badge variant="outline">{category.examCount} {category.examCount > 1 ? 'exámenes' : 'examen'}</Badge>
-                            </div>
-                        </div>
-                    </CardHeader>
-                    <CardContent className="flex-grow">
-                        <p className="text-sm text-muted-foreground mb-4">
-                            Exámenes disponibles para la categoría de {category.name}. ¡Prepárate para el éxito!
-                        </p>
-                    </CardContent>
-                    <CardFooter>
-                         <Button className="w-full bg-slate-800 hover:bg-slate-700 text-white" onClick={() => handleStartTest(category.id)}>
-                            Ver Exámenes
-                         </Button>
-                    </CardFooter>
-                </Card>
-            ))}
-          </div>
-        )}
 
       </main>
     </div>
