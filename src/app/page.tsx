@@ -24,85 +24,27 @@ interface AppUser {
   email: string | null;
 }
 
-const mockTests = [
-  {
-    title: 'TREBEP - Estatuto Básico del Empleado Público',
-    difficulty: 'Medio',
-    difficultyColor: 'bg-yellow-400',
-    description: 'Test completo sobre el Texto Refundido de la Ley del Estatuto Básico del Empleado Público con 20 preguntas.',
-    questions: 20,
-    time: 30,
-    points: 290,
-    tag: 'Función Pública',
-    icon: <User className="h-6 w-6 text-white" />,
-    iconBgColor: 'bg-blue-500',
-  },
-  {
-    title: 'Ley 39/2015 - Procedimiento Administrativo Común',
-    difficulty: 'Medio',
-    difficultyColor: 'bg-yellow-400',
-    description: 'Evaluación completa sobre el procedimiento administrativo común de las AAPP con 20 preguntas.',
-    questions: 20,
-    time: 30,
-    points: 300,
-    tag: 'Derecho Administrativo',
-    icon: <BookOpen className="h-6 w-6 text-white" />,
-    iconBgColor: 'bg-green-500',
-  },
-  {
-    title: 'Sistema de Seguridad Social',
-    difficulty: 'Medio',
-    difficultyColor: 'bg-yellow-400',
-    description: 'Test completo sobre el sistema español de Seguridad Social con 20 preguntas.',
-    questions: 20,
-    time: 30,
-    points: 285,
-    tag: 'Seguridad Social',
-    icon: <BrainCircuit className="h-6 w-6 text-white" />,
-    iconBgColor: 'bg-purple-500',
-  },
-    {
-    title: 'Quiz Mixto - Administración Pública',
-    difficulty: 'Difícil',
-    difficultyColor: 'bg-red-500',
-    description: 'Preguntas combinadas de TREBEP, Ley 39/2015 y Seguridad Social (20 preguntas).',
-    questions: 20,
-    time: 35,
-    points: 300,
-    tag: 'General',
-    icon: <ListChecks className="h-6 w-6 text-white" />,
-    iconBgColor: 'bg-red-500',
-  },
-  {
-    title: 'TREBEP - Nivel Básico',
-    difficulty: 'Fácil',
-    difficultyColor: 'bg-green-400',
-    description: 'Test de nivel básico sobre TREBEP con las preguntas más fundamentales (20 preguntas).',
-    questions: 16,
-    time: 25,
-    points: 210,
-    tag: 'Función Pública',
-    icon: <User className="h-6 w-6 text-white" />,
-    iconBgColor: 'bg-cyan-500',
-  },
-    {
-    title: 'Ley 39/2015 - Nivel Avanzado',
-    difficulty: 'Difícil',
-    difficultyColor: 'bg-red-500',
-    description: 'Test avanzado sobre procedimiento administrativo para expertos (20 preguntas).',
-    questions: 15,
-    time: 35,
-    points: 250,
-    tag: 'Derecho Administrativo',
-    icon: <BookOpen className="h-6 w-6 text-white" />,
-    iconBgColor: 'bg-indigo-500',
-  },
-];
+const CATEGORY_ICONS: { [key: string]: React.ReactNode } = {
+  madrid: <User className="h-6 w-6 text-white" />,
+  estado: <BookOpen className="h-6 w-6 text-white" />,
+  otros: <BrainCircuit className="h-6 w-6 text-white" />,
+  default: <ListChecks className="h-6 w-6 text-white" />,
+};
+
+const CATEGORY_COLORS: { [key: string]: string } = {
+  madrid: 'bg-blue-500',
+  estado: 'bg-green-500',
+  otros: 'bg-purple-500',
+  default: 'bg-red-500',
+};
 
 
 export default function Home() {
   const [user, setUser] = useState<AppUser | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
   
   useEffect(() => {
     const unsubscribe = onAuthStateChange((firebaseUser: FirebaseUser | null) => {
@@ -115,11 +57,28 @@ export default function Home() {
       } else {
         setUser(null);
       }
-       setIsLoading(false);
     });
+
+    const fetchData = async () => {
+      setIsLoading(true);
+      const result = await loadInitialData();
+      if (result.success && result.categories) {
+        setCategories(result.categories);
+      } else {
+        setError(result.error || 'No se pudieron cargar las categorías.');
+        console.error(result.error);
+      }
+      setIsLoading(false);
+    };
+
+    fetchData();
     
     return () => unsubscribe();
   }, []);
+
+  const handleStartTest = (categoryId: string) => {
+    router.push(`/category/${categoryId}`);
+  }
 
   return (
      <div className="min-h-screen bg-secondary/30">
@@ -135,9 +94,31 @@ export default function Home() {
               </div>
             </Link>
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" className="hidden sm:inline-flex"><Share2 className="mr-2 h-4 w-4" /> Compartir</Button>
-              <Button variant="ghost" size="sm" className="hidden sm:inline-flex"><Award className="mr-2 h-4 w-4" /> Ranking</Button>
-              <Button className="bg-slate-700 hover:bg-slate-600 text-white font-bold"><ArrowRight className="mr-2 h-4 w-4" /> Iniciar Sesión</Button>
+              {user ? (
+                 <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                       <User className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuItem onClick={() => router.push('/stats')}>
+                      <BarChart3 className="mr-2 h-4 w-4" />
+                      <span>Estadísticas</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => signOut().then(() => setUser(null))}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Cerrar sesión</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <>
+                  <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => router.push('/login')}><Share2 className="mr-2 h-4 w-4" /> Compartir</Button>
+                  <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => router.push('/login')}><Award className="mr-2 h-4 w-4" /> Ranking</Button>
+                  <Button className="bg-slate-700 hover:bg-slate-600 text-white font-bold" onClick={() => router.push('/login')}><ArrowRight className="mr-2 h-4 w-4" /> Iniciar Sesión</Button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -151,8 +132,8 @@ export default function Home() {
             <p className="text-gray-700">Inicia sesión para guardar tu progreso, competir en el ranking global y desbloquear el modo IA adaptativo.</p>
           </div>
            <div className="ml-auto flex gap-4">
-              <Button className="bg-gray-800 text-white hover:bg-gray-700"><ArrowRight className="mr-2 h-4 w-4" />Iniciar Sesión Gratis</Button>
-              <Button variant="outline" className="bg-white/30 border-gray-700 text-gray-800 hover:bg-white/50">Ver Ranking</Button>
+              <Button className="bg-gray-800 text-white hover:bg-gray-700" onClick={() => router.push('/login')}><ArrowRight className="mr-2 h-4 w-4" />Iniciar Sesión Gratis</Button>
+              <Button variant="outline" className="bg-white/30 border-gray-700 text-gray-800 hover:bg-white/50" onClick={() => router.push('/stats')}>Ver Ranking</Button>
            </div>
         </div>
 
@@ -161,17 +142,17 @@ export default function Home() {
         </section>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            <Card>
+             <Card>
                 <CardContent className="pt-6 flex flex-col items-center text-center">
                     <div className="bg-blue-100 p-3 rounded-full mb-3"><BookOpen className="h-8 w-8 text-blue-600" /></div>
-                    <p className="text-3xl font-bold">8</p>
+                    <p className="text-3xl font-bold">{categories.reduce((acc, cat) => acc + cat.examCount, 0)}</p>
                     <p className="text-muted-foreground">Tests Disponibles</p>
                 </CardContent>
             </Card>
             <Card>
                 <CardContent className="pt-6 flex flex-col items-center text-center">
                     <div className="bg-green-100 p-3 rounded-full mb-3"><ListChecks className="h-8 w-8 text-green-600" /></div>
-                    <p className="text-3xl font-bold">143</p>
+                    <p className="text-3xl font-bold">300+</p>
                     <p className="text-muted-foreground">Preguntas Totales</p>
                 </CardContent>
             </Card>
@@ -193,67 +174,71 @@ export default function Home() {
 
         <div className="mb-6">
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold flex items-center gap-2"><ListChecks className="h-5 w-5" /> Tests Disponibles</h3>
-                <Badge variant="secondary">Modo Invitado</Badge>
+                <h3 className="text-xl font-bold flex items-center gap-2"><ListChecks className="h-5 w-5" /> Tests por Categoría</h3>
+                {user ? <Badge variant="secondary">Modo Registrado</Badge> : <Badge variant="secondary">Modo Invitado</Badge>}
             </div>
-            <div className="flex gap-4">
-                <div className="relative flex-grow">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                    <Input placeholder="Buscar tests..." className="pl-10" />
+             <div className="flex justify-between items-center mb-4">
+                <div className="flex gap-4">
+                    <div className="relative flex-grow">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <Input placeholder="Buscar tests..." className="pl-10" />
+                    </div>
+                     <Select>
+                        <SelectTrigger className="w-[200px]">
+                            <SelectValue placeholder="Todas las categorías" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {categories.map(cat => (
+                                <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </div>
-                 <Select>
-                    <SelectTrigger className="w-[200px]">
-                        <SelectValue placeholder="Todas las categorías" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="general">General</SelectItem>
-                        <SelectItem value="funcion-publica">Función Pública</SelectItem>
-                        <SelectItem value="derecho-admin">Derecho Administrativo</SelectItem>
-                        <SelectItem value="seg-social">Seguridad Social</SelectItem>
-                    </SelectContent>
-                </Select>
-                 <Select>
-                    <SelectTrigger className="w-[200px]">
-                        <SelectValue placeholder="Todas las dificultades" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="facil">Fácil</SelectItem>
-                        <SelectItem value="medio">Medio</SelectItem>
-                        <SelectItem value="dificil">Difícil</SelectItem>
-                    </SelectContent>
-                </Select>
+                 <Button onClick={() => router.push('/generate')}>
+                    <Wand2 className="mr-2 h-4 w-4" /> Generar Test con IA
+                </Button>
             </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockTests.map((test, index) => (
-                <Card key={index} className="flex flex-col">
+        {isLoading ? (
+          <div className="flex justify-center items-center py-10">
+            <Loader2 className="mr-2 h-8 w-8 animate-spin" />
+            <p>Cargando tests...</p>
+          </div>
+        ) : error ? (
+           <Card className="text-center p-8 bg-red-50 border-red-200">
+                <p className="text-red-600 font-semibold">Error al cargar los datos</p>
+                <p className="text-red-500 mt-2">{error}</p>
+            </Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {categories.filter(cat => cat.examCount > 0).map((category, index) => (
+                <Card key={category.id} className="flex flex-col">
                     <CardHeader>
                         <div className="flex items-start gap-4">
-                            <div className={`p-3 rounded-lg ${test.iconBgColor}`}>
-                                {test.icon}
+                            <div className={`p-3 rounded-lg ${CATEGORY_COLORS[category.id] || CATEGORY_COLORS.default}`}>
+                                {CATEGORY_ICONS[category.id] || CATEGORY_ICONS.default}
                             </div>
                             <div>
-                                <CardTitle className="text-lg mb-1">{test.title}</CardTitle>
-                                <Badge className={`${test.difficultyColor} text-white`}>{test.difficulty}</Badge>
+                                <CardTitle className="text-lg mb-1">{category.name}</CardTitle>
+                                <Badge variant="outline">{category.examCount} {category.examCount > 1 ? 'exámenes' : 'examen'}</Badge>
                             </div>
                         </div>
                     </CardHeader>
                     <CardContent className="flex-grow">
-                        <p className="text-sm text-muted-foreground mb-4">{test.description}</p>
-                        <div className="grid grid-cols-3 gap-2 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-2"><ListChecks className="h-4 w-4"/> {test.questions} preguntas</div>
-                            <div className="flex items-center gap-2"><Clock className="h-4 w-4"/> {test.time} min</div>
-                            <div className="flex items-center gap-2"><Target className="h-4 w-4"/> {test.points} pts</div>
-                        </div>
+                        <p className="text-sm text-muted-foreground mb-4">
+                            Exámenes disponibles para la categoría de {category.name}. ¡Prepárate para el éxito!
+                        </p>
                     </CardContent>
-                    <CardFooter className="flex-col items-start gap-4">
-                         <Badge variant="outline">{test.tag}</Badge>
-                         <Button className="w-full bg-slate-800 hover:bg-slate-700 text-white">Comenzar Quiz</Button>
+                    <CardFooter>
+                         <Button className="w-full bg-slate-800 hover:bg-slate-700 text-white" onClick={() => handleStartTest(category.id)}>
+                            Ver Exámenes
+                         </Button>
                     </CardFooter>
                 </Card>
             ))}
-        </div>
+          </div>
+        )}
 
       </main>
     </div>
