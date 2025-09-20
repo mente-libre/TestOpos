@@ -28,6 +28,7 @@ export default function CategoryPage() {
     
     const fetchExams = async () => {
       setIsLoading(true);
+      setError(null);
       const result = await getExamsForCategory(categoryId);
       if (result.success) {
         setExams(result.exams || []);
@@ -103,3 +104,5 @@ export default function CategoryPage() {
     </div>
   );
 }
+
+    

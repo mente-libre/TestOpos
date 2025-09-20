@@ -70,7 +70,7 @@ export default function StatsPage() {
     }, [user]);
 
     const overallStats: OverallStats | null = useMemo(() => {
-        if (stats.length === 0) return null;
+        if (!stats || stats.length === 0) return null;
 
         const totalTests = stats.length;
         const totalScore = stats.reduce((acc, current) => acc + current.score, 0);
@@ -79,13 +79,14 @@ export default function StatsPage() {
 
         return {
             totalTests,
-            averageScore: Math.round(totalScore / totalTests),
+            averageScore: totalTests > 0 ? Math.round(totalScore / totalTests) : 0,
             totalQuestions,
             correctQuestions,
         };
     }, [stats]);
     
     const chartData = useMemo(() => {
+        if (!stats) return [];
         return stats.map((stat, index) => ({
             name: `Test ${index + 1}`,
             puntuacion: stat.score,
@@ -148,7 +149,7 @@ export default function StatsPage() {
                         <p className="text-lg text-muted-foreground">Analiza tu progreso y descubre dónde mejorar.</p>
                     </div>
 
-                    {stats.length > 0 && overallStats ? (
+                    {stats && stats.length > 0 && overallStats ? (
                         <div className="space-y-8">
                              <div className="grid gap-6 md:grid-cols-3">
                                 <Card>
@@ -247,3 +248,5 @@ export default function StatsPage() {
     );
 }
 
+
+    

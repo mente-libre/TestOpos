@@ -27,6 +27,8 @@ export default function ExamPage() {
     }
 
     const fetchExam = async () => {
+      setIsLoading(true);
+      setError(null);
       const result = await getExamById(examId);
       if (result.success && result.exam) {
         setExam(result.exam);
@@ -102,3 +104,5 @@ export default function ExamPage() {
     </div>
   );
 }
+
+    
