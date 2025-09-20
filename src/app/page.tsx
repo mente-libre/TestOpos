@@ -223,6 +223,45 @@ export default function Home() {
                     </Button>
                 </CardFooter>
             </Card>
+             <Card>
+                <CardHeader>
+                    <CardTitle>Tema 28 - Sistema de la Seguridad Social</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">Test completo sobre el Sistema Español de la Seguridad Social.</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" onClick={() => handleStartThemedTest('TEMA 28: El Sistema Español de la Seguridad Social')}>
+                        Realizar Test
+                    </Button>
+                </CardFooter>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Tema 14 - Las Fuentes del Derecho</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">Test completo sobre las fuentes del derecho, la ley y sus clases.</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" onClick={() => handleStartThemedTest('TEMA 14: LAS FUENTES DEL DERECHO. LA LEY Y SUS CLASES.')}>
+                        Realizar Test
+                    </Button>
+                </CardFooter>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Ley 39/2015 - Procedimiento Administrativo</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">Test completo sobre la Ley 39/2015, del Procedimiento Administrativo Común.</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" onClick={() => handleStartThemedTest('Ley 39/2015 - Procedimiento Administrativo Común')}>
+                        Realizar Test
+                    </Button>
+                </CardFooter>
+            </Card>
           </div>
         </div>
 
