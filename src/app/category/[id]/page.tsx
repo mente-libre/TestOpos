@@ -29,14 +29,20 @@ export default function CategoryPage() {
     const fetchExams = async () => {
       setIsLoading(true);
       setError(null);
-      const result = await getExamsForCategory(categoryId);
-      if (result.success) {
-        setExams(result.exams || []);
-        setCategoryName(result.categoryName || 'Categoría');
-      } else {
-        setError(result.error || 'No se pudieron cargar los exámenes.');
+      try {
+        const result = await getExamsForCategory(categoryId);
+        if (result.success) {
+          setExams(result.exams || []);
+          setCategoryName(result.categoryName || 'Categoría');
+        } else {
+          setError(result.error || 'No se pudieron cargar los exámenes.');
+        }
+      } catch (e) {
+        setError('Ocurrió un error al cargar los exámenes.');
+        console.error(e);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     fetchExams();
@@ -96,7 +102,7 @@ export default function CategoryPage() {
           <div className="text-center py-16 border-2 border-dashed rounded-lg">
             <p className="text-muted-foreground">No hay exámenes en esta categoría todavía.</p>
              <Link href="/" passHref>
-                <Button variant="link" className="mt-4">Sube tu primer examen</Button>
+                <Button variant="link" className="mt-4">Explorar otras categorías</Button>
             </Link>
           </div>
         )}
@@ -104,5 +110,3 @@ export default function CategoryPage() {
     </div>
   );
 }
-
-    

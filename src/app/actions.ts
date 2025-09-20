@@ -152,18 +152,24 @@ export const getExamsForCategory = async (categoryId: string): Promise<{ success
       }
   }
 
+  // Combine seed exams with firestore exams, ensuring no duplicates if IDs overlap
+  const seedExamsForCategory = allSeedExams
+    .filter(exam => exam.category === categoryId)
+    .map((seedExam, index) => ({
+        id: `seed-${seedExam.fileName}`,
+        userId: 'system',
+        fileName: seedExam.fileName,
+        category: seedExam.category,
+        questions: seedExam.questions,
+        createdAt: new Date().getTime(),
+    }));
+
+  const examIds = new Set(exams.map(e => e.id));
+  const uniqueSeedExams = seedExamsForCategory.filter(e => !examIds.has(e.id));
+  exams = [...exams, ...uniqueSeedExams];
+  
   if (exams.length === 0) {
-      console.warn(`No exams found in Firestore for category '${categoryId}'. Using local fallback data.`);
-      exams = allSeedExams
-          .filter(exam => exam.category === categoryId)
-          .map((seedExam, index) => ({
-              id: `seed-${seedExam.fileName}`,
-              userId: 'system',
-              fileName: seedExam.fileName,
-              category: seedExam.category,
-              questions: seedExam.questions,
-              createdAt: new Date().getTime(),
-          }));
+      console.warn(`No exams found anywhere for category '${categoryId}'.`);
   }
 
   return { success: true, exams: JSON.parse(JSON.stringify(exams)), categoryName };
@@ -370,13 +376,12 @@ function findTestByName(fileName: string) {
 }
 
 export async function getExamById(examId: string) {
-    const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, advoGeneralTestMedium, advoGeneralTestHard, seguridadSocialTestFacil, seguridadSocialTestMedio, seguridadSocialTestHard, madrid2017Test, madrid2023Test, madrid2025Test, tema14FacilTest, tema14MedioTest];
     if (!examId) {
       return { success: false, error: 'Exam ID is required.' };
     }
 
     if (examId.startsWith('seed-')) {
-        const testName = examId.replace(/^seed-/, '');
+        const testName = decodeURIComponent(examId.replace(/^seed-/, ''));
         const seedExam = findTestByName(testName);
         
         if (seedExam) {
@@ -421,5 +426,3 @@ export async function getExamById(examId: string) {
         return { success: false, error: errorMessage };
     }
 }
-
-    

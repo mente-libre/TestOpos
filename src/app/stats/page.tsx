@@ -27,10 +27,7 @@ interface OverallStats {
 
 // Wrapper function to call server action with auth headers
 async function loadStatisticsWithAuth() {
-    const headers = await getAuthHeaders();
-    // This is a simplified example. In a real app, you would pass headers to your fetch call.
-    // Since server actions are called directly, we need a different mechanism.
-    // For this prototype, we'll assume the action can get the user from the session.
+    // We can't pass headers to server actions directly, but getUserId in actions.ts will handle it
     return loadStatistics();
 }
 
@@ -247,6 +244,3 @@ export default function StatsPage() {
         </div>
     );
 }
-
-
-    
