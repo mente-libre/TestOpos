@@ -198,13 +198,28 @@ export default function Home() {
                         <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('Tema 28 - Seguridad Social (Difícil)')}>Difícil</Button>
                     </CardFooter>
                 </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle>Tema 14 - Las Fuentes del Derecho</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground mb-4">
+                            Evalúa tu comprensión sobre la ley, la costumbre, los principios generales y la jerarquía normativa.
+                        </p>
+                    </CardContent>
+                    <CardFooter className="flex flex-col sm:flex-row gap-2">
+                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('Tema 14 - Fuentes del Derecho (Fácil)')}>Fácil</Button>
+                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('Tema 14 - Fuentes del Derecho (Medio)')}>Medio</Button>
+                        <Button className="w-full" variant="outline" onClick={() => handleStartThemedTest('Tema 14 - Fuentes del Derecho (Difícil)')} disabled>Difícil</Button>
+                    </CardFooter>
+                </Card>
             </div>
         </div>
 
 
         <div className="mb-6">
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold flex items-center gap-2"><ListChecks className="h-5 w-5" /> Tests por Categoría</h3>
+                <h3 className="text-xl font-bold flex items-center gap-2"><ListChecks className="h-5 w-5" /> Exámenes Completos y por Categoría</h3>
                 {user ? <Badge variant="secondary">Modo Registrado</Badge> : <Badge variant="secondary">Modo Invitado</Badge>}
             </div>
              <div className="flex justify-between items-center mb-4">
