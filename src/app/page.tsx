@@ -262,6 +262,19 @@ export default function Home() {
                     </Button>
                 </CardFooter>
             </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Ley 29/1998 - Jurisdicción Contencioso-Administrativa</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">Test completo sobre la Ley 29/1998, reguladora de la Jurisdicción Contencioso-administrativa.</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" onClick={() => handleStartThemedTest('Ley 29/1998 - Jurisdicción Contencioso-Administrativa')}>
+                        Realizar Test
+                    </Button>
+                </CardFooter>
+            </Card>
           </div>
         </div>
 
@@ -310,3 +323,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
