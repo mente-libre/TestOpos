@@ -13,6 +13,7 @@ import { seguridadSocialTest } from '@/lib/seed-data-seguridad-social';
 import { tema14Test } from '@/lib/seed-data-tema14';
 import { ley39Test } from '@/lib/seed-data-ley39-2015';
 import { ley29Test } from '@/lib/seed-data-ley29-1998';
+import { ley19Test } from '@/lib/seed-data-ley19-2013';
 import { madrid2017Test } from '@/lib/seed-data-madrid-2017';
 import { madrid2023Test } from '@/lib/seed-data-madrid-2023';
 import { madrid2025Test } from '@/lib/seed-data-madrid-2025';
@@ -36,7 +37,7 @@ async function getUserId(): Promise<string | null> {
 }
 
 export async function getCategories(): Promise<{ success: boolean, categories?: Category[], error?: string }>{
-  const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, madrid2017Test, madrid2023Test, madrid2025Test];
+  const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, ley19Test, madrid2017Test, madrid2023Test, madrid2025Test];
   if (!db) {
     console.warn("getCategories: Firestore is not initialized. Falling back to local data.");
     const fallbackCategories = CATEGORY_DEFINITIONS.map(def => ({
@@ -98,7 +99,7 @@ export async function loadInitialData() {
     
     // Fallback if firestore is empty or there was an error loading categories
     console.warn("Database is empty or failed to load. Using local fallback data for categories.");
-    const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, madrid2017Test, madrid2023Test, madrid2025Test];
+    const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, ley19Test, madrid2017Test, madrid2023Test, madrid2025Test];
     const categoryCounts: { [key: string]: number } = {};
 
     seedExams.forEach(exam => {
@@ -123,7 +124,7 @@ export async function loadInitialData() {
 
 export const getExamsForCategory = async (categoryId: string): Promise<{ success: boolean; exams: Exam[]; categoryName: string; error?: string; }> => {
   const categoryName = CATEGORY_DEFINITIONS.find(c => c.id === categoryId)?.name || 'Categoría desconocida';
-  const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, madrid2017Test, madrid2023Test, madrid2025Test];
+  const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, ley19Test, madrid2017Test, madrid2023Test, madrid2025Test];
   let exams: Exam[] = [];
 
   if (db) {
@@ -174,7 +175,7 @@ export const getExamsForCategory = async (categoryId: string): Promise<{ success
 
 
 export async function getQuestionsForCategory(categoryId: string): Promise<{ success: boolean, questions: Question[], error?: string }> {
-  const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, madrid2017Test, madrid2023Test, madrid2025Test];
+  const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, ley19Test, madrid2017Test, madrid2023Test, madrid2025Test];
   if (!db) {
     console.warn(`getQuestionsForCategory: Firestore not available. Using fallback for category ${categoryId}.`);
     const fallbackQuestions = allSeedExams.filter(e => e.category === categoryId).flatMap(e => e.questions).slice(0, 100);
@@ -367,7 +368,7 @@ export async function loadStatistics() {
     }
 }
 
-const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, madrid2017Test, madrid2023Test, madrid2025Test];
+const allSeedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, ebepTest, seguridadSocialTest, tema14Test, ley39Test, ley29Test, ley19Test, madrid2017Test, madrid2023Test, madrid2025Test];
 
 function findTestByName(fileName: string) {
     return allSeedExams.find(e => e.fileName === fileName);
@@ -424,5 +425,3 @@ export async function getExamById(examId: string) {
         return { success: false, error: errorMessage };
     }
 }
-
-    

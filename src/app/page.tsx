@@ -275,6 +275,19 @@ export default function Home() {
                     </Button>
                 </CardFooter>
             </Card>
+             <Card>
+                <CardHeader>
+                    <CardTitle>Ley 19/2013 - Transparencia y Buen Gobierno</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm text-muted-foreground">Test completo sobre la Ley 19/2013, de transparencia, acceso a la información pública y buen gobierno.</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" onClick={() => handleStartThemedTest('Ley 19/2013 - Transparencia y Buen Gobierno')}>
+                        Realizar Test
+                    </Button>
+                </CardFooter>
+            </Card>
           </div>
         </div>
 
@@ -323,5 +336,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
