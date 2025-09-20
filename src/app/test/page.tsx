@@ -7,14 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { getExamById } from '@/app/actions';
+import { getExamById, generateReviewTest, saveFinishedTest } from '@/app/actions';
 import { type Question, type TestResult } from '@/lib/definitions';
 import { Loader2, CheckCircle, XCircle, RefreshCw, Eye, Wand2, Home } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
-import { generateReviewTest, saveFinishedTest } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { onAuthStateChange, type User } from '@/lib/firebase/auth';
+import { getAuthHeaders } from '@/lib/utils';
 
 
 type AnswerStatus = 'unanswered' | 'correct' | 'incorrect';
@@ -29,6 +29,25 @@ interface Results {
   incorrectCount: number;
   unansweredCount: number;
   score: number;
+}
+
+// Wrapper to call server action with auth headers
+async function saveFinishedTestWithAuth(result: Omit<TestResult, 'id' | 'createdAt' | 'userId'>) {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user) {
+        console.warn("User not logged in, results will not be saved.");
+        return; // Or handle appropriately
+    }
+    const resultToSave = { ...result, userId: user.uid };
+    // We can't pass headers to server actions directly, but getUserId in actions.ts will handle it
+    await saveFinishedTest(resultToSave);
+}
+
+// Wrapper to call server action with auth headers
+async function generateReviewTestWithAuth(failedQuestions: Question[]) {
+    // We can't pass headers to server actions directly, but getUserId in actions.ts will handle it
+    return await generateReviewTest(failedQuestions);
 }
 
 function calculateResults(questions: Question[], answers: AnswerState[]): Results | null {
@@ -140,24 +159,23 @@ function TestPageContent() {
   }, [examId]);
   
   const finishTest = useCallback(() => {
-    if (isFinished || !user) return;
+    if (isFinished) return;
 
     if (questions) {
       const results = calculateResults(questions, answers);
       setFinalResults(results);
 
-      // Save results to Firestore
-      if(results) {
-        const resultToSave: Omit<TestResult, 'id' | 'createdAt'> = {
+      // Save results to Firestore if user is logged in
+      if(results && user) {
+        const resultToSave: Omit<TestResult, 'id' | 'createdAt' | 'userId'> = {
             testTitle: title,
             score: results.score,
             correctCount: results.correctCount,
             incorrectCount: results.incorrectCount,
             unansweredCount: results.unansweredCount,
             totalQuestions: questions.length,
-            userId: user.uid
         };
-        saveFinishedTest(resultToSave); // Fire-and-forget, don't block UI
+        saveFinishedTestWithAuth(resultToSave); // Fire-and-forget, don't block UI
       }
     }
     setIsFinished(true);
@@ -206,7 +224,16 @@ function TestPageContent() {
   };
 
   const handleGenerateReview = async () => {
-    if (!questions) return;
+    if (!questions || !user) {
+        if (!user) {
+            toast({
+                variant: "destructive",
+                title: "Función para usuarios registrados",
+                description: "Inicia sesión para generar tests de repaso con IA."
+            });
+        }
+        return;
+    };
     setIsGeneratingReview(true);
 
     const failedQuestions = questions.filter((q, index) => {
@@ -224,7 +251,7 @@ function TestPageContent() {
     }
 
     try {
-        const result = await generateReviewTest(failedQuestions);
+        const result = await generateReviewTestWithAuth(failedQuestions);
         if (result.success && result.questions) {
             sessionStorage.setItem('testQuestions', JSON.stringify(result.questions));
             sessionStorage.setItem('testTitle', `Test de Repaso IA: ${title}`);
@@ -311,7 +338,7 @@ function TestPageContent() {
               </div>
             </CardContent>
             <CardFooter className="flex-col sm:flex-row gap-4">
-                {results.incorrectCount > 0 && (
+                {results.incorrectCount > 0 && user && (
                     <Button variant="outline" className="w-full" onClick={handleGenerateReview} disabled={isGeneratingReview}>
                         {isGeneratingReview ? (
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

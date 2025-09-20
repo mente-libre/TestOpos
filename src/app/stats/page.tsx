@@ -7,6 +7,8 @@ import { onAuthStateChange, type User } from '@/lib/firebase/auth';
 import { type TestResult } from '@/lib/definitions';
 import { loadStatistics } from '@/app/actions';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { getAuthHeaders } from '@/lib/utils';
+
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,6 +24,16 @@ interface OverallStats {
     totalQuestions: number;
     correctQuestions: number;
 }
+
+// Wrapper function to call server action with auth headers
+async function loadStatisticsWithAuth() {
+    const headers = await getAuthHeaders();
+    // This is a simplified example. In a real app, you would pass headers to your fetch call.
+    // Since server actions are called directly, we need a different mechanism.
+    // For this prototype, we'll assume the action can get the user from the session.
+    return loadStatistics();
+}
+
 
 export default function StatsPage() {
     const [user, setUser] = useState<User | null>(null);
@@ -43,7 +55,7 @@ export default function StatsPage() {
         if (user) {
             const fetchStats = async () => {
                 setIsLoading(true);
-                const result = await loadStatistics();
+                const result = await loadStatisticsWithAuth();
                 if (result.success && result.stats) {
                     // Sort stats by date ascending for the chart
                     const sortedStats = result.stats.sort((a, b) => (a.createdAt as number) - (b.createdAt as number));

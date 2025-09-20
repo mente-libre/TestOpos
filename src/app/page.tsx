@@ -42,6 +42,7 @@ const CATEGORY_COLORS: { [key: string]: string } = {
 export default function Home() {
   const [user, setUser] = useState<AppUser | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [userCount, setUserCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -62,8 +63,9 @@ export default function Home() {
     const fetchData = async () => {
       setIsLoading(true);
       const result = await loadInitialData();
-      if (result.success && result.categories) {
-        setCategories(result.categories);
+      if (result.success) {
+        setCategories(result.categories || []);
+        setUserCount(result.userCount || 0);
       } else {
         setError(result.error || 'No se pudieron cargar las categorías.');
         console.error(result.error);
@@ -115,7 +117,7 @@ export default function Home() {
               ) : (
                 <>
                   <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => router.push('/login')}><Share2 className="mr-2 h-4 w-4" /> Compartir</Button>
-                  <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => router.push('/login')}><Award className="mr-2 h-4 w-4" /> Ranking</Button>
+                  <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => router.push('/stats')}><Award className="mr-2 h-4 w-4" /> Ranking</Button>
                   <Button className="bg-slate-700 hover:bg-slate-600 text-white font-bold" onClick={() => router.push('/login')}><ArrowRight className="mr-2 h-4 w-4" /> Iniciar Sesión</Button>
                 </>
               )}
@@ -166,7 +168,7 @@ export default function Home() {
             <Card>
                 <CardContent className="pt-6 flex flex-col items-center text-center">
                      <div className="bg-yellow-100 p-3 rounded-full mb-3"><Users className="h-8 w-8 text-yellow-600" /></div>
-                    <p className="text-3xl font-bold">0</p>
+                    <p className="text-3xl font-bold">{userCount}</p>
                     <p className="text-muted-foreground">Usuarios Compitiendo</p>
                 </CardContent>
             </Card>

@@ -14,13 +14,18 @@ import { madrid2023Test } from '@/lib/seed-data-madrid-2023';
 import { madrid2025Test } from '@/lib/seed-data-madrid-2025';
 import { madrid2017Test } from '@/lib/seed-data-madrid-2017';
 import { Timestamp } from 'firebase-admin/firestore';
+import { headers } from 'next/headers';
 
 
 async function getUserId(): Promise<string | null> {
     try {
-        // In a real app, you'd get this from the session.
-        // As we don't have auth implemented on the server, we'll use a placeholder.
-        return 'placeholder-user-id';
+        const authorization = headers().get('Authorization');
+        if (authorization?.startsWith('Bearer ')) {
+            const idToken = authorization.split('Bearer ')[1];
+            const decodedToken = await getAuth().verifyIdToken(idToken);
+            return decodedToken.uid;
+        }
+        return null; // No user logged in
     } catch (error) {
         console.error("Auth error in server action:", error);
         return null;
@@ -67,16 +72,29 @@ export async function getCategories(): Promise<{ success: boolean, categories?: 
 
 export async function loadInitialData() {
   try {
-    const result = await getCategories();
+    const categoriesResult = await getCategories();
+    let userCount = 0;
+
+    if (db) {
+        try {
+            const resultsSnapshot = await db.collection('testResults').get();
+            const uniqueUsers = new Set(resultsSnapshot.docs.map(doc => doc.data().userId));
+            userCount = uniqueUsers.size;
+        } catch (error) {
+            console.error('Error loading user count:', error);
+            // Non-critical, so we can continue with userCount = 0
+        }
+    }
     
-    if (result.success && result.categories) {
-       if (result.categories.some(c => c.examCount > 0)) {
-         return { success: true, categories: result.categories };
+    if (categoriesResult.success && categoriesResult.categories) {
+       // If firestore has data, use it.
+       if (categoriesResult.categories.some(c => c.examCount > 0)) {
+         return { success: true, categories: categoriesResult.categories, userCount };
        }
     }
     
-    // Fallback if firestore is empty or there was an error
-    console.warn("Database is empty or failed to load. Using local fallback data.");
+    // Fallback if firestore is empty or there was an error loading categories
+    console.warn("Database is empty or failed to load. Using local fallback data for categories.");
     const seedExams = [madridAdminTest, estadoConstitutionTest, madridAdminTest2, madridAdminTest2006, advoGeneralTest, officeTest, madrid2023Test, madrid2025Test, madrid2017Test];
     const categoryCounts: { [key: string]: number } = {};
 
@@ -91,7 +109,7 @@ export async function loadInitialData() {
       examCount: categoryCounts[def.id] || 0,
     }));
 
-    return { success: true, categories: fallbackCategories };
+    return { success: true, categories: fallbackCategories, userCount };
 
   } catch (error) {
     console.error('Error loading initial data:', error);
