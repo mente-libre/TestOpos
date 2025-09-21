@@ -16,6 +16,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
+import { ShareButton } from '@/components/ui/share-button';
 
 interface AppUser {
   uid: string;
@@ -119,9 +120,8 @@ export default function Home() {
                 </DropdownMenu>
               ) : (
                 <>
-                  <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => router.push('/login')}><Share2 className="mr-2 h-4 w-4" /> Compartir</Button>
-                  <Button variant="ghost" size="sm" className="hidden sm
-:inline-flex" onClick={() => router.push('/stats')}><Award className="mr-2 h-4 w-4" /> Ranking</Button>
+                  <ShareButton />
+                  <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => router.push('/stats')}><Award className="mr-2 h-4 w-4" /> Ranking</Button>
                   <Button className="bg-slate-700 hover:bg-slate-600 text-white font-bold" onClick={() => router.push('/login')}><ArrowRight className="mr-2 h-4 w-4" /> Iniciar Sesión</Button>
                 </>
               )}
