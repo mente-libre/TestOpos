@@ -1,47 +1,40 @@
-// El nombre de la caché.
-const CACHE_NAME = 'testopos-v1';
-// La lista de archivos para cachear.
+// Service Worker
+const CACHE_NAME = 'testopos-cache-v1';
 const urlsToCache = [
   '/',
   '/manifest.json',
-  '/favicon.ico',
-  '/logo.png',
-  '/icon-192x192.png',
-  '/icon-256x256.png',
-  '/icon-384x384.png',
-  '/icon-512x512.png',
+  // Es mejor no cachear los JS y CSS de Next.js directamente por sus hashes,
+  // pero el fetch se encargará de cachearlos dinámicamente.
 ];
 
-// Evento de instalación: se abre la caché y se añaden los archivos.
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Cache abierta');
+        console.log('Opened cache');
         return cache.addAll(urlsToCache);
       })
   );
 });
 
-// Evento fetch: responde con los recursos de la caché si están disponibles.
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Si el recurso está en la caché, se devuelve.
+        // Si la respuesta está en la caché, la devolvemos
         if (response) {
           return response;
         }
 
-        // Si no, se busca en la red.
+        // Si no, la buscamos en la red
         return fetch(event.request).then(
           response => {
-            // Si la respuesta no es válida, se devuelve directamente.
+            // Si la respuesta no es válida, la devolvemos tal cual
             if(!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
 
-            // Se clona la respuesta para poder guardarla en la caché y devolverla.
+            // Clonamos la respuesta porque es un stream y solo se puede consumir una vez
             const responseToCache = response.clone();
 
             caches.open(CACHE_NAME)
@@ -56,7 +49,6 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// Evento de activación: limpia cachés antiguas.
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(

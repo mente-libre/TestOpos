@@ -1,129 +1,12 @@
 {
-  "name": "TestOpos",
+  "name": "TestOpos - Tests de Oposiciones con IA",
   "short_name": "TestOpos",
-  "description": "App para generar tests de oposiciones con IA",
+  "description": "Practica y genera tests para tus oposiciones con la ayuda de la inteligencia artificial.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
-  "lang": "es-ES",
-  "dir": "ltr",
-  "orientation": "portrait-primary",
-  "id": "/?source=pwa",
-  "scope": "/",
-  "categories": [
-    "education",
-    "productivity"
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshots/screenshot-wide.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Vista de la aplicación en escritorio"
-    },
-    {
-      "src": "/screenshots/screenshot-narrow.png",
-      "sizes": "720x1280",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Vista de la aplicación en móvil"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Generar Test con IA",
-      "short_name": "Generar Test",
-      "description": "Crear un nuevo test personalizado con inteligencia artificial",
-      "url": "/generate",
-      "icons": [
-        {
-          "src": "/icons/icon-96x96.png",
-          "sizes": "96x96"
-        }
-      ]
-    }
-  ],
-  "share_target": {
-    "action": "/share-target",
-    "method": "GET",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
-  },
-  "file_handlers": [
-    {
-      "action": "/open-file",
-      "accept": {
-        "application/json": [
-          ".json"
-        ]
-      }
-    }
-  ],
-  "display_override": [
-    "window-controls-overlay",
-    "standalone"
-  ],
-  "related_applications": [
-    {
-      "platform": "webapp",
-      "url": "https://test-opos.vercel.app/manifest.json"
-    }
-  ],
-  "prefer_related_applications": false,
-  "protocol_handlers": [
-    {
-      "protocol": "web+testopos",
-      "url": "/protocol-handler?url=%s"
-    }
-  ],
-  "scope_extensions": [
-    { "origin": "*.test-opos.vercel.app" }
-  ],
-  "widgets": [
-    {
-      "name": "Últimos Resultados",
-      "description": "Widget para ver tus últimos resultados de tests.",
-      "tag": "results",
-      "template": "results-template",
-      "ms_ac_template": "widgets/results.json",
-      "data": "widgets/results-data.json",
-      "type": "application/json",
-      "auth": true,
-      "update": 86400
-    }
-  ],
-  "launch_handler": {
-    "client_mode": "navigate-existing"
-  },
-  "edge_side_panel": {
-    "preferred_width": 400
-  },
-  "note_taking": {
-    "new_note_url": "/new-note",
-    "needs_custom_browser_UI": false
-  },
-  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
   "icons": [
-    {
-      "src": "/icons/icon-16x16.png",
-      "sizes": "16x16",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-32x32.png",
-      "sizes": "32x32",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-48x48.png",
-      "sizes": "48x48",
-      "type": "image/png"
-    },
     {
       "src": "/icons/icon-72x72.png",
       "sizes": "72x72",
@@ -152,14 +35,7 @@
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
+      "type": "image/png"
     },
     {
       "src": "/icons/icon-384x384.png",
@@ -170,11 +46,6 @@
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
-    },
-    {
-      "src": "logo.svg",
-      "sizes": "any",
-      "purpose": "any"
     }
   ]
 }
