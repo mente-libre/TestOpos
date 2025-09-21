@@ -2,62 +2,45 @@
 
 Este es un proyecto de Next.js para practicar tests de oposiciones, construido con Firebase Studio.
 
-## El Problema: Por qué `git push` no funciona aquí
+## Cómo Descargar y Subir tu Proyecto a GitHub
 
-Hemos descubierto que este entorno de desarrollo tiene una limitación técnica que impide conectar con GitHub de forma segura desde la terminal.
+Este entorno no permite usar `git push` directamente. La forma más sencilla y segura de llevar tu código a GitHub es descargarlo y subirlo manualmente.
 
-*   **Antes se usaba contraseña:** GitHub ya no lo permite por seguridad.
-*   **Los nuevos métodos (Tokens, SSH) no funcionan aquí:** La terminal de este entorno es muy restrictiva y no tiene las herramientas necesarias para usar los nuevos métodos de autenticación que exige GitHub.
+### Paso 1: Empaqueta tu Proyecto
 
-Por más comandos que intentemos, el `git push` seguirá fallando. No es tu culpa, es una limitación del entorno.
+He creado un script para que no tengas que descargar los archivos uno por uno.
 
-## La Solución Definitiva: Subir el Código Manualmente
+1.  Abre una terminal en este entorno.
+2.  Dale permisos de ejecución al script con este comando:
+    ```bash
+    chmod +x package_project.sh
+    ```
+3.  Ejecuta el script para crear el paquete:
+    ```bash
+    ./package_project.sh
+    ```
 
-La única forma 100% segura de pasar tu código a GitHub desde aquí es hacerlo a mano. Es un proceso que te da control total y funciona siempre.
+    Esto creará un archivo llamado `TestOpos.tar.gz` en la raíz de tu proyecto.
 
-### Paso 1: Prepara tu repositorio en GitHub
+### Paso 2: Descarga el Archivo
 
-1.  Ve a [github.com](https://github.com) y crea un nuevo repositorio. Puedes llamarlo `TestOpos`.
-2.  Asegúrate de que esté vacío o solo contenga un `README`.
+1.  En el explorador de archivos de la izquierda, busca el fichero `TestOpos.tar.gz`.
+2.  Haz clic derecho sobre él y selecciona **"Download"** (Descargar).
+3.  Guarda el archivo en tu ordenador.
+4.  Descomprímelo. Ahora tienes todo tu proyecto en una carpeta local.
 
-### Paso 2: Descarga los archivos a tu ordenador
+### Paso 3: Sube tu Código a GitHub
 
-La forma más sencilla es copiar el contenido de cada archivo de este entorno y guardarlo en tu ordenador.
+1.  Ve a [github.com](https://github.com) y crea un nuevo repositorio (puedes llamarlo `TestOpos`).
+2.  En la página de tu nuevo repositorio, sigue las instrucciones para "push an existing repository from the command line" (subir un repositorio existente desde la línea de comandos). Serán comandos como estos (ejecútalos desde la carpeta de tu proyecto en **tu ordenador**, no aquí):
 
-1.  **Crea una carpeta en tu ordenador** (por ejemplo, en tu Escritorio) y llámala `TestOpos-local`.
-2.  **Repite este proceso para cada archivo y carpeta importante**:
-    *   En el editor de Firebase Studio (la columna de la izquierda), abre un archivo (ej: `package.json`).
-    *   Selecciona todo su contenido (`Ctrl+A` o `Cmd+A`) y cópialo (`Ctrl+C` o `Cmd+C`).
-    *   En tu ordenador, dentro de `TestOpos-local`, crea un archivo de texto con el **mismo nombre** (`package.json`).
-    *   Abre ese nuevo archivo y pega el contenido. Guárdalo.
-    *   **Haz esto para todos los archivos principales y carpetas como `src`, `public`, `app`, `components`, etc.** No te preocupes por `node_modules` ni `.next`.
+    ```bash
+    git init
+    git add .
+    git commit -m "Mi primer commit desde mi ordenador"
+    git branch -M main
+    git remote add origin https://github.com/TU_USUARIO/TU_REPOSITORIO.git
+    git push -u origin main
+    ```
 
-### Paso 3: Sube tus archivos a GitHub
-
-1.  Vuelve a la página de tu repositorio en GitHub.
-2.  Haz clic en el botón **"Add file"** y luego en **"Upload files"**.
-3.  Arrastra **todos los archivos y carpetas** que guardaste en `TestOpos-local` a la ventana del navegador.
-4.  Espera a que se suban.
-5.  Abajo, escribe un mensaje para el commit (ej: "Subida inicial del proyecto").
-6.  Haz clic en **"Commit changes"**.
-
-¡Listo! Tu código estará en GitHub. Lamento las complicaciones, pero este método es infalible.
-
----
-
-## Anexo: Cómo Generar un Token de Acceso en GitHub (Para tu futuro)
-
-Aunque en este entorno no lo podamos usar, es muy útil que sepas cómo generar un token para cuando trabajes en tu propio ordenador.
-
-1.  **Ve a GitHub y haz clic en tu perfil** (arriba a la derecha) -> **Settings**.
-2.  En el menú izquierdo, baja hasta **Developer settings**.
-3.  Haz clic en **Personal access tokens** -> **Tokens (classic)**.
-4.  Haz clic en **Generate new token** -> **Generate new token (classic)**.
-5.  **Note (Nota):** Dale un nombre, como "Mi-PC-Terminal".
-6.  **Expiration (Caducidad):** Elige un tiempo (ej. 30 días).
-7.  **Select scopes (Permisos):** Marca la casilla **`repo`**. Esto le dará permisos para gestionar repositorios.
-8.  Haz clic en **Generate token**.
-
-**¡MUY IMPORTANTE!** Copia el token (empieza por `ghp_...`) y guárdalo en un lugar seguro, como un gestor de contraseñas. **Una vez que cierres esa página, nunca más podrás volver a verlo.** Si lo pierdes, tendrás que generar uno nuevo.
-
-Cuando la terminal te pida la contraseña en tu ordenador, pegarás este token.
+¡Y listo! Tu código estará seguro en GitHub. Este método es mucho más fiable.
