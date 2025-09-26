@@ -45,6 +45,8 @@ export default function Home() {
   const [userCount, setUserCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const router = useRouter();
   
   useEffect(() => {
@@ -85,6 +87,17 @@ export default function Home() {
   const handleStartThemedTest = (testName: string) => {
     router.push(`/exam/seed-${encodeURIComponent(testName)}`);
   };
+
+  const filteredCategories = categories
+    .filter(category => category.examCount > 0)
+    .filter(category => {
+      if (selectedCategory === 'all') return true;
+      return category.id === selectedCategory;
+    })
+    .filter(category => {
+      if (searchTerm === '') return true;
+      return category.name.toLowerCase().includes(searchTerm.toLowerCase());
+    });
 
   return (
      <div className="min-h-screen bg-secondary/30">
@@ -187,13 +200,14 @@ export default function Home() {
                 <div className="flex gap-4">
                     <div className="relative flex-grow">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                        <Input placeholder="Buscar tests..." className="pl-10" />
+                        <Input placeholder="Buscar tests..." className="pl-10" onChange={(e) => setSearchTerm(e.target.value)} />
                     </div>
-                     <Select>
+                     <Select onValueChange={setSelectedCategory} defaultValue="all">
                         <SelectTrigger className="w-[200px]">
                             <SelectValue placeholder="Todas las categorías" />
                         </SelectTrigger>
                         <SelectContent>
+                            <SelectItem value="all">Todas las categorías</SelectItem>
                             {categories.map(cat => (
                                 <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
                             ))}
@@ -218,7 +232,7 @@ export default function Home() {
             </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {categories.filter(cat => cat.examCount > 0).map((category) => (
+            {filteredCategories.map((category) => (
                 <Card key={category.id} className="flex flex-col">
                     <CardHeader>
                         <div className="flex items-start gap-4">
