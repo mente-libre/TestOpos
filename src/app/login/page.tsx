@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { signInWithGoogle } from "@/lib/firebase/auth";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Logo } from "@/components/ui/logo";
-
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { signInWithGoogle } from '@/lib/firebase/auth';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Logo } from '@/components/ui/logo';
 
 export default function LoginPage() {
   const router = useRouter();
 
-  const handleGoogleSignIn = async () => {
-    try {
-        const user = await signInWithGoogle();
+  const handleGoogleSignIn = () => {
+    signInWithGoogle()
+      .then((user) => {
         if (user) {
-          router.push("/");
+          router.push('/');
         }
-    } catch (error) {
-        console.error("Error during Google sign-in:", error);
-    }
+      })
+      .catch((error) => {
+        console.error('Error signing in with Google: ', error);
+      });
   };
 
   return (
@@ -64,7 +64,7 @@ export default function LoginPage() {
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
-            ¿No tienes una cuenta?{" "}
+            ¿No tienes una cuenta?{' '}
             <Link href="/register" className="underline">
               Regístrate
             </Link>
