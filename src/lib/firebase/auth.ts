@@ -3,7 +3,8 @@
 import { 
   getAuth, 
   GoogleAuthProvider, 
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   onAuthStateChanged,
   signOut as firebaseSignOut,
   type User,
@@ -21,8 +22,9 @@ auth.useDeviceLanguage();
 
 export const signInWithGoogle = async () => {
   try {
-    const result = await signInWithPopup(auth, provider);
-    return result.user;
+    await signInWithRedirect(auth, provider);
+    const result = await getRedirectResult(auth);
+    return result?.user ?? null;
   } catch (error) {
     const errorCode = (error as AuthError).code;
     // Don't log an error if the user simply closes the popup or cancels the request.
