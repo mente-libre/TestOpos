@@ -673,3 +673,15 @@ const rawTema14Test = {
     }
   ]
 }
+
+const transformedQuestions: Question[] = rawTema14Test.questions.map(q => ({
+    questionText: q.question,
+    options: q.options,
+    correctAnswerIndex: q.answer,
+}));
+
+export const tema14Test: SeedExam = {
+    fileName: rawTema14Test.title,
+    category: 'tema-14',
+    questions: transformedQuestions,
+};

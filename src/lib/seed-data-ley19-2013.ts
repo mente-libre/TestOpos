@@ -673,3 +673,15 @@ const rawLey19Test = {
     }
   ]
 }
+
+const transformedQuestions: Question[] = rawLey19Test.questions.map(q => ({
+    questionText: q.question,
+    options: q.options,
+    correctAnswerIndex: q.answer,
+}));
+
+export const ley19Test: SeedExam = {
+    fileName: rawLey19Test.title,
+    category: 'ley19-2013',
+    questions: transformedQuestions,
+};

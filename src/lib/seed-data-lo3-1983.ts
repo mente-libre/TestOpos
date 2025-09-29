@@ -673,3 +673,15 @@ const rawLO3Test = {
     }
   ]
 }
+
+const transformedQuestions: Question[] = rawLO3Test.questions.map(q => ({
+    questionText: q.question,
+    options: q.options,
+    correctAnswerIndex: q.answer,
+}));
+
+export const lo3_1983Test: SeedExam = {
+    fileName: rawLO3Test.title,
+    category: 'lo3-1983',
+    questions: transformedQuestions,
+};

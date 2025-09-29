@@ -673,3 +673,15 @@ const rawSeguridadSocialTest = {
     }
   ]
 };
+
+const transformedQuestions: Question[] = rawSeguridadSocialTest.questions.map(q => ({
+    questionText: q.question,
+    options: q.options,
+    correctAnswerIndex: q.answer,
+}));
+
+export const seguridadSocialTest: SeedExam = {
+    fileName: rawSeguridadSocialTest.title,
+    category: 'seguridad-social',
+    questions: transformedQuestions,
+};
