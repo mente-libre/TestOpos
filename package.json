@@ -13,8 +13,8 @@
     "seed-ranking": "tsx -r dotenv/config src/scripts/seed-ranking.ts"
   },
   "dependencies": {
-    "@genkit-ai/googleai": "^1.12.0",
-    "@genkit-ai/next": "^1.12.0",
+    "@genkit-ai/googleai": "1.12.0",
+    "@genkit-ai/next": "1.12.0",
     "@hookform/resolvers": "3.1.1",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-alert-dialog": "^1.1.6",
@@ -52,7 +52,7 @@
     "firebase-admin": "11.11.0",
     "framer-motion": "10.16.4",
     "geist": "1.0.0",
-    "genkit": "^1.12.0",
+    "genkit": "1.12.0",
     "iron-session": "6.3.1",
     "jose": "4.14.6",
     "lucide-react": "0.279.0",
