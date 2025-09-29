@@ -1,5 +1,3 @@
-
-
 import { type Question } from './definitions';
 import { ebepTest } from './seed-data-ebep';
 import { seguridadSocialTest } from './seed-data-seguridad-social';
@@ -7,12 +5,12 @@ import { tema14Test } from './seed-data-tema14';
 import { ley39Test as ley39_2015Test } from './seed-data-ley39-2015';
 import { ley29Test as ley29_1998Test } from './seed-data-ley29-1998';
 import { ley19Test as ley19_2013Test } from './seed-data-ley19-2013';
-import { ley3Test as ley3_2007Test } from './seed-data-ley3-2007';
-import { ley1Test as ley1_1983Test } from './seed-data-ley1-1983';
+import { ley3_2007Test } from './seed-data-ley3-2007';
+import { ley1_1983Test } from './seed-data-ley1-1983';
 import { lo3_1983Test as lo3_1983Test_imported } from './seed-data-lo3-1983';
 import { constitucionTest as constitucionTest_imported } from './seed-data-constitucion';
 import { ley9_2017Test as ley9_2017Test_imported } from './seed-data-ley9-2017';
-import { ley9Test as ley9_1990Test } from './seed-data-ley9-1990';
+import { ley9_1990Test } from './seed-data-ley9-1990';
 import { madrid2017Test } from './seed-data-madrid-2017';
 import { madrid2023Test } from './seed-data-madrid-2023';
 import { madrid2025Test } from './seed-data-madrid-2025';
@@ -499,12 +497,8 @@ export const madridAdminTest2006: SeedExam = {
       },
     ]
   };
-    
-    
+
 export { ebepTest, seguridadSocialTest, tema14Test, ley39_2015Test as ley39Test, ley29_1998Test as ley29Test, ley19_2013Test as ley19Test, lo3_1983Test_imported as lo3_1983Test, constitucionTest_imported as constitucionTest, ley9_2017Test_imported as ley9_2017Test, ley9_1990Test as ley9Test, ley3_2007Test as ley3Test, ley1_1983Test as ley1Test };
 export { madrid2017Test } from './seed-data-madrid-2017';
 export { madrid2023Test } from './seed-data-madrid-2023';
 export { madrid2025Test } from './seed-data-madrid-2025';
-
-
-  
