@@ -10,18 +10,12 @@ import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/ui/logo';
 
 export default function LoginPage() {
-  const router = useRouter();
-
-  const handleGoogleSignIn = () => {
-    signInWithGoogle()
-      .then((user) => {
-        if (user) {
-          router.push('/');
-        }
-      })
-      .catch((error) => {
-        console.error('Error signing in with Google: ', error);
-      });
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      console.error('Error signing in with Google: ', error);
+    }
   };
 
   return (

@@ -3,8 +3,7 @@ import { Toaster } from "@/components/ui/toaster"
 import './globals.css';
 import { Inter as FontSans } from 'next/font/google';
 import { cn } from '@/lib/utils';
-import Script from 'next/script';
-
+import { AuthProvider } from '@/components/auth-provider';
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -35,21 +34,10 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={cn("antialiased", fontSans.variable)}>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
         <Toaster />
-        <Script id="service-worker-registration">
-          {`
-            if ('serviceWorker' in navigator) {
-              window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(registration => {
-                  console.log('Service Worker registrado con éxito:', registration);
-                }).catch(error => {
-                  console.log('Error al registrar el Service Worker:', error);
-                });
-              });
-            }
-          `}
-        </Script>
       </body>
     </html>
   );

@@ -15,31 +15,31 @@ import app from "./config";
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// Set the authDomain for popup operations to ensure correct redirects
-auth.tenantId = null; // Ensure we're not in a multi-tenant context
 auth.useDeviceLanguage();
 
-
+/**
+ * Initiates the Google Sign-In process by redirecting the user.
+ * The result of the redirect is handled by getRedirectResult 
+ * in the AuthProvider.
+ */
 export const signInWithGoogle = async () => {
   try {
     await signInWithRedirect(auth, provider);
-    const result = await getRedirectResult(auth);
-    return result?.user ?? null;
   } catch (error) {
-    const errorCode = (error as AuthError).code;
-    // Don't log an error if the user simply closes the popup or cancels the request.
-    if (errorCode === 'auth/popup-closed-by-user' || errorCode === 'auth/cancelled-popup-request') {
-        return null;
-    }
-    console.error("Error signing in with Google: ", error);
-    return null;
+    console.error("Error starting sign in with Google redirect: ", error);
   }
 };
 
+/**
+ * Listens for changes in the authentication state.
+ */
 export const onAuthStateChange = (callback: (user: User | null) => void) => {
     return onAuthStateChanged(auth, callback);
 }
 
+/**
+ * Signs the current user out.
+ */
 export const signOut = async () => {
     try {
         await firebaseSignOut(auth);
@@ -48,5 +48,5 @@ export const signOut = async () => {
     }
 }
 
-export { getAuth };
+export { getAuth, getRedirectResult };
 export type { User };

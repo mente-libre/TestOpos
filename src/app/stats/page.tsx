@@ -45,7 +45,9 @@ export default function StatsPage() {
         setIsLoading(true);
         const rankingResult = await loadRankingData();
         if (rankingResult.success && rankingResult.ranking) {
-            setRanking(rankingResult.ranking);
+            // Sort the ranking by average score in descending order
+            const sortedRanking = rankingResult.ranking.sort((a, b) => b.averageScore - a.averageScore);
+            setRanking(sortedRanking);
         } else {
             setError(rankingResult.error || 'No se pudo cargar el ranking.');
         }
@@ -61,7 +63,9 @@ export default function StatsPage() {
             // Fetch global ranking
             const rankingResult = await loadRankingData();
             if (rankingResult.success && rankingResult.ranking) {
-                setRanking(rankingResult.ranking);
+                // Sort the ranking by average score in descending order
+                const sortedRanking = rankingResult.ranking.sort((a, b) => b.averageScore - a.averageScore);
+                setRanking(sortedRanking);
             } else {
                  setError(rankingResult.error || 'No se pudo cargar el ranking.');
             }
@@ -251,6 +255,3 @@ export default function StatsPage() {
         </div>
     );
 }
-
-
-    
