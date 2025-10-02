@@ -5,8 +5,8 @@ import {
   GoogleAuthProvider, 
   signInWithRedirect,
   getRedirectResult,
-  onAuthStateChanged,
   signOut as firebaseSignOut,
+  signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword,
   type User,
   type AuthError
 } from "firebase/auth";
@@ -19,8 +19,6 @@ auth.useDeviceLanguage();
 
 /**
  * Initiates the Google Sign-In process by redirecting the user.
- * The result of the redirect is handled by getRedirectResult 
- * in the AuthProvider.
  */
 export const signInWithGoogle = async () => {
   try {
@@ -31,11 +29,16 @@ export const signInWithGoogle = async () => {
 };
 
 /**
- * Listens for changes in the authentication state.
+ * Signs in a user with email and password.
  */
-export const onAuthStateChange = (callback: (user: User | null) => void) => {
-    return onAuthStateChanged(auth, callback);
-}
+export const signInWithEmailAndPassword = async (email, password) => {
+  try {
+    await firebaseSignInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    console.error("Error signing in with email and password: ", error);
+    throw error;
+  }
+};
 
 /**
  * Signs the current user out.

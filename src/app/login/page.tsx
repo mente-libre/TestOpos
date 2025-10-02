@@ -4,17 +4,51 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { signInWithGoogle } from '@/lib/firebase/auth';
+import { signInWithGoogle, signInWithEmailAndPassword, getRedirectResult, getAuth } from '@/lib/firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Logo } from '@/components/ui/logo';
+import { useEffect, useState } from 'react';
 
 export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null); // State to hold error messages
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(getAuth());
+        if (result) {
+          router.push('/');
+        }
+      } catch (error: any) {
+        setError(error.message);
+      }
+    };
+
+    checkRedirectResult();
+  }, [router]);
+
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
-    } catch (error) {
-      console.error('Error signing in with Google: ', error);
+    } catch (error: any) {
+      setError(error.message);
+    }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null); // Reset error before new login attempt
+    try {
+      await signInWithEmailAndPassword(email, password);
+      router.push('/');
+    } catch (error: any) {
+      // Set error message to be displayed to the user
+      setError(error.message);
+      console.error('Error signing in: ', error);
     }
   };
 
@@ -31,32 +65,47 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="nombre@ejemplo.com"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-                <div className="flex items-center">
-                    <Label htmlFor="password">Contraseña</Label>
-                    <Link href="#" className="ml-auto inline-block text-sm underline">
-                        ¿Has olvidado tu contraseña?
-                    </Link>
+          <form onSubmit={handleLogin}>
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="nombre@ejemplo.com"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="grid gap-2">
+                  <div className="flex items-center">
+                      <Label htmlFor="password">Contraseña</Label>
+                      <Link href="#" className="ml-auto inline-block text-sm underline">
+                          ¿Has olvidado tu contraseña?
+                      </Link>
+                  </div>
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              {error && (
+                <div className="text-red-500 text-sm text-center">
+                  {error}
                 </div>
-              <Input id="password" type="password" required />
+              )}
+              <Button type="submit" className="w-full">
+                Iniciar Sesión
+              </Button>
             </div>
-            <Button type="submit" className="w-full">
-              Iniciar Sesión
-            </Button>
-            <Button variant="outline" className="w-full" onClick={handleGoogleSignIn}>
-              Acceder con Google
-            </Button>
-          </div>
+          </form>
+          <Button variant="outline" className="w-full mt-4" onClick={handleGoogleSignIn}>
+            Acceder con Google
+          </Button>
           <div className="mt-4 text-center text-sm">
             ¿No tienes una cuenta?{' '}
             <Link href="/register" className="underline">

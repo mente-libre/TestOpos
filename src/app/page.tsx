@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Bot, BarChart3, User, LogOut, Loader2, Folder, Wand2, Menu, Calendar, ExternalLink, ArrowRight, Share2, Award, BrainCircuit, BookOpen, Users, Search, Clock, Target, ListChecks, Trophy } from 'lucide-react';
 import Link from 'next/link';
-import { onAuthStateChange, signOut } from '@/lib/firebase/auth';
-import type { User as FirebaseUser } from 'firebase/auth';
+import { signOut } from '@/lib/firebase/auth';
+import { useAuth } from '@/components/auth-provider'; // Import the useAuth hook
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { loadInitialData } from '@/app/actions';
 import { type Category } from '@/lib/definitions';
@@ -17,12 +17,6 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { ShareButton } from '@/components/ui/share-button';
-
-interface AppUser {
-  uid: string;
-  displayName: string | null;
-  email: string | null;
-}
 
 const CATEGORY_ICONS: { [key: string]: React.ReactNode } = {
   madrid: <User className="h-6 w-6 text-white" />,
@@ -40,7 +34,7 @@ const CATEGORY_COLORS: { [key: string]: string } = {
 
 
 export default function Home() {
-  const [user, setUser] = useState<AppUser | null>(null);
+  const user = useAuth(); // Use the user from the AuthProvider
   const [categories, setCategories] = useState<Category[]>([]);
   const [userCount, setUserCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,18 +44,6 @@ export default function Home() {
   const router = useRouter();
   
   useEffect(() => {
-    const unsubscribe = onAuthStateChange((firebaseUser: FirebaseUser | null) => {
-      if (firebaseUser) {
-        setUser({
-          uid: firebaseUser.uid,
-          displayName: firebaseUser.displayName,
-          email: firebaseUser.email,
-        });
-      } else {
-        setUser(null);
-      }
-    });
-
     const fetchData = async () => {
       setIsLoading(true);
       const result = await loadInitialData();
@@ -76,8 +58,6 @@ export default function Home() {
     };
 
     fetchData();
-    
-    return () => unsubscribe();
   }, []);
 
   const handleStartTest = (categoryId: string) => {
@@ -86,6 +66,11 @@ export default function Home() {
 
   const handleStartThemedTest = (testName: string) => {
     router.push(`/exam/seed-${encodeURIComponent(testName)}`);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/login'); // Redirect to login after sign out
   };
 
   const filteredCategories = categories
@@ -125,7 +110,7 @@ export default function Home() {
                       <BarChart3 className="mr-2 h-4 w-4" />
                       <span>Estadísticas</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => signOut().then(() => setUser(null))}>
+                    <DropdownMenuItem onClick={handleSignOut}>
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Cerrar sesión</span>
                     </DropdownMenuItem>
