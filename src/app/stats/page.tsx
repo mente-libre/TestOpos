@@ -3,7 +3,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
-import { onAuthStateChange, type User } from '@/lib/firebase/auth';
+import { auth, onAuthStateChanged, type User } from '@/lib/firebase/auth';
 import { type TestResult, type UserRanking } from '@/lib/definitions';
 import { loadStatistics, loadRankingData } from '@/app/actions';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -31,7 +31,7 @@ export default function StatsPage() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChange((firebaseUser) => {
+        const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
             setUser(firebaseUser);
             if (!firebaseUser) {
                 // For non-logged-in users, we might just show the ranking

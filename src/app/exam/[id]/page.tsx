@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getExamById } from '@/app/actions';
 import { type Exam } from '@/lib/definitions';
-import { onAuthStateChange, type User } from '@/lib/firebase/auth';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, List, ChevronLeft, PlayCircle } from 'lucide-react';
@@ -104,5 +103,3 @@ export default function ExamPage() {
     </div>
   );
 }
-
-    

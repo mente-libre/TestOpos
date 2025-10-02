@@ -5,6 +5,7 @@ import {
   GoogleAuthProvider, 
   signInWithRedirect,
   getRedirectResult,
+  onAuthStateChanged,
   signOut as firebaseSignOut,
   signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword,
   type User,
@@ -31,7 +32,7 @@ export const signInWithGoogle = async () => {
 /**
  * Signs in a user with email and password.
  */
-export const signInWithEmailAndPassword = async (email, password) => {
+export const signInWithEmailAndPassword = async (email: string, password: string) => {
   try {
     await firebaseSignInWithEmailAndPassword(auth, email, password);
   } catch (error) {
@@ -51,5 +52,6 @@ export const signOut = async () => {
     }
 }
 
-export { getAuth, getRedirectResult };
+// Export the auth instance along with other functions
+export { auth, getAuth, getRedirectResult, onAuthStateChanged };
 export type { User };

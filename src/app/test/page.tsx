@@ -13,7 +13,7 @@ import { Loader2, CheckCircle, XCircle, RefreshCw, Eye, Wand2, Home } from 'luci
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { onAuthStateChange, type User, getAuth } from '@/lib/firebase/auth';
+import { auth, onAuthStateChanged, type User } from '@/lib/firebase/auth';
 import { getAuthHeaders } from '@/lib/utils';
 
 
@@ -88,7 +88,7 @@ function TestPageContent() {
   const examId = searchParams.get('examId');
   
   useEffect(() => {
-    const unsubscribe = onAuthStateChange((firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
     });
     return () => unsubscribe();
