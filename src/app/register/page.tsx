@@ -15,10 +15,8 @@ export default function RegisterPage() {
 
   const handleGoogleSignIn = async () => {
     try {
-        const user = await signInWithGoogle();
-        if (user) {
-          router.push("/");
-        }
+        await signInWithGoogle();
+        router.push("/");
     } catch (error) {
         console.error("Error during Google sign-in:", error);
     }
