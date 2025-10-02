@@ -19,36 +19,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
-
-      const isAuthPage = pathname === '/login' || pathname === '/register';
-
-      if (firebaseUser && isAuthPage) {
-        router.push('/');
-      }
-      
-      if (!firebaseUser && !isAuthPage) {
-        router.push('/login');
-      }
     });
-
     return () => unsubscribe();
-  }, [pathname, router]);
+  }, []);
 
-  if (loading) {
+  useEffect(() => {
+    if (loading) return;
+
+    const isAuthPage = pathname === '/login' || pathname === '/register';
+
+    if (!user && !isAuthPage) {
+      router.push('/login');
+    } else if (user && isAuthPage) {
+      router.push('/');
+    }
+  }, [user, loading, pathname, router]);
+
+  const isAuthPage = pathname === '/login' || pathname === '/register';
+  const shouldShowLoading = loading || (!user && !isAuthPage) || (user && isAuthPage);
+
+  if (shouldShowLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
         <p className="ml-2">Cargando sesión...</p>
-      </div>
-    );
-  }
-
-  const isAuthPage = pathname === '/login' || pathname === '/register';
-  if ((!user && !isAuthPage) || (user && isAuthPage)) {
-    return (
-       <div className="flex items-center justify-center h-screen">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <p className="ml-2">Redirigiendo...</p>
       </div>
     );
   }

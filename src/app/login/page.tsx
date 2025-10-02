@@ -13,27 +13,26 @@ import { useEffect, useState } from 'react';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null); // State to hold error messages
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     const checkRedirectResult = async () => {
       try {
-        const result = await getRedirectResult(getAuth());
-        if (result) {
-          router.push('/');
-        }
+        // The AuthProvider will handle the redirect, so we just need to check.
+        await getRedirectResult(getAuth());
       } catch (error: any) {
         setError(error.message);
       }
     };
 
     checkRedirectResult();
-  }, [router]);
+  }, []);
 
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
+      // The AuthProvider will handle the redirect.
     } catch (error: any) {
       setError(error.message);
     }
@@ -41,12 +40,11 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // Reset error before new login attempt
+    setError(null);
     try {
       await signInWithEmailAndPassword(email, password);
-      router.push('/');
+      // The AuthProvider will handle the redirect after the state changes.
     } catch (error: any) {
-      // Set error message to be displayed to the user
       setError(error.message);
       console.error('Error signing in: ', error);
     }
