@@ -24,25 +24,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (loading) return;
+    if (loading) return; // Don't do anything while loading
 
     const isAuthPage = pathname === '/login' || pathname === '/register';
 
-    if (!user && !isAuthPage) {
-      router.push('/login');
-    } else if (user && isAuthPage) {
+    // If the user is logged in and tries to access login/register, redirect to home
+    if (user && isAuthPage) {
       router.push('/');
     }
+    // We no longer redirect non-authenticated users to the login page.
+    // They can browse the site as guests.
+
   }, [user, loading, pathname, router]);
 
   const isAuthPage = pathname === '/login' || pathname === '/register';
-  const shouldShowLoading = loading || (!user && !isAuthPage) || (user && isAuthPage);
+  // Show loading screen only while fetching user or if a logged-in user is on an auth page
+  const shouldShowLoading = loading || (user && isAuthPage);
 
   if (shouldShowLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
-        <p className="ml-2">Cargando sesión...</p>
+        <p className="ml-2">Cargando...</p>
       </div>
     );
   }
