@@ -8,6 +8,7 @@ import {
   onAuthStateChanged,
   signOut as firebaseSignOut,
   signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword,
+  createUserWithEmailAndPassword as firebaseCreateUserWithEmailAndPassword,
   type User,
   type AuthError
 } from "firebase/auth";
@@ -37,6 +38,18 @@ export const signInWithEmailAndPassword = async (email: string, password: string
     await firebaseSignInWithEmailAndPassword(auth, email, password);
   } catch (error) {
     console.error("Error signing in with email and password: ", error);
+    throw error;
+  }
+};
+
+/**
+ * Creates a new user with email and password.
+ */
+export const createUserWithEmailAndPassword = async (email: string, password: string) => {
+  try {
+    await firebaseCreateUserWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    console.error("Error creating user with email and password: ", error);
     throw error;
   }
 };
