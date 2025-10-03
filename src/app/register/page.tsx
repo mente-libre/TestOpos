@@ -1,47 +1,52 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import Link from 'next/link';
-import { Logo } from '@/components/ui/logo';
-import { signInWithGoogle, createUserWithEmailAndPassword } from '@/lib/firebase/auth';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import Link from "next/link";
+import { Logo } from "@/components/ui/logo";
+import {
+  signInWithGoogle,
+  createUserWithEmailAndPassword,
+} from "@/lib/firebase/auth";
+import { useState } from "react";
 
 export default function RegisterPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState(""); // Although we collect it, we are not using it yet.
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   const handleEmailRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres.');
+      setError("La contraseña debe tener al menos 6 caracteres.");
       return;
     }
     try {
       await createUserWithEmailAndPassword(email, password);
-      // The AuthProvider will detect the new user and handle the redirect.
-      // No router.push() needed here.
+      // The AuthProvider will handle the redirect
     } catch (error: any) {
-      console.error('Error during email registration:', error);
-      setError(error.message);
+      console.error("Error during email registration:", error);
+      setError("Error al registrar la cuenta. Es posible que el email ya esté en uso.");
     }
   };
 
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
-      // The AuthProvider will detect the new user on redirect and handle routing.
-      // No router.push() needed here.
-    } catch (error: any) {
-      console.error('Error during Google sign-in:', error);
-      setError(error.message);
+      // The AuthProvider will handle the redirect
+    } catch (error) {
+      console.error("Error during Google sign-in:", error);
+      setError("Error al registrar con Google.");
     }
   };
 
@@ -62,10 +67,10 @@ export default function RegisterPage() {
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="first-name">Nombre</Label>
-                <Input 
-                  id="first-name" 
-                  placeholder="Tu nombre" 
-                  required 
+                <Input
+                  id="first-name"
+                  placeholder="Tu nombre"
+                  required
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                 />
@@ -83,25 +88,31 @@ export default function RegisterPage() {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="password">Contraseña</Label>
-                <Input 
-                  id="password" 
-                  type="password" 
-                  required 
+                <Input
+                  id="password"
+                  type="password"
+                  required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+              {error && (
+                <p className="text-red-500 text-sm text-center">{error}</p>
+              )}
               <Button type="submit" className="w-full">
                 Crear cuenta
               </Button>
             </div>
           </form>
-          <Button variant="outline" className="w-full mt-4" onClick={handleGoogleSignIn}>
+          <Button
+            variant="outline"
+            className="w-full mt-4"
+            onClick={handleGoogleSignIn}
+          >
             Registrarse con Google
           </Button>
           <div className="mt-4 text-center text-sm">
-            ¿Ya tienes una cuenta?{' '}
+            ¿Ya tienes una cuenta?{" "}
             <Link href="/login" className="underline">
               Inicia sesión
             </Link>

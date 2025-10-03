@@ -1,52 +1,49 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { signInWithGoogle, signInWithEmailAndPassword, getRedirectResult, getAuth } from '@/lib/firebase/auth';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Logo } from '@/components/ui/logo';
-import { useEffect, useState } from 'react';
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import Link from "next/link";
+import { Logo } from "@/components/ui/logo";
+import {
+  signInWithGoogle,
+  signInWithEmailAndPassword,
+} from "@/lib/firebase/auth";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    const checkRedirectResult = async () => {
-      try {
-        // The AuthProvider will handle the redirect, so we just need to check.
-        await getRedirectResult(getAuth());
-      } catch (error: any) {
-        setError(error.message);
-      }
-    };
-
-    checkRedirectResult();
-  }, []);
-
-  const handleGoogleSignIn = async () => {
-    try {
-      await signInWithGoogle();
-      // The AuthProvider will handle the redirect.
-    } catch (error: any) {
-      setError(error.message);
-    }
-  };
-
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     try {
       await signInWithEmailAndPassword(email, password);
-      // The AuthProvider will handle the redirect after the state changes.
+      // The AuthProvider will handle the redirect
     } catch (error: any) {
-      setError(error.message);
-      console.error('Error signing in: ', error);
+      console.error("Error signing in with email and password:", error);
+      setError("Email o contraseña incorrectos.");
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+      // The AuthProvider will handle the redirect
+    } catch (error) {
+      console.error("Error during Google sign-in:", error);
+      setError("Error al iniciar sesión con Google.");
     }
   };
 
@@ -54,16 +51,16 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
       <Card className="w-full max-w-sm">
         <CardHeader>
-           <div className="flex justify-center mb-4">
-              <Logo />
-            </div>
+          <div className="flex justify-center mb-4">
+            <Logo />
+          </div>
           <CardTitle className="text-2xl text-center">Iniciar Sesión</CardTitle>
           <CardDescription className="text-center">
-            Introduce tu email para acceder a tu cuenta.
+            Introduce tus credenciales para acceder a tu cuenta.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleEmailSignIn}>
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
@@ -77,12 +74,7 @@ export default function LoginPage() {
                 />
               </div>
               <div className="grid gap-2">
-                  <div className="flex items-center">
-                      <Label htmlFor="password">Contraseña</Label>
-                      <Link href="#" className="ml-auto inline-block text-sm underline">
-                          ¿Has olvidado tu contraseña?
-                      </Link>
-                  </div>
+                <Label htmlFor="password">Contraseña</Label>
                 <Input
                   id="password"
                   type="password"
@@ -92,20 +84,22 @@ export default function LoginPage() {
                 />
               </div>
               {error && (
-                <div className="text-red-500 text-sm text-center">
-                  {error}
-                </div>
+                <p className="text-red-500 text-sm text-center">{error}</p>
               )}
               <Button type="submit" className="w-full">
                 Iniciar Sesión
               </Button>
             </div>
           </form>
-          <Button variant="outline" className="w-full mt-4" onClick={handleGoogleSignIn}>
-            Acceder con Google
+          <Button
+            variant="outline"
+            className="w-full mt-4"
+            onClick={handleGoogleSignIn}
+          >
+            Iniciar Sesión con Google
           </Button>
           <div className="mt-4 text-center text-sm">
-            ¿No tienes una cuenta?{' '}
+            ¿No tienes una cuenta?{" "}
             <Link href="/register" className="underline">
               Regístrate
             </Link>
