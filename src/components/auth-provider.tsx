@@ -8,6 +8,7 @@ import { Loader2 } from 'lucide-react';
 
 interface AuthContextType {
   user: User | null;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -19,26 +20,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
+    // Firebase listener for authentication state changes
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setIsLoading(false);
     });
+    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
   useEffect(() => {
-    if (isLoading) return;
-
-    const isAuthPage = pathname === '/login' || pathname === '/register';
-
-    if (user && isAuthPage) {
-      router.push('/');
-    } else if (!user && !isAuthPage) {
-      router.push('/login');
+    // This effect only handles redirecting LOGGED-IN users away from auth pages.
+    // It no longer forces guests to the login page.
+    if (!isLoading && user) {
+      const isAuthPage = pathname === '/login' || pathname === '/register';
+      if (isAuthPage) {
+        router.push('/');
+      }
     }
   }, [user, isLoading, pathname, router]);
 
-  if (isLoading || (!user && pathname !== '/login' && pathname !== '/register')) {
+  // Show a loader only during the initial check.
+  // Afterwards, the application is rendered for both guests and logged-in users.
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader2 className="h-10 w-10 animate-spin" />
@@ -46,7 +50,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
   }
 
-  return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, isLoading }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export const useAuth = () => {
@@ -54,5 +62,5 @@ export const useAuth = () => {
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
-  return context.user;
+  return context;
 };

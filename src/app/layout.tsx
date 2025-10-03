@@ -1,29 +1,14 @@
-import type {Metadata, Viewport} from 'next';
-import { Toaster } from "@/components/ui/toaster"
-import './globals.css';
-import { Inter as FontSans } from 'next/font/google';
-import { cn } from '@/lib/utils';
-import { AuthProvider } from '@/components/auth-provider';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { AuthProvider } from "@/components/auth-provider";
+import { Header } from "@/components/header";
 
-const fontSans = FontSans({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  weight: ['400', '600', '700'],
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'TestOpos - Tests de Oposiciones con IA',
-  description: 'Genera tests para oposiciones usando IA',
-  icons: {
-    icon: '/favicon.ico',
-  },
-  manifest: '/manifest.json',
-};
-
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  themeColor: "#2563eb",
+  title: "TestOpos - Generador de Tests para Oposiciones",
+  description: "Crea tests para tus oposiciones de forma rápida y sencilla.",
 };
 
 export default function RootLayout({
@@ -32,12 +17,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" suppressHydrationWarning>
-      <body className={cn("antialiased", fontSans.variable)}>
+    <html lang="es">
+      <body className={inter.className}>
         <AuthProvider>
-          {children}
+          <Header />
+          <main className="p-4">{children}</main>
         </AuthProvider>
-        <Toaster />
       </body>
     </html>
   );
