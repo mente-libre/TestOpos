@@ -13,9 +13,6 @@ import { Loader2, CheckCircle, XCircle, RefreshCw, Eye, Wand2, Home } from 'luci
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { auth, onAuthStateChanged, type User } from '@/lib/firebase/auth';
-import { getAuthHeaders } from '@/lib/utils';
-
 
 type AnswerStatus = 'unanswered' | 'correct' | 'incorrect';
 
@@ -29,18 +26,6 @@ interface Results {
   incorrectCount: number;
   unansweredCount: number;
   score: number;
-}
-
-// Wrapper to call server action with auth headers
-async function saveFinishedTestWithAuth(result: Omit<TestResult, 'id' | 'createdAt'>) {
-    // We can't pass headers to server actions directly, but getUserId in actions.ts will handle it
-    await saveFinishedTest(result);
-}
-
-// Wrapper to call server action with auth headers
-async function generateReviewTestWithAuth(failedQuestions: Question[]) {
-    // We can't pass headers to server actions directly, but getUserId in actions.ts will handle it
-    return await generateReviewTest(failedQuestions);
 }
 
 function calculateResults(questions: Question[], answers: AnswerState[]): Results | null {
@@ -70,7 +55,6 @@ function calculateResults(questions: Question[], answers: AnswerState[]): Result
 }
 
 function TestPageContent() {
-  const [user, setUser] = useState<User | null>(null);
   const [title, setTitle] = useState<string>('Cargando...');
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -87,14 +71,6 @@ function TestPageContent() {
   const searchParams = useSearchParams();
   const examId = searchParams.get('examId');
   
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-    });
-    return () => unsubscribe();
-  }, []);
-
-
   useEffect(() => {
     const fetchExam = async (id: string) => {
       const result = await getExamById(id);
@@ -158,22 +134,28 @@ function TestPageContent() {
       const results = calculateResults(questions, answers);
       setFinalResults(results);
 
-      // Save results to Firestore if user is logged in
-      if(results && user) {
-        const resultToSave: Omit<TestResult, 'id' | 'createdAt'> = {
+      // Save results to LocalStorage
+      if(results) {
+        const resultToSave = {
             testTitle: title,
             score: results.score,
             correctCount: results.correctCount,
             incorrectCount: results.incorrectCount,
             unansweredCount: results.unansweredCount,
             totalQuestions: questions.length,
-            userId: user.uid
+            date: new Date().toISOString()
         };
-        saveFinishedTestWithAuth(resultToSave); // Fire-and-forget, don't block UI
+        try {
+            const history = JSON.parse(localStorage.getItem('testHistory') || '[]');
+            history.push(resultToSave);
+            localStorage.setItem('testHistory', JSON.stringify(history));
+        } catch (error) {
+            console.error("Could not save test results to local storage", error);
+        }
       }
     }
     setIsFinished(true);
-  }, [questions, answers, title, isFinished, user]);
+  }, [questions, answers, title, isFinished]);
 
 
   useEffect(() => {
@@ -218,14 +200,7 @@ function TestPageContent() {
   };
 
   const handleGenerateReview = async () => {
-    if (!questions || !user) {
-        if (!user) {
-            toast({
-                variant: "destructive",
-                title: "Función para usuarios registrados",
-                description: "Inicia sesión para generar tests de repaso con IA."
-            });
-        }
+    if (!questions) {
         return;
     };
     setIsGeneratingReview(true);
@@ -245,7 +220,7 @@ function TestPageContent() {
     }
 
     try {
-        const result = await generateReviewTestWithAuth(failedQuestions);
+        const result = await generateReviewTest(failedQuestions);
         if (result.success && result.questions) {
             sessionStorage.setItem('testQuestions', JSON.stringify(result.questions));
             sessionStorage.setItem('testTitle', `Test de Repaso IA: ${title}`);
@@ -332,7 +307,7 @@ function TestPageContent() {
               </div>
             </CardContent>
             <CardFooter className="flex-col sm:flex-row gap-4">
-                {results.incorrectCount > 0 && user && (
+                {results.incorrectCount > 0 && (
                     <Button variant="outline" className="w-full" onClick={handleGenerateReview} disabled={isGeneratingReview}>
                         {isGeneratingReview ? (
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
