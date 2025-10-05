@@ -12,7 +12,7 @@ import {
   type User,
   type AuthError
 } from "firebase/auth";
-import app from "./config";
+import { app } from "./config";
 
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
@@ -66,5 +66,5 @@ export const signOut = async () => {
 }
 
 // Export the auth instance along with other functions
-export { auth, getAuth, getRedirectResult, onAuthStateChanged };
+export { auth, getRedirectResult, onAuthStateChanged };
 export type { User };
