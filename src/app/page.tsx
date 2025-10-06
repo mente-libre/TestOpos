@@ -133,7 +133,7 @@ export default function Home() {
         <div className="bg-gradient-to-r from-yellow-300 to-orange-400 p-6 rounded-lg shadow-md mb-10 flex items-center gap-6">
           <Trophy className="h-10 w-10 text-yellow-900/70" />
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">¡Bienvenido a TestOpos - v3!</h1>
+            <h1 className="text-2xl font-bold text-gray-800">¡Bienvenido a TestOpos!</h1>
             <p className="text-gray-700">Inicia sesión para guardar tu progreso, competir en el ranking global y desbloquear el modo IA adaptativo.</p>
           </div>
            <div className="ml-auto flex gap-4">
