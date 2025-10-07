@@ -7,11 +7,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+const getDate = (createdAt: TestResult['createdAt']): Date => {
+  if (typeof createdAt === 'object' && createdAt !== null && 'toDate' in createdAt) {
+    return (createdAt as any).toDate();
+  }
+  return new Date(createdAt as number);
+};
+
 export default function StatsPage() {
   const [results, setResults] = useState<TestResult[]>([]);
 
   useEffect(() => {
-    setResults(getLocalTestResults());
+    const localResults = getLocalTestResults();
+    setResults(localResults);
   }, []);
 
   const handleClearHistory = () => {
@@ -20,7 +28,7 @@ export default function StatsPage() {
   };
 
   const chartData = results.map(result => ({
-    name: new Date(result.createdAt).toLocaleDateString(),
+    name: getDate(result.createdAt).toLocaleDateString(),
     Puntuación: result.score,
   }));
 
@@ -60,14 +68,14 @@ export default function StatsPage() {
             <CardContent className="pt-6">
               <div className="flex justify-between">
                 <div>
-                  <p className="font-semibold">{result.testName || 'Test General'}</p>
-                  <p className="text-sm text-gray-500">{new Date(result.createdAt).toLocaleString()}</p>
+                  <p className="font-semibold">{result.testTitle || 'Test General'}</p>
+                  <p className="text-sm text-gray-500">{getDate(result.createdAt).toLocaleString()}</p>
                 </div>
                 <div className="text-right">
                     <p className={`text-lg font-bold ${result.score > 50 ? 'text-green-600' : 'text-red-600'}`}>
                         {result.score.toFixed(2)}%
                     </p>
-                  <p className="text-sm">{result.correctAnswers} / {result.totalQuestions} correctas</p>
+                  <p className="text-sm">{result.correctCount} / {result.totalQuestions} correctas</p>
                 </div>
               </div>
             </CardContent>
