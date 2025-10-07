@@ -1,52 +1,42 @@
 import * as admin from 'firebase-admin';
 
 let db: admin.firestore.Firestore | null = null;
+const isInitialized = admin.apps.length > 0;
 
-try {
-  if (process.env.NODE_ENV === 'production') {
-    // En producción (ej. Vercel), usa las variables de entorno
-    if (process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY && process.env.GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL) {
-      const serviceAccount = {
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-        privateKey: process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY.replace(/\\n/g, '\n'),
-        clientEmail: process.env.GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL,
-      };
+if (!isInitialized) {
+  let serviceAccount: admin.ServiceAccount | undefined;
 
-      if (admin.apps.length === 0) {
-        admin.initializeApp({
-          credential: admin.credential.cert(serviceAccount),
-        });
-        db = admin.firestore();
-        console.log("Firebase Admin SDK initialized for production.");
-      }
-    } else {
-      console.warn("Production environment detected, but Firebase Admin credentials are not fully set in environment variables.");
-    }
+  if (process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY && process.env.GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL && process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) {
+    serviceAccount = {
+      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+      privateKey: process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      clientEmail: process.env.GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL,
+    };
+    console.log("Attempting to initialize Firebase Admin with environment variables.");
   } else {
-    // En desarrollo, intenta usar el fichero de cuenta de servicio
     try {
-      const serviceAccount = require('../../../serviceAccountKey.json');
-       if (admin.apps.length === 0) {
-        admin.initializeApp({
-          credential: admin.credential.cert(serviceAccount),
-        });
-        db = admin.firestore();
-        console.log("Firebase Admin SDK initialized for development using serviceAccountKey.json.");
-      }
+      serviceAccount = require('../../../serviceAccountKey.json');
+      console.log("Attempting to initialize Firebase Admin with serviceAccountKey.json.");
     } catch (e) {
-      console.warn("Could not initialize Firebase Admin SDK for development. ",
-        "Did you download your serviceAccountKey.json? ",
-        "Falling back to application default credentials if available.", e);
-      // Si falla, intenta con las credenciales por defecto (útil en algunos entornos de Google Cloud)
-      if (admin.apps.length === 0) {
-        admin.initializeApp();
-        db = admin.firestore();
-        console.log("Firebase Admin SDK initialized with Application Default Credentials.");
-      }
+      console.warn(
+        'Firebase Admin initialization failed. Neither environment variables nor serviceAccountKey.json were found.'
+      );
     }
   }
-} catch (error) {
-  console.error("Critical error initializing Firebase Admin SDK:", error);
+
+  if (serviceAccount) {
+    try {
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+      db = admin.firestore();
+      console.log("Firebase Admin SDK initialized successfully.");
+    } catch (error) {
+      console.error("Critical error initializing Firebase Admin SDK:", error);
+    }
+  }
+} else {
+  db = admin.firestore();
 }
 
 export { db };

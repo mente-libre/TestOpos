@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState, useCallback, Suspense } from 'react';
@@ -131,12 +130,14 @@ function TestPageContent() {
 
       if(results) {
         const resultToSave: Omit<TestResult, 'id'> = {
-            testName: title,
+            userId: 'local-user', // Using a placeholder as user is not authenticated
+            testTitle: title,
             score: results.score,
-            correctAnswers: results.correctCount,
+            correctCount: results.correctCount,
+            incorrectCount: results.incorrectCount,
+            unansweredCount: results.unansweredCount,
             totalQuestions: questions.length,
-            createdAt: Date.now(),
-            failedQuestions: [], // Placeholder for now
+            createdAt: Date.now()
         };
         saveLocalTestResult(resultToSave);
       }
