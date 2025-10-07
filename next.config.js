@@ -1,3 +1,4 @@
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {
@@ -5,7 +6,10 @@ const nextConfig = {
   },
   transpilePackages: ['undici'],
   compiler: {
-    styledComponents: true,
+    styledComponents: false,
+  },
+  experimental: {
+    cpus: 1,
   },
 };
 

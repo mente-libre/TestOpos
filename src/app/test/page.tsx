@@ -7,7 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { getExamById, generateReviewTest, saveFinishedTest } from '@/app/actions';
+import { getExamById, generateReviewTest } from '@/app/actions';
+import { saveLocalTestResult } from '@/lib/local-storage';
 import { type Question, type TestResult } from '@/lib/definitions';
 import { Loader2, CheckCircle, XCircle, RefreshCw, Eye, Wand2, Home } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
@@ -89,7 +90,6 @@ function TestPageContent() {
       setIsLoading(true);
       let loadedFromSession = false;
 
-      // 1. Try to load from session storage (for AI-generated tests)
       try {
         const sessionQuestions = sessionStorage.getItem('testQuestions');
         const sessionTitle = sessionStorage.getItem('testTitle');
@@ -110,11 +110,9 @@ function TestPageContent() {
          console.error("Failed to parse questions from session storage", e);
       }
 
-      // 2. If not from session, and we have an examId, load from Firestore
       if (!loadedFromSession && examId) {
         fetchExam(examId);
       } 
-      // 3. If no session data and no examId, it's an invalid state.
       else if (!loadedFromSession && !examId) {
         console.error("no valid test found to load.");
         router.push('/');
@@ -122,10 +120,7 @@ function TestPageContent() {
     };
     
     loadTest();
-  // We depend on examId to re-trigger this if the URL changes.
-  // The initial load is handled once.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [examId]);
+  }, [examId, router]);
   
   const finishTest = useCallback(() => {
     if (isFinished) return;
@@ -134,24 +129,16 @@ function TestPageContent() {
       const results = calculateResults(questions, answers);
       setFinalResults(results);
 
-      // Save results to LocalStorage
       if(results) {
-        const resultToSave = {
-            testTitle: title,
+        const resultToSave: Omit<TestResult, 'id'> = {
+            testName: title,
             score: results.score,
-            correctCount: results.correctCount,
-            incorrectCount: results.incorrectCount,
-            unansweredCount: results.unansweredCount,
+            correctAnswers: results.correctCount,
             totalQuestions: questions.length,
-            date: new Date().toISOString()
+            createdAt: Date.now(),
+            failedQuestions: [], // Placeholder for now
         };
-        try {
-            const history = JSON.parse(localStorage.getItem('testHistory') || '[]');
-            history.push(resultToSave);
-            localStorage.setItem('testHistory', JSON.stringify(history));
-        } catch (error) {
-            console.error("Could not save test results to local storage", error);
-        }
+        saveLocalTestResult(resultToSave);
       }
     }
     setIsFinished(true);
@@ -190,8 +177,6 @@ function TestPageContent() {
   };
 
   const handleRestartTest = () => {
-    // A full reload is the most reliable way to restart, especially for AI tests.
-    // It will either re-fetch from Firestore if `examId` is present, or go home if not.
     window.location.reload(); 
   };
   
@@ -225,7 +210,6 @@ function TestPageContent() {
             sessionStorage.setItem('testQuestions', JSON.stringify(result.questions));
             sessionStorage.setItem('testTitle', `Test de Repaso IA: ${title}`);
             router.push('/test');
-            // A reload is needed to re-trigger the useEffect in the Suspense boundary
             window.location.reload(); 
         } else {
             toast({

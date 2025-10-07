@@ -6,9 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Bot, BarChart3, User, LogOut, Loader2, Folder, Wand2, Menu, Calendar, ExternalLink, ArrowRight, Share2, Award, BrainCircuit, BookOpen, Users, Search, Clock, Target, ListChecks, Trophy } from 'lucide-react';
 import Link from 'next/link';
-import { signOut } from '@/lib/firebase/auth';
-import { useAuth } from '@/components/auth-provider'; // Import the useAuth hook
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { loadInitialData } from '@/app/actions';
 import { type Category } from '@/lib/definitions';
 import { useRouter } from 'next/navigation';
@@ -35,9 +32,7 @@ const CATEGORY_COLORS: { [key: string]: string } = {
 
 
 export default function Home() {
-  const user = useAuth(); // Use the user from the AuthProvider
   const [categories, setCategories] = useState<Category[]>([]);
-  const [userCount, setUserCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -50,7 +45,6 @@ export default function Home() {
       const result = await loadInitialData();
       if (result.success) {
         setCategories(result.categories || []);
-        setUserCount(result.userCount || 0);
       } else {
         setError(result.error || 'No se pudieron cargar las categorías.');
         console.error(result.error);
@@ -67,11 +61,6 @@ export default function Home() {
 
   const handleStartThemedTest = (testName: string) => {
     router.push(`/exam/seed-${encodeURIComponent(testName)}`);
-  };
-
-  const handleSignOut = async () => {
-    await signOut();
-    router.push('/login'); // Redirect to login after sign out
   };
 
   const filteredCategories = categories
@@ -99,54 +88,23 @@ export default function Home() {
               </div>
             </Link>
             <div className="flex items-center gap-2">
-              {user ? (
-                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                       <User className="h-5 w-5" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56" align="end" forceMount>
-                    <DropdownMenuItem onClick={() => router.push('/stats')}>
-                      <BarChart3 className="mr-2 h-4 w-4" />
-                      <span>Estadísticas</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleSignOut}>
-                      <LogOut className="mr-2 h-4 w-4" />
-                      <span>Cerrar sesión</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <>
-                  <ShareButton />
-                  <Button variant="ghost" size="sm" className="hidden sm:inline-flex" onClick={() => router.push('/stats')}><Award className="mr-2 h-4 w-4" /> Ranking</Button>
-                  <Button className="bg-slate-700 hover:bg-slate-600 text-white font-bold" onClick={() => router.push('/login')}><ArrowRight className="mr-2 h-4 w-4" /> Iniciar Sesión</Button>
-                </>
-              )}
+                <Button variant="ghost" onClick={() => router.push('/stats')}>
+                    <BarChart3 className="mr-2 h-4 w-4" />
+                    Estadísticas
+                </Button>
+                <ShareButton />
             </div>
           </div>
         </div>
       </header>
       
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-gradient-to-r from-yellow-300 to-orange-400 p-6 rounded-lg shadow-md mb-10 flex items-center gap-6">
-          <Trophy className="h-10 w-10 text-yellow-900/70" />
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">¡Bienvenido a TestOpos!</h1>
-            <p className="text-gray-700">Inicia sesión para guardar tu progreso, competir en el ranking global y desbloquear el modo IA adaptativo.</p>
-          </div>
-           <div className="ml-auto flex gap-4">
-              <Button className="bg-gray-800 text-white hover:bg-gray-700" onClick={() => router.push('/login')}><ArrowRight className="mr-2 h-4 w-4" />Iniciar Sesión Gratis</Button>
-              <Button variant="outline" className="bg-white/30 border-gray-700 text-gray-800 hover:bg-white/50" onClick={() => router.push('/stats')}>Ver Ranking</Button>
-           </div>
-        </div>
-
         <section className="text-center mb-12">
-            <h2 className="text-2xl font-semibold mb-2">Prepárate para las oposiciones con nuestro sistema de tests inteligente que se adapta a tu nivel</h2>
+            <h1 className="text-3xl font-bold mb-2">Prepara tus Oposiciones</h1>
+            <h2 className="text-xl font-semibold mb-2 text-gray-700">Prepárate para las oposiciones con nuestro sistema de tests inteligente que se adapta a tu nivel</h2>
         </section>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
              <Card>
                 <CardContent className="pt-6 flex flex-col items-center text-center">
                     <div className="bg-blue-100 p-3 rounded-full mb-3"><BookOpen className="h-8 w-8 text-blue-600" /></div>
@@ -168,19 +126,11 @@ export default function Home() {
                     <p className="text-muted-foreground">Preguntas IA</p>
                 </CardContent>
             </Card>
-            <Card>
-                <CardContent className="pt-6 flex flex-col items-center text-center">
-                     <div className="bg-yellow-100 p-3 rounded-full mb-3"><Users className="h-8 w-8 text-yellow-600" /></div>
-                    <p className="text-3xl font-bold">{userCount}</p>
-                    <p className="text-muted-foreground">Usuarios Compitiendo</p>
-                </CardContent>
-            </Card>
         </div>
 
         <div className="mb-6">
             <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-bold flex items-center gap-2"><ListChecks className="h-5 w-5" /> Exámenes Completos y por Categoría</h3>
-                {user ? <Badge variant="secondary">Modo Registrado</Badge> : <Badge variant="secondary">Modo Invitado</Badge>}
             </div>
              <div className="flex justify-between items-center mb-4">
                 <div className="flex gap-4">
