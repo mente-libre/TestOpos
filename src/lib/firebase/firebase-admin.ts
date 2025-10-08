@@ -1,25 +1,27 @@
 import * as admin from 'firebase-admin';
 
 let db: admin.firestore.Firestore | null = null;
-const isInitialized = admin.apps.length > 0;
 
-if (!isInitialized) {
+if (admin.apps.length === 0) {
   let serviceAccount: admin.ServiceAccount | undefined;
 
-  if (process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY && process.env.GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL && process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) {
+  // Production / Vercel environment
+  if (process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY) {
     serviceAccount = {
       projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
       privateKey: process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY.replace(/\\n/g, '\n'),
       clientEmail: process.env.GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL,
     };
-    console.log("Attempting to initialize Firebase Admin with environment variables.");
-  } else {
+    console.log("Initializing Firebase Admin with Vercel environment variables.");
+  } 
+  // Development environment
+  else if (process.env.NODE_ENV === 'development') {
     try {
       serviceAccount = require('../../../serviceAccountKey.json');
-      console.log("Attempting to initialize Firebase Admin with serviceAccountKey.json.");
+      console.log("Initializing Firebase Admin with local serviceAccountKey.json.");
     } catch (e) {
       console.warn(
-        'Firebase Admin initialization failed. Neither environment variables nor serviceAccountKey.json were found.'
+        'Could not find serviceAccountKey.json for local development. Some server features may not work.'
       );
     }
   }
@@ -34,7 +36,10 @@ if (!isInitialized) {
     } catch (error) {
       console.error("Critical error initializing Firebase Admin SDK:", error);
     }
+  } else {
+      console.warn('Firebase Admin SDK could not be initialized. No valid credentials found.');
   }
+
 } else {
   db = admin.firestore();
 }
