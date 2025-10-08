@@ -24,7 +24,7 @@ const generateMixedTestFlow = ai.defineFlow(
         
         Asegúrate de que cada pregunta tenga 4 opciones y una respuesta correcta claramente identificada. Si puedes, añade una breve explicación para la respuesta correcta. Las preguntas deben ser variadas y no centrarse en un único tema de los proporcionados.
         `,
-        model: 'googleai/gemini-1.5-flash-latest',
+        model: 'googleai/gemini-pro',
         output: {
             schema: GenerateMixedTestOutputSchema
         }
