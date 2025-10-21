@@ -54,10 +54,24 @@ function calculateResults(questions: Question[], answers: AnswerState[]): Result
   return { correctCount, incorrectCount, unansweredCount, score };
 }
 
+const ErrorView = ({ message }: { message: string }) => (
+    <div className="flex flex-col justify-center items-center min-h-screen text-center">
+      <XCircle className="h-12 w-12 text-red-500 mb-4" />
+      <h2 className="text-xl font-semibold mb-2">Error al Cargar el Test</h2>
+      <p className="text-muted-foreground mb-6">{message}</p>
+      <Link href="/" passHref>
+        <Button>
+          <Home className="mr-2 h-4 w-4" /> Volver al Inicio
+        </Button>
+      </Link>
+    </div>
+  );
+
 function TestPageContent() {
   const [title, setTitle] = useState<string>('Cargando...');
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isGeneratingReview, setIsGeneratingReview] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<AnswerState[]>([]);
@@ -72,23 +86,10 @@ function TestPageContent() {
   const examId = searchParams.get('examId');
   
   useEffect(() => {
-    const fetchExam = async (id: string) => {
-      const result = await getExamById(id);
-      if (result.success && result.exam) {
-        setQuestions(result.exam.questions);
-        setTitle(result.exam.fileName);
-        setAnswers(result.exam.questions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
-        setIsLoading(false);
-      } else {
-        console.error("Failed to load exam:", result.error);
-        router.push('/');
-      }
-    };
-
-    const loadTest = () => {
+    const loadTest = async () => {
       setIsLoading(true);
-      let loadedFromSession = false;
-
+      setError(null);
+      
       try {
         const sessionQuestions = sessionStorage.getItem('testQuestions');
         const sessionTitle = sessionStorage.getItem('testTitle');
@@ -101,25 +102,35 @@ function TestPageContent() {
             setAnswers(parsedQuestions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
             sessionStorage.removeItem('testQuestions');
             sessionStorage.removeItem('testTitle');
-            loadedFromSession = true;
             setIsLoading(false);
+            return;
           }
         }
-      } catch(e) {
-         console.error("Failed to parse questions from session storage", e);
-      }
 
-      if (!loadedFromSession && examId) {
-        fetchExam(examId);
-      } 
-      else if (!loadedFromSession && !examId) {
-        console.error("no valid test found to load.");
-        router.push('/');
+        if (examId) {
+          const result = await getExamById(examId);
+          if (result.success && result.exam) {
+            setQuestions(result.exam.questions);
+            setTitle(result.exam.fileName);
+            setAnswers(result.exam.questions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
+          } else {
+            console.error("Failed to load exam:", result.error);
+            setError(result.error || 'No se pudo cargar el examen. Por favor, inténtalo de nuevo más tarde.');
+          }
+        } else {
+          setError("No se ha encontrado ningún test para cargar. Por favor, selecciona un examen desde la página de inicio.");
+        }
+
+      } catch (e) {
+        console.error("Failed to load test:", e);
+        setError("Ha ocurrido un error inesperado al cargar el test. Por favor, inténtalo de nuevo.");
+      } finally {
+        setIsLoading(false);
       }
     };
     
     loadTest();
-  }, [examId, router]);
+  }, [examId]);
   
   const finishTest = useCallback(() => {
     if (isFinished) return;
@@ -130,7 +141,7 @@ function TestPageContent() {
 
       if(results) {
         const resultToSave: Omit<TestResult, 'id'> = {
-            userId: 'local-user', // Using a placeholder as user is not authenticated
+            userId: 'local-user',
             testTitle: title,
             score: results.score,
             correctCount: results.correctCount,
@@ -317,6 +328,10 @@ function TestPageContent() {
 
   if (isLoading) {
     return <div className="flex justify-center items-center min-h-screen"><Loader2 className="mr-2 h-8 w-8 animate-spin" /><p>Cargando test...</p></div>;
+  }
+
+  if (error) {
+    return <ErrorView message={error} />;
   }
   
   if (isFinished) {
