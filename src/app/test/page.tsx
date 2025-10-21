@@ -29,6 +29,51 @@ interface Results {
 
 // --- Helper Functions ---
 
+function shuffleArray(array: any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+function validateAndTransformQuestions(rawQuestions: any[]): Question[] {
+  if (!Array.isArray(rawQuestions)) return [];
+
+  const validQuestions: Question[] = [];
+
+  rawQuestions.forEach((q, index) => {
+    let questionText = q.questionText || q.question;
+    let options = q.options;
+    let correctAnswerIndex = q.correctAnswerIndex;
+
+    // Handle old format where answer is the index
+    if (q.answer !== undefined && correctAnswerIndex === undefined) {
+        correctAnswerIndex = q.answer;
+    }
+
+    if (
+      typeof questionText === 'string' &&
+      Array.isArray(options) &&
+      options.length > 1 &&
+      typeof correctAnswerIndex === 'number' &&
+      correctAnswerIndex >= 0 &&
+      correctAnswerIndex < options.length &&
+      options.every(opt => typeof opt === 'string')
+    ) {
+      validQuestions.push({
+        questionText,
+        options,
+        correctAnswerIndex,
+      });
+    } else {
+        console.warn(`Pregunta descartada en el índice ${index} por formato inválido.`);
+    }
+  });
+
+  return validQuestions;
+}
+
+
 function calculateResults(questions: Question[], answers: AnswerState[]): Results | null {
   if (!questions || questions.length === 0) return null;
   const totalQuestions = questions.length;
@@ -150,22 +195,21 @@ function TestPageContent() {
       setTestState('loading');
       setError(null);
       try {
-        let loadedQuestions: Question[] | null = null;
+        let rawQuestions: any[] | null = null;
         let loadedTitle: string | null = null;
+
         const sessionQuestions = sessionStorage.getItem('testQuestions');
         const sessionTitle = sessionStorage.getItem('testTitle');
+
         if (sessionQuestions && sessionTitle) {
-          const parsedQuestions = JSON.parse(sessionQuestions);
-          if (parsedQuestions?.length > 0) {
-            loadedQuestions = parsedQuestions;
-            loadedTitle = sessionTitle;
-            sessionStorage.removeItem('testQuestions');
-            sessionStorage.removeItem('testTitle');
-          }
+          rawQuestions = JSON.parse(sessionQuestions);
+          loadedTitle = sessionTitle;
+          sessionStorage.removeItem('testQuestions');
+          sessionStorage.removeItem('testTitle');
         } else if (examId) {
           const result = await getExamById(examId);
           if (result.success && result.exam) {
-            loadedQuestions = result.exam.questions;
+            rawQuestions = result.exam.questions;
             loadedTitle = result.exam.fileName;
           } else {
             throw new Error(result.error || 'No se pudo cargar el examen.');
@@ -174,10 +218,15 @@ function TestPageContent() {
           throw new Error("No se ha encontrado ningún test para cargar.");
         }
 
-        if (loadedQuestions && loadedTitle) {
-            setQuestions(loadedQuestions);
+        if (rawQuestions && loadedTitle) {
+            const validatedQuestions = validateAndTransformQuestions(rawQuestions);
+            if (validatedQuestions.length === 0) {
+                throw new Error("No se encontraron preguntas válidas en los datos del test.");
+            }
+            shuffleArray(validatedQuestions);
+            setQuestions(validatedQuestions);
             setTitle(loadedTitle);
-            setAnswers(loadedQuestions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
+            setAnswers(validatedQuestions.map(() => ({ selectedIndex: null, status: 'unanswered' })));
             setTestState('ready');
         } else {
              throw new Error("No se pudieron cargar las preguntas o el título.");
