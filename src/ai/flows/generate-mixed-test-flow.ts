@@ -17,7 +17,7 @@ const generateMixedTestFlow = ai.defineFlow(
     const cleanedContext = cleanQuestionText(input.context);
 
     const llmResponse = await ai.generate({
-        model: 'googleai/gemini-1.5-pro-latest', // Changed to the more powerful model for evaluation
+        // The model is now inherited from the global genkit configuration
         prompt: `Eres un experto creando tests para oposiciones en España. Tu tarea es generar 60 preguntas **nuevas, originales y muy variadas** sobre legislación y temas de administración pública española.
 
         Usa las siguientes preguntas y respuestas existentes como **inspiración y guía de estilo**, pero **no las copies**. El objetivo es crear un test completamente nuevo que sea un desafío completo, mezclando preguntas de diferentes leyes y temas.
