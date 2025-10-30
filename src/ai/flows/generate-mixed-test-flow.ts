@@ -4,6 +4,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'zod';
 import { GenerateMixedTestInputSchema, GenerateMixedTestOutputSchema, type GenerateMixedTestInput, type GenerateMixedTestOutput } from './types';
+import { cleanQuestionText } from '@/lib/utils';
 
 const generateMixedTestFlow = ai.defineFlow(
   {
@@ -12,15 +13,18 @@ const generateMixedTestFlow = ai.defineFlow(
     outputSchema: GenerateMixedTestOutputSchema,
   },
   async (input) => {
+    // Clean the context before sending it to the AI
+    const cleanedContext = cleanQuestionText(input.context);
+
     const llmResponse = await ai.generate({
-        model: 'googleai/gemini-1.5-flash-latest',
+        model: 'googleai/gemini-1.5-pro-latest', // Changed to the more powerful model for evaluation
         prompt: `Eres un experto creando tests para oposiciones en España. Tu tarea es generar 60 preguntas **nuevas, originales y muy variadas** sobre legislación y temas de administración pública española.
 
         Usa las siguientes preguntas y respuestas existentes como **inspiración y guía de estilo**, pero **no las copies**. El objetivo es crear un test completamente nuevo que sea un desafío completo, mezclando preguntas de diferentes leyes y temas.
         
         Contexto de preguntas existentes de varios temarios:
         ---
-        ${input.context}
+        ${cleanedContext}
         ---
         
         Asegúrate de que cada pregunta tenga 4 opciones y una respuesta correcta claramente identificada. Si puedes, añade una breve explicación para la respuesta correcta. Las preguntas deben ser variadas y no centrarse en un único tema de los proporcionados.
