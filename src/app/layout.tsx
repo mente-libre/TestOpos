@@ -9,6 +9,11 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "TestOpos - Tu preparador de oposiciones online",
   description: "Plataforma online para la preparación de oposiciones con tests auto-corregibles e IA.",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
+  },
 };
 
 export default function RootLayout({
