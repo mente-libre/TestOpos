@@ -1,51 +1,39 @@
-
-'use server';
-
-import {ai} from '@/ai/genkit';
+import {ai} from '../genkit';
 import {z} from 'zod';
-import { GenerateMixedTestInputSchema, GenerateMixedTestOutputSchema, type GenerateMixedTestInput, type GenerateMixedTestOutput } from './types';
-import { cleanQuestionText } from '@/lib/utils';
+import {
+  GenerateMixedTestOutput,
+  GenerateMixedTestOutputSchema,
+} from './types';
 
-const generateMixedTestFlow = ai.defineFlow(
+const GenerateMixedTestInputSchema = z.object({
+  category: z.array(z.string()),
+  level: z.enum(['Fácil', 'Medio', 'Difícil']),
+});
+
+type GenerateMixedTestInput = z.infer<typeof GenerateMixedTestInputSchema>;
+
+const generateMixedTestPrompt = ai.definePrompt({
+  name: 'generateMixedTestPrompt',
+  input: {schema: GenerateMixedTestInputSchema},
+  output: {schema: GenerateMixedTestOutputSchema},
+  prompt: `You are an expert in creating multiple-choice exams for Spanish civil service examinations.
+
+    Generate a test with 60 questions based on the following categories: {{{category}}}.
+    The difficulty level should be: {{{level}}}.
+
+    Each question must have 4 options and a single correct answer.
+    The output must be a JSON object matching the expected schema.
+    `,
+});
+
+export const generateMixedTestFlow = ai.defineFlow(
   {
     name: 'generateMixedTestFlow',
     inputSchema: GenerateMixedTestInputSchema,
     outputSchema: GenerateMixedTestOutputSchema,
   },
-  async (input) => {
-    // Clean the context before sending it to the AI
-    const cleanedContext = cleanQuestionText(input.context);
-
-    const llmResponse = await ai.generate({
-        // The model is now inherited from the global genkit configuration
-        prompt: `Eres un experto creando tests para oposiciones en España. Tu tarea es generar 60 preguntas **nuevas, originales y muy variadas** sobre legislación y temas de administración pública española.
-
-        Usa las siguientes preguntas y respuestas existentes como **inspiración y guía de estilo**, pero **no las copies**. El objetivo es crear un test completamente nuevo que sea un desafío completo, mezclando preguntas de diferentes leyes y temas.
-        
-        Contexto de preguntas existentes de varios temarios:
-        ---
-        ${cleanedContext}
-        ---
-        
-        Asegúrate de que cada pregunta tenga 4 opciones y una respuesta correcta claramente identificada. Si puedes, añade una breve explicación para la respuesta correcta. Las preguntas deben ser variadas y no centrarse en un único tema de los proporcionados.
-        `,
-        output: {
-            schema: GenerateMixedTestOutputSchema
-        }
-      });
-
-    const output = llmResponse.output;
-
-    if (!output) {
-        throw new Error("AI failed to generate a valid test structure.");
-    }
-
-    return output;
+  async (input: GenerateMixedTestInput): Promise<GenerateMixedTestOutput> => {
+    const {output} = await generateMixedTestPrompt(input);
+    return output!;
   }
 );
-
-export async function generateMixedTest(
-    input: GenerateMixedTestInput
-  ): Promise<GenerateMixedTestOutput> {
-    return generateMixedTestFlow(input);
-  }
