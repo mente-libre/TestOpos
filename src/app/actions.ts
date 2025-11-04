@@ -3,7 +3,7 @@
 
 import { generateTestFromExam } from '@/ai/flows/generate-test-from-exam-flow';
 import { generateReviewTest as generateReviewTestFlow } from '@/ai/flows/generate-review-test-flow';
-import { generateMixedTest as generateMixedTestFlow } from '@/ai/flows/generate-mixed-test-flow';
+import { generateMixedTestFlow } from '@/ai/flows/generate-mixed-test-flow';
 import { type TestResult, type Question, type Exam, type Category } from '@/lib/definitions';
 // import { getAuth } from 'firebase-admin/auth'; // No longer needed
 import { db } from '@/lib/firebase/firebase-admin';
@@ -268,23 +268,12 @@ export async function generateNewMixedTest() {
     }
 
     try {
-        const allQuestions = allSeedExams.flatMap(exam => exam.questions);
+        const allCategoryNames = CATEGORY_DEFINITIONS.map(def => def.name);
         
-        const shuffled = allQuestions.sort(() => 0.5 - Math.random());
-        const sampledQuestions = shuffled.slice(0, 100);
-
-        if (sampledQuestions.length === 0) {
-            return {
-                success: false,
-                error: 'No hay preguntas disponibles para generar un test variado.'
-            };
-        }
-
-        const context = sampledQuestions
-            .map(q => `Pregunta: ${q.questionText}\nRespuesta Correcta: ${q.options[q.correctAnswerIndex]}`)
-            .join('\n---\n');
-        
-        const generationResult = await generateMixedTestFlow({ context });
+        const generationResult = await generateMixedTestFlow({
+            category: allCategoryNames,
+            level: 'Medio'
+        });
 
         if (!generationResult?.questions || generationResult.questions.length === 0) {
             return { 
