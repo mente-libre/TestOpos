@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ai } from '../genkit';
-import { CATEGORY_DEFINITIONS } from '@/lib/definitions';
+import { defineFlow } from '@genkit-ai/core';
 
 
 const QuestionSchema = z.object({
@@ -10,7 +10,7 @@ const QuestionSchema = z.object({
     explanation: z.string().optional().describe('Una breve explicación de por qué la respuesta es correcta, para ayudar al estudiante a aprender.')
 });
 
-export const generateMixedTestFlow = ai.flow(
+export const generateMixedTestFlow = defineFlow(
     {
       name: 'generateMixedTestFlow',
       inputSchema: z.object({
