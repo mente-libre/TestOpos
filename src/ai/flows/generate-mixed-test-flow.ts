@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { ai } from '../genkit';
 import { defineFlow } from '@genkit-ai/core';
+import { CATEGORY_DEFINITIONS } from '@/lib/definitions';
 
 
 const QuestionSchema = z.object({
