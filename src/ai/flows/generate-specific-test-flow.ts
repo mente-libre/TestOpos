@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ai } from '../genkit';
-
+import { defineFlow } from '@genkit-ai/core';
 
 const QuestionSchema = z.object({
     questionText: z.string().describe('El texto de la pregunta. No debe incluir el número de la pregunta.'),
@@ -9,7 +9,7 @@ const QuestionSchema = z.object({
     explanation: z.string().optional().describe('Una breve explicación de por qué la respuesta es correcta, para ayudar al estudiante a aprender.')
 });
 
-export const generateSpecificTestFlow = ai.flow(
+export const generateSpecificTestFlow = defineFlow(
     {
       name: 'generateSpecificTestFlow',
       inputSchema: z.object({

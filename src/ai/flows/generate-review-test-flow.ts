@@ -2,7 +2,6 @@ import { z } from 'zod';
 import { ai } from '../genkit';
 import { defineFlow } from '@genkit-ai/core';
 
-
 const QuestionSchema = z.object({
     questionText: z.string().describe('El texto de la pregunta. No debe incluir el número de la pregunta.'),
     options: z.array(z.string()).length(4).describe('Un array de 4 posibles respuestas.'),
