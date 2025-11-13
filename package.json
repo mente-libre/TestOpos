@@ -11,7 +11,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "seed-ranking": "tsx -r dotenv/config src/scripts/seed-ranking.ts"
+    "seed-ranking": "tsx -r dotenv/config src/scripts/seed-ranking.ts",
+    "test": "vitest"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.2.2",
@@ -105,6 +106,7 @@
     "encoding": "0.1.13",
     "eslint": "8.49.0",
     "eslint-config-next": "^14.2.3",
-    "tsx": "^4.20.6"
+    "tsx": "^4.20.6",
+    "vitest": "^1.6.0"
   }
 }

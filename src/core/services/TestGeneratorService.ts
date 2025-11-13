@@ -36,43 +36,22 @@ export class TestGeneratorService {
 
   // --- Prompt Engineering (Now testable and centralized) ---
 
-  private buildSpecificTestPrompt(params: SpecificTestParams): string {
-    return `Eres un asistente experto en la creación de exámenes de oposición para la administración pública en España.
-      Tu tarea es generar un test de ${params.numQuestions} preguntas tipo test con 4 opciones de respuesta cada una.
-      El test debe centrarse exclusivamente en el siguiente tema: "${params.category}".
-      El nivel de dificultad debe ser '${params.level}'.
-      Para cada pregunta, proporciona el texto de la pregunta, una lista de 4 opciones, el índice de la respuesta correcta y una breve explicación.
-      Genera exactamente ${params.numQuestions} preguntas. No generes ni más ni menos.
-      La salida debe ser un objeto JSON que se ajuste al esquema proporcionado.`;
+  public buildSpecificTestPrompt(params: SpecificTestParams): string {
+    return `Eres un asistente experto en la creación de exámenes de oposición para la administración pública en España.\n      Tu tarea es generar un test de ${params.numQuestions} preguntas tipo test con 4 opciones de respuesta cada una.\n      El test debe centrarse exclusivamente en el siguiente tema: "${params.category}".\n      El nivel de dificultad debe ser '${params.level}'.\n      Para cada pregunta, proporciona el texto de la pregunta, una lista de 4 opciones, el índice de la respuesta correcta y una breve explicación.\n      Genera exactamente ${params.numQuestions} preguntas. No generes ni más ni menos.\n      La salida debe ser un objeto JSON que se ajuste al esquema proporcionado.`;
   }
 
-  private buildMixedTestPrompt(params: MixedTestParams): string {
+  public buildMixedTestPrompt(params: MixedTestParams): string {
     const themes = params.categories.join(', ');
-    return `Eres un asistente experto en la creación de exámenes de oposición para la administración pública en España.
-      Tu tarea es generar un test de ${params.numQuestions} preguntas tipo test con 4 opciones de respuesta cada una.
-      El test debe ser un repaso general que mezcle preguntas de los siguientes temas: ${themes}.
-      El nivel de dificultad debe ser '${params.level}'.
-      Para cada pregunta, proporciona el texto de la pregunta, una lista de 4 opciones, el índice de la respuesta correcta y una breve explicación.
-      Asegúrate de que las preguntas sean relevantes, claras y bien formuladas.
-      Genera exactamente ${params.numQuestions} preguntas.
-      La salida debe ser un objeto JSON que se ajuste al esquema proporcionado.`;
+    return `Eres un asistente experto en la creación de exámenes de oposición para la administración pública en España.\n      Tu tarea es generar un test de ${params.numQuestions} preguntas tipo test con 4 opciones de respuesta cada una.\n      El test debe ser un repaso general que mezcle preguntas de los siguientes temas: ${themes}.\n      El nivel de dificultad debe ser '${params.level}'.\n      Para cada pregunta, proporciona el texto de la pregunta, una lista de 4 opciones, el índice de la respuesta correcta y una breve explicación.\n      Asegúrate de que las preguntas sean relevantes, claras y bien formuladas.\n      Genera exactamente ${params.numQuestions} preguntas.\n      La salida debe ser un objeto JSON que se ajuste al esquema proporcionado.`;
   }
 
-  private buildReviewTestPrompt(params: ReviewTestParams): string {
-    return `Eres un asistente experto en la creación de exámenes de oposición en España.
-      Tu tarea es generar un test de repaso de ${params.numQuestions} preguntas.
-      Este test se basará en las preguntas que el usuario ha fallado anteriormente, las cuales se proporcionan en el siguiente contexto:
-      --- CONTEXTO ---
-      ${params.context}
-      --- FIN DEL CONTEXTO ---
-      Analiza los temas de las preguntas falladas y genera ${params.numQuestions} preguntas nuevas y originales que cubran esos mismos temas.
-      Para cada pregunta, proporciona el texto de la pregunta, 4 opciones de respuesta, el índice de la respuesta correcta y una breve explicación.
-      La salida debe ser un objeto JSON que se ajuste al esquema proporcionado.`;
+  public buildReviewTestPrompt(params: ReviewTestParams): string {
+    return `Eres un asistente experto en la creación de exámenes de oposición en España.\n      Tu tarea es generar un test de repaso de ${params.numQuestions} preguntas.\n      Este test se basará en las preguntas que el usuario ha fallado anteriormente, las cuales se proporcionan en el siguiente contexto:\n      --- CONTEXTO ---\n      ${params.context}\n      --- FIN DEL CONTEXTO ---\n      Analiza los temas de las preguntas falladas y genera ${params.numQuestions} preguntas nuevas y originales que cubran esos mismos temas.\n      Para cada pregunta, proporciona el texto de la pregunta, 4 opciones de respuesta, el índice de la respuesta correcta y una breve explicación.\n      La salida debe ser un objeto JSON que se ajuste al esquema proporcionado.`;
   }
 
   // --- Dynamic Schema Generation ---
 
-  private createDynamicTestSchema(numQuestions: number) {
+  public createDynamicTestSchema(numQuestions: number) {
     return z.object({
       questions: z.array(z.object({
         questionText: z.string(),
@@ -85,7 +64,7 @@ export class TestGeneratorService {
 
   // --- Input Validation ---
   
-  private validateAndExtractParams<T extends SpecificTestParams | MixedTestParams | ReviewTestParams>(params: T, type: 'specific' | 'mixed' | 'review') {
+  public validateAndExtractParams<T extends SpecificTestParams | MixedTestParams | ReviewTestParams>(params: T, type: 'specific' | 'mixed' | 'review') {
       // This is where you would add more complex validation logic if needed.
       // For now, it just returns the params as is, but it's a good placeholder.
       return params;
