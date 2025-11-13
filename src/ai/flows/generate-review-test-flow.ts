@@ -9,44 +9,48 @@ const QuestionSchema = z.object({
     explanation: z.string().optional().describe('Una breve explicación de por qué la respuesta es correcta, para ayudar al estudiante a aprender.')
 });
 
-export const generateReviewTest = defineFlow(
+const ReviewTestInputSchema = z.object({
+  context: z.string().describe('Una cadena de texto que contiene las preguntas y respuestas que el usuario ha fallado previamente. Este es el contexto para generar el test de repaso.')
+});
+
+const ReviewTestOutputSchema = z.object({
+  questions: z.array(QuestionSchema).length(10).describe('Un array de 10 preguntas nuevas generadas para el repaso.')
+});
+
+export const generateReviewTestFlow = defineFlow(
     {
       name: 'generateReviewTestFlow',
-      inputSchema: z.object({
-        context: z.string().describe('Una cadena de texto que contiene las preguntas y respuestas que el usuario ha fallado previamente. Este es el contexto para generar el test de repaso.')
-      }),
-      outputSchema: z.object({
-        questions: z.array(QuestionSchema).describe('Un array de 15 preguntas de repaso generadas a partir de los fallos.')
-      }),
+      inputSchema: ReviewTestInputSchema,
+      outputSchema: ReviewTestOutputSchema,
     },
     async (input) => {
       const llmResponse = await ai.generate({
-        prompt: `Eres un asistente de estudio especializado en oposiciones en España. El usuario ha fallado algunas preguntas y quiere un test de repaso.
-        A partir del siguiente contexto de preguntas falladas y sus respuestas correctas, genera un nuevo test de 15 preguntas.
-        Las nuevas preguntas deben ser diferentes a las originales, pero deben tratar sobre los mismos conceptos o artículos de ley para reforzar el conocimiento.
-        Genera preguntas con un estilo similar a un examen de oposición real (tipo test, 4 opciones).
+        prompt: `Eres un asistente experto en la creación de exámenes de oposición en España.
+        Tu tarea es generar un test de repaso de 10 preguntas.
+        Este test se basará en las preguntas que el usuario ha fallado anteriormente, las cuales se proporcionan en el siguiente contexto:
         
-        Contexto de preguntas falladas:
-        ---
+        --- CONTEXTO ---
         ${input.context}
-        ---
+        --- FIN DEL CONTEXTO ---
         
-        Crea 15 preguntas nuevas basadas en estos temas. Para cada pregunta, proporciona el texto, 4 opciones, el índice de la respuesta correcta y una breve explicación.
+        Analiza los temas de las preguntas falladas y genera 10 preguntas **nuevas y originales** que cubran esos mismos temas, para ayudar al usuario a reforzar sus conocimientos.
+        
+        Para cada pregunta, proporciona el texto de la pregunta, 4 opciones de respuesta y el índice de la respuesta correcta.
+        Añade también una breve explicación para la respuesta correcta.
+        
         La salida debe ser un objeto JSON que se ajuste al esquema proporcionado.`,
         output: {
           format: 'json',
-          schema: z.object({
-            questions: z.array(QuestionSchema).length(15),
-          }),
+          schema: ReviewTestOutputSchema,
         },
         config: {
-          temperature: 0.8, // Un poco más creativo para variar las preguntas
+          temperature: 1,
         },
       });
   
-      const result = llmResponse.output();
+      const result = llmResponse.output;
       if (!result) {
-        throw new Error('La IA no generó una salida válida para el test de repaso.');
+        throw new Error('La IA no generó una salida válida.');
       }
       return result;
     }

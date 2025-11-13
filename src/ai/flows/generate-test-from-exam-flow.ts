@@ -42,8 +42,11 @@ const generateTestFromExamFlow = ai.defineFlow(
     inputSchema: GenerateTestFromExamInputSchema,
     outputSchema: GenerateTestFromExamOutputSchema,
   },
-  async input => {
+  async (input: GenerateTestFromExamInput) => {
     const {output} = await generateTestFromExamPrompt(input);
-    return output!;
+    if (!output) {
+        throw new Error('The AI failed to generate a valid output.');
+    }
+    return output;
   }
 );

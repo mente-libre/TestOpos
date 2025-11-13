@@ -9,17 +9,21 @@ const QuestionSchema = z.object({
     explanation: z.string().optional().describe('Una breve explicación de por qué la respuesta es correcta, para ayudar al estudiante a aprender.')
 });
 
+const SpecificTestInputSchema = z.object({
+  category: z.string().describe('El nombre de la categoría o tema específico sobre el que debe tratar el test.'),
+  numQuestions: z.number().int().min(5).max(50).describe('El número de preguntas a generar.'),
+  level: z.string().describe('El nivel de dificultad deseado para el test (por ejemplo, Fácil, Medio, Difícil).')
+});
+
+const SpecificTestOutputSchema = z.object({
+  questions: z.array(QuestionSchema).describe('Un array de preguntas generadas para el tema específico.')
+});
+
 export const generateSpecificTestFlow = defineFlow(
     {
       name: 'generateSpecificTestFlow',
-      inputSchema: z.object({
-        category: z.string().describe('El nombre de la categoría o tema específico sobre el que debe tratar el test.'),
-        numQuestions: z.number().int().min(5).max(50).describe('El número de preguntas a generar.'),
-        level: z.string().describe('El nivel de dificultad deseado para el test (por ejemplo, Fácil, Medio, Difícil).')
-      }),
-      outputSchema: z.object({
-        questions: z.array(QuestionSchema).describe('Un array de preguntas generadas para el tema específico.')
-      }),
+      inputSchema: SpecificTestInputSchema,
+      outputSchema: SpecificTestOutputSchema,
     },
     async (input) => {
       const llmResponse = await ai.generate({
@@ -44,7 +48,7 @@ export const generateSpecificTestFlow = defineFlow(
         },
       });
   
-      const result = llmResponse.output();
+      const result = llmResponse.output;
       if (!result) {
         throw new Error('La IA no generó una salida válida.');
       }

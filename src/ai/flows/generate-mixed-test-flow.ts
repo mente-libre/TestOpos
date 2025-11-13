@@ -3,7 +3,6 @@ import { ai } from '../genkit';
 import { defineFlow } from '@genkit-ai/core';
 import { CATEGORY_DEFINITIONS } from '@/lib/definitions';
 
-
 const QuestionSchema = z.object({
     questionText: z.string().describe('El texto de la pregunta. No debe incluir el número de la pregunta.'),
     options: z.array(z.string()).length(4).describe('Un array de 4 posibles respuestas.'),
@@ -11,16 +10,20 @@ const QuestionSchema = z.object({
     explanation: z.string().optional().describe('Una breve explicación de por qué la respuesta es correcta, para ayudar al estudiante a aprender.')
 });
 
+const MixedTestInputSchema = z.object({
+  category: z.array(z.string()).describe('Una lista de todos los nombres de las categorías disponibles para el test. La IA debe mezclar preguntas de estos temas.'),
+  level: z.string().describe('El nivel de dificultad deseado para el test (por ejemplo, Fácil, Medio, Difícil).')
+});
+
+const MixedTestOutputSchema = z.object({
+  questions: z.array(QuestionSchema).length(60).describe('Un array de exactamente 60 preguntas generadas.')
+});
+
 export const generateMixedTestFlow = defineFlow(
     {
       name: 'generateMixedTestFlow',
-      inputSchema: z.object({
-        category: z.array(z.string()).describe('Una lista de todos los nombres de las categorías disponibles para el test. La IA debe mezclar preguntas de estos temas.'),
-        level: z.string().describe('El nivel de dificultad deseado para el test (por ejemplo, Fácil, Medio, Difícil).')
-      }),
-      outputSchema: z.object({
-        questions: z.array(QuestionSchema).length(60).describe('Un array de exactamente 60 preguntas generadas.')
-      }),
+      inputSchema: MixedTestInputSchema,
+      outputSchema: MixedTestOutputSchema,
     },
     async (input) => {
       const themes = input.category.join(', ');
@@ -48,7 +51,7 @@ export const generateMixedTestFlow = defineFlow(
         },
       });
   
-      const result = llmResponse.output();
+      const result = llmResponse.output;
       if (!result) {
         throw new Error('La IA no generó una salida válida.');
       }
