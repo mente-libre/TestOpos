@@ -1,11 +1,6 @@
 
 import type { Question } from './definitions';
-
-interface SeedExam {
-    fileName: string;
-    category: string;
-    questions: Question[];
-}
+import { type SeedExam } from './definitions';
 
 const rawLey19Test = {
   "title": "Ley 19/2013 - Transparencia y Buen Gobierno",
@@ -681,6 +676,8 @@ const transformedQuestions: Question[] = rawLey19Test.questions.map(q => ({
 }));
 
 export const ley19Test: SeedExam = {
+    id: 'ley19-2013',
+    name: 'Ley 19/2013 Transparencia',
     fileName: rawLey19Test.title,
     category: 'ley19-2013',
     questions: transformedQuestions,

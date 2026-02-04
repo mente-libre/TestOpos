@@ -1,11 +1,6 @@
 
 import type { Question } from './definitions';
-
-interface SeedExam {
-    fileName: string;
-    category: string;
-    questions: Question[];
-}
+import { type SeedExam } from './definitions';
 
 const rawLey39Test = {
   "title": "Ley 39/2015 - Procedimiento Administrativo Común",
@@ -681,6 +676,8 @@ const transformedQuestions: Question[] = rawLey39Test.questions.map(q => ({
 }));
 
 export const ley39Test: SeedExam = {
+    id: "ley39-2015",
+    name: "Ley 39/2015",
     fileName: rawLey39Test.title,
     category: 'ley39-2015',
     questions: transformedQuestions,

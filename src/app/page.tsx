@@ -19,6 +19,7 @@ import { ShareButton } from '@/components/ui/share-button';
 const CATEGORY_ICONS: { [key: string]: React.ReactNode } = {
   madrid: <User className="h-6 w-6 text-white" />,
   estado: <BookOpen className="h-6 w-6 text-white" />,
+  constitucion: <Award className="h-6 w-6 text-white" />,
   otros: <BrainCircuit className="h-6 w-6 text-white" />,
   default: <ListChecks className="h-6 w-6 text-white" />,
 };
@@ -26,6 +27,7 @@ const CATEGORY_ICONS: { [key: string]: React.ReactNode } = {
 const CATEGORY_COLORS: { [key: string]: string } = {
   madrid: 'bg-blue-500',
   estado: 'bg-green-500',
+  constitucion: 'bg-yellow-500',
   otros: 'bg-purple-500',
   default: 'bg-red-500',
 };
@@ -43,11 +45,13 @@ export default function Home() {
     const fetchData = async () => {
       setIsLoading(true);
       const result = await loadInitialData();
-      if (result.success) {
+      if ('error' in result && result.error) {
+        setError(result.error);
+        console.error(result.error);
+      } else if ('categories' in result) {
         setCategories(result.categories || []);
       } else {
-        setError(result.error || 'No se pudieron cargar las categorías.');
-        console.error(result.error);
+        setError('No se pudieron cargar las categorías.');
       }
       setIsLoading(false);
     };
@@ -64,7 +68,7 @@ export default function Home() {
   };
 
   const filteredCategories = categories
-    .filter(category => category.examCount > 0)
+    .filter(category => (category.examCount || 0) > 0)
     .filter(category => {
       if (selectedCategory === 'all') return true;
       return category.id === selectedCategory;
@@ -177,7 +181,7 @@ export default function Home() {
                             </div>
                             <div>
                                 <CardTitle className="text-lg mb-1">{category.name}</CardTitle>
-                                <Badge variant="outline">{category.examCount} {category.examCount > 1 ? 'exámenes' : 'examen'}</Badge>
+                                <Badge variant="outline">{category.examCount || 0} {(category.examCount || 0) !== 1 ? 'exámenes' : 'examen'}</Badge>
                             </div>
                         </div>
                     </CardHeader>

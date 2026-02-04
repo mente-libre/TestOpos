@@ -1,19 +1,17 @@
-
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, AlertCircle, CheckCircle, Wand2, ArrowLeft, RefreshCw, Info } from 'lucide-react';
+import { Loader2, AlertCircle, Wand2, ArrowLeft, RefreshCw, Info, ArrowRight } from 'lucide-react';
 import { generateNewMixedTest } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
 import { Logo } from '@/components/ui/logo';
 import { type Question } from '@/lib/definitions';
-import { CATEGORY_DEFINITIONS } from '@/lib/definitions';
+import { CATEGORY_DEFINITIONS } from '@/lib/categories';
 
 const isAiAvailable = !!process.env.NEXT_PUBLIC_AI_AVAILABLE;
 
@@ -21,10 +19,9 @@ export default function GeneratePage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [questions, setQuestions] = useState<Question[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  
+
   const { toast } = useToast();
   const router = useRouter();
-
 
   const handleStartGeneratedTest = () => {
     if (!questions || questions.length === 0) return;
@@ -45,17 +42,26 @@ export default function GeneratePage() {
     setError(null);
 
     try {
-      const result = await generateNewMixedTest();
+      const allCategoryIds = CATEGORY_DEFINITIONS.map(c => c.id);
+      const params = {
+        categories: allCategoryIds,
+        numQuestions: 60,
+        level: 'Medio',
+      };
+      const result = await generateNewMixedTest(params);
 
-      if (result.success && result.questions) {
-        setQuestions(result.questions);
+      if ('error' in result && result.error) {
+        setError(result.error);
+        setQuestions(null);
+      } else if ('test' in result && result.test?.questions) {
+        setQuestions(result.test.questions);
         setError(null);
         toast({
             title: '¡Test generado con IA!',
-            description: `Se han creado ${result.questions.length} preguntas nuevas de temas variados.`,
+            description: `Se han creado ${result.test.questions.length} preguntas nuevas de temas variados.`,
         });
       } else {
-        setError(result.error ?? 'Ha ocurrido un error desconocido durante la generación.');
+        setError('Ha ocurrido un error inesperado y la respuesta del servidor no tiene el formato esperado.');
         setQuestions(null);
       }
     } catch (e: any) {
@@ -127,70 +133,31 @@ export default function GeneratePage() {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            
-            {isProcessing && (
-                 <div className="text-center p-8">
-                    <Loader2 className="mx-auto h-12 w-12 animate-spin text-primary mb-4" />
-                    <p className="text-lg text-muted-foreground">La IA está creando tu nuevo test. Esto puede tardar un minuto...</p>
-                 </div>
-             )}
 
-            {questions && questions.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div className="flex items-center gap-3">
-                        <CheckCircle className="h-6 w-6 text-green-500" />
-                        <h3 className="text-xl font-semibold">Test General Variado generado</h3>
-                    </div>
-                    <div className="flex gap-2 w-full sm:w-auto">
-                        <Button variant="outline" onClick={handleGenerateTest} disabled={isProcessing} className="flex-1">
-                          <RefreshCw className="mr-2 h-4 w-4" /> Regenerar
-                        </Button>
-                        <Button onClick={handleStartGeneratedTest} className="flex-1">
-                          Comenzar Test
-                        </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    {questions.map((q, qIndex) => (
-                         <div key={qIndex} className="p-4 border rounded-lg bg-gray-50/50">
-                            <p className="font-semibold mb-3">{qIndex + 1}. {q.questionText}</p>
-                             <div className="space-y-2">
-                                {q.options.map((option, oIndex) => (
-                                    <div
-                                    key={oIndex}
-                                    className={`flex items-start text-sm p-3 border rounded-md 
-                                        ${oIndex === q.correctAnswerIndex ? 'bg-green-100 border-green-300' : 'bg-white'}`
-                                    }
-                                    >
-                                    <span className='font-bold mr-2'>{String.fromCharCode(97 + oIndex)})</span>
-                                    <span>{option}</span>
-                                    </div>
-                                ))}
+            {questions && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center justify-between">
+                            <span>✅ Test Generado con Éxito</span>
+                            <div className="space-x-2">
+                                <Button variant="secondary" size="sm" onClick={handleGenerateTest} disabled={isProcessing}>
+                                    <RefreshCw className="mr-2 h-4 w-4"/>
+                                    Volver a generar
+                                </Button>
+                                <Button size="sm" onClick={handleStartGeneratedTest}>
+                                    Iniciar Test
+                                    <ArrowRight className="ml-2 h-4 w-4"/>
+                                </Button>
                             </div>
-                            {q.explanation && (
-                                <div className="mt-4 p-3 bg-blue-50 text-blue-800 border border-blue-200 rounded-md text-sm">
-                                    <p><strong className="font-semibold">Explicación:</strong> {q.explanation}</p>
-                                </div>
-                            )}
-                         </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p>Se han generado {questions.length} preguntas sobre temas variados. ¡Mucha suerte!</p>
+                    </CardContent>
+                </Card>
             )}
-
         </div>
       </main>
-
-      <footer className="bg-dark text-white py-6 text-center mt-auto">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <p>© 2024 TestOpos - Generación de Tests con IA</p>
-        </div>
-      </footer>
     </div>
   );
 }

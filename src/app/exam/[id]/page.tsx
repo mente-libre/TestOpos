@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getExamById } from '@/app/actions';
-import { type Exam } from '@/lib/definitions';
+import type { Exam } from '@/lib/definitions';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, List, ChevronLeft, PlayCircle } from 'lucide-react';
@@ -28,13 +28,21 @@ export default function ExamPage() {
     const fetchExam = async () => {
       setIsLoading(true);
       setError(null);
-      const result = await getExamById(examId);
-      if (result.success && result.exam) {
-        setExam(result.exam);
-      } else {
-        setError(result.error || 'No se pudo cargar el examen.');
+      try {
+        const result = await getExamById(examId);
+        if (result.success && 'exam' in result) {
+            setExam(result.exam || null);
+        } else if ('error' in result) {
+            setError(result.error || 'No se pudo cargar el examen.');
+        } else {
+            setError('Ocurrió un error inesperado al cargar el examen.');
+        }
+      } catch (e) {
+        setError('Ocurrió un error al cargar los exámenes.');
+        console.error(e);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     fetchExam();
@@ -76,7 +84,7 @@ export default function ExamPage() {
         
         <Card className="max-w-3xl mx-auto">
             <CardHeader>
-                <CardTitle className="text-2xl">{exam.fileName}</CardTitle>
+                <CardTitle className="text-2xl">{exam.name}</CardTitle>
                 <CardDescription>
                     Este examen tiene <strong>{exam.questions.length} preguntas</strong>. ¿Listo para empezar?
                 </CardDescription>

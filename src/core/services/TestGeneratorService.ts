@@ -1,5 +1,14 @@
 import { z } from 'zod';
-import { LLMProvider, MixedTestParams, ReviewTestParams, SpecificTestParams, TestSchema } from '../types';
+import {
+  LLMProvider,
+  MixedTestParams,
+  ReviewTestParams,
+  SpecificTestParams,
+  TestSchema,
+  SpecificTestParamsSchema,
+  MixedTestParamsSchema,
+  ReviewTestParamsSchema,
+} from '../types';
 
 /**
  * Service class responsible for all business logic related to test generation.
@@ -64,9 +73,29 @@ export class TestGeneratorService {
 
   // --- Input Validation ---
   
-  public validateAndExtractParams<T extends SpecificTestParams | MixedTestParams | ReviewTestParams>(params: T, type: 'specific' | 'mixed' | 'review') {
-      // This is where you would add more complex validation logic if needed.
-      // For now, it just returns the params as is, but it's a good placeholder.
-      return params;
+  public validateAndExtractParams<T extends SpecificTestParams | MixedTestParams | ReviewTestParams>(
+    params: T,
+    type: 'specific' | 'mixed' | 'review'
+  ): T {
+    try {
+      switch (type) {
+        case 'specific':
+          return SpecificTestParamsSchema.parse(params) as T;
+        case 'mixed':
+          return MixedTestParamsSchema.parse(params) as T;
+        case 'review':
+          return ReviewTestParamsSchema.parse(params) as T;
+        default:
+          // This should be unreachable if called correctly from public methods
+          throw new Error('Invalid validation type specified.');
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        // Re-throw a more informative error for easier debugging downstream
+        throw new Error(`Invalid parameters for ${type} test: ${error.message}`);
+      }
+      // Re-throw other unexpected errors
+      throw error;
+    }
   }
 }

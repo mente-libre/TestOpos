@@ -1,11 +1,6 @@
 
 import type { Question } from './definitions';
-
-interface SeedExam {
-    fileName: string;
-    category: string;
-    questions: Question[];
-}
+import { type SeedExam } from './definitions';
 
 const rawLey29Test = {
   "title": "Ley 29/1998 - Jurisdicción Contencioso-Administrativa",
@@ -675,6 +670,8 @@ const rawLey29Test = {
 };
 
 export const ley29Test: SeedExam = {
+    id: "ley29-1998",
+    name: "Ley 29/1998",
     fileName: rawLey29Test.title,
     category: "estado",
     questions: rawLey29Test.questions.map(q => {

@@ -2,6 +2,8 @@
 import type { Question } from './definitions';
 
 interface SeedExam {
+    id: string;
+    name: string;
     fileName: string;
     category: string;
     questions: Question[];
@@ -672,11 +674,13 @@ const rawEbepTest = {
       "answer": 3
     }
   ]
-};
+}
 
 export const ebepTest: SeedExam = {
+    id: "ebep",
+    name: "Estatuto Básico del Empleado Público",
     fileName: rawEbepTest.title,
-    category: "madrid",
+    category: "leyes",
     questions: rawEbepTest.questions.map(q => {
         return {
             questionText: q.question,

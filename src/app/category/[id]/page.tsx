@@ -31,11 +31,13 @@ export default function CategoryPage() {
       setError(null);
       try {
         const result = await getExamsForCategory(categoryId);
-        if (result.success) {
+        if (result.success && 'exams' in result) {
           setExams(result.exams || []);
           setCategoryName(result.categoryName || 'Categoría');
-        } else {
+        } else if ('error' in result) {
           setError(result.error || 'No se pudieron cargar los exámenes.');
+        } else {
+            setError('Ocurrió un error inesperado al cargar los exámenes.');
         }
       } catch (e) {
         setError('Ocurrió un error al cargar los exámenes.');
@@ -85,13 +87,13 @@ export default function CategoryPage() {
                   <CardHeader>
                     <div className="flex items-center gap-4">
                       <FileText className="h-8 w-8 text-primary" />
-                      <CardTitle className="text-lg leading-tight">{exam.fileName}</CardTitle>
+                      <CardTitle className="text-lg leading-tight">{exam.name}</CardTitle>
                     </div>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground">{exam.questions.length} preguntas</p>
                     <p className="text-xs text-muted-foreground mt-2">
-                      Subido el: {new Date(exam.createdAt as number).toLocaleDateString()}
+                      Subido el: {new Date((exam as any).createdAt as number).toLocaleDateString()}
                     </p>
                   </CardContent>
                 </Card>

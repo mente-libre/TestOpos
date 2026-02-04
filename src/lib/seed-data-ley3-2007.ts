@@ -1,11 +1,6 @@
 
 import type { Question } from './definitions';
-
-interface SeedExam {
-    fileName: string;
-    category: string;
-    questions: Question[];
-}
+import { type SeedExam } from './definitions';
 
 const rawLey3Test = {
   "title": "Ley Orgánica 3/2007 - Igualdad",
@@ -681,6 +676,8 @@ const transformedQuestions: Question[] = rawLey3Test.questions.map(q => ({
 }));
 
 export const ley3_2007Test: SeedExam = {
+    id: 'ley3-2007',
+    name: 'Ley 3/2007 Igualdad',
     fileName: rawLey3Test.title,
     category: 'ley3-2007',
     questions: transformedQuestions,

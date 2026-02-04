@@ -1,11 +1,9 @@
 
-import { type Question } from './definitions';
+import { type Question, type SeedExam } from './definitions';
 
-export const officeTest: {
-  fileName: string;
-  category: string;
-  questions: Question[];
-} = {
+export const officeTest: SeedExam = {
+  id: "office-demo",
+  name: "Test de Ofimática (Demo)",
   fileName: 'Test de Ofimática (Demo)',
   category: 'office',
   questions: [

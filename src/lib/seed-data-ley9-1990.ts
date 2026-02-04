@@ -1,11 +1,6 @@
 
 import type { Question } from './definitions';
-
-interface SeedExam {
-    fileName: string;
-    category: string;
-    questions: Question[];
-}
+import { type SeedExam } from './definitions';
 
 const rawLey9Test = {
   "title": "Ley 9/1990 - Hacienda de la Comunidad de Madrid",
@@ -586,7 +581,7 @@ const rawLey9Test = {
     },
     {
       "id": 53,
-      "question": "¿La jurisprudencia tampoco es ajena al cambio?",
+      "question": "¿El problema no es \ncuantitativo, sino cualitativo?",
       "options": [
         "1 mes",
         "3 meses",
@@ -630,7 +625,7 @@ const rawLey9Test = {
     },
     {
       "id": 57,
-      "question": "¿El problema no es \ncuantitativo, sino cualitativo?",
+      "question": "¿La diversidad de figuras y la interdependencia existente en la gestión de los recursos, \n(1) B?",
       "options": [
         "De 1 a 5 años",
         "De 3 a 7 años",
@@ -641,7 +636,7 @@ const rawLey9Test = {
     },
     {
       "id": 58,
-      "question": "¿La diversidad de figuras y la interdependencia existente en la gestión de los recursos, \n(1) B?",
+      "question": "¿13-XII-1990?",
       "options": [
         "El Ministerio de Política Territorial",
         "Cada administración pública",
@@ -652,7 +647,7 @@ const rawLey9Test = {
     },
     {
       "id": 59,
-      "question": "¿13-XII-1990?",
+      "question": "¿Dirección General de Presupuestos \nCONSEJERÍA DE ECONOMÍA, HACIENDA Y EMPLEO – COMUNIDAD DE MADRID \n4/80\n NORMATIVA PRESUPUESTARIA DE LA C?",
       "options": [
         "15 días",
         "30 días",
@@ -660,17 +655,6 @@ const rawLey9Test = {
         "6 meses"
       ],
       "answer": 3
-    },
-    {
-      "id": 60,
-      "question": "¿Dirección General de Presupuestos \nCONSEJERÍA DE ECONOMÍA, HACIENDA Y EMPLEO – COMUNIDAD DE MADRID \n4/80\n NORMATIVA PRESUPUESTARIA DE LA C?",
-      "options": [
-        "Sí, siempre",
-        "No, nunca",
-        "Solo para altos cargos",
-        "Depende de la administración"
-      ],
-      "answer": 2
     }
   ]
 }
@@ -682,6 +666,8 @@ const transformedQuestions: Question[] = rawLey9Test.questions.map(q => ({
 }));
 
 export const ley9_1990Test: SeedExam = {
+    id: 'ley9-1990',
+    name: 'Ley 9/1990 Hacienda Madrid',
     fileName: rawLey9Test.title,
     category: 'ley9-1990',
     questions: transformedQuestions,

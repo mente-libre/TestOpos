@@ -1,11 +1,6 @@
 
 import type { Question } from './definitions';
-
-interface SeedExam {
-    fileName: string;
-    category: string;
-    questions: Question[];
-}
+import { type SeedExam } from './definitions';
 
 const rawLO3Test = {
   "title": "Estatuto de Autonomía de la Comunidad de Madrid",
@@ -681,6 +676,8 @@ const transformedQuestions: Question[] = rawLO3Test.questions.map(q => ({
 }));
 
 export const lo3_1983Test: SeedExam = {
+    id: "lo3-1983",
+    name: "Estatuto Autonomía Madrid",
     fileName: rawLO3Test.title,
     category: 'lo3-1983',
     questions: transformedQuestions,

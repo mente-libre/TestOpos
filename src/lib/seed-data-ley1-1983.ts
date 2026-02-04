@@ -1,11 +1,6 @@
 
 import type { Question } from './definitions';
-
-interface SeedExam {
-    fileName: string;
-    category: string;
-    questions: Question[];
-}
+import { type SeedExam } from './definitions';
 
 const rawLey1Test = {
   "title": "Ley 1/1983 - Gobierno y Administración de la Comunidad de Madrid",
@@ -681,6 +676,8 @@ const transformedQuestions: Question[] = rawLey1Test.questions.map(q => ({
 }));
 
 export const ley1_1983Test: SeedExam = {
+    id: 'ley1-1983',
+    name: 'Ley 1/1983 Madrid',
     fileName: rawLey1Test.title,
     category: 'ley1-1983',
     questions: transformedQuestions,

@@ -1,14 +1,6 @@
 
 'use server';
 
-/**
- * @fileOverview Generates a new test based on existing exam questions.
- *
- * - generateTestFromExam - A function that generates a new test.
- * - GenerateTestFromExamInput - The input type for the function.
- * - GenerateTestFromExamOutput - The return type for the function.
- */
-
 import {ai} from '@/ai/genkit';
 import {z} from 'zod';
 import { GenerateTestFromExamInputSchema, GenerateTestFromExamOutputSchema, type GenerateTestFromExamInput, type GenerateTestFromExamOutput } from './types';
@@ -36,7 +28,7 @@ Asegúrate de que cada pregunta tenga 4 opciones y una respuesta correcta claram
 `,
 });
 
-const generateTestFromExamFlow = ai.defineFlow(
+export const generateTestFromExamFlow = ai.defineFlow(
   {
     name: 'generateTestFromExamFlow',
     inputSchema: GenerateTestFromExamInputSchema,

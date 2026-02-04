@@ -24,6 +24,14 @@ export const TestSchema = z.object({
     questions: z.array(QuestionSchema)
 });
 
+export const ExamSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  fileName: z.string(),
+  category: z.string(),
+  questions: z.array(QuestionSchema),
+  createdAt: z.any().optional(),
+});
 
 // --- Service Input Parameter Schemas ---
 
@@ -49,6 +57,7 @@ export const ReviewTestParamsSchema = z.object({
 
 export type Question = z.infer<typeof QuestionSchema>;
 export type Test = z.infer<typeof TestSchema>;
+export type Exam = z.infer<typeof ExamSchema>;
 
 export type SpecificTestParams = z.infer<typeof SpecificTestParamsSchema>;
 export type MixedTestParams = z.infer<typeof MixedTestParamsSchema>;

@@ -2,6 +2,8 @@
 import type { Question } from './definitions';
 
 interface SeedExam {
+    id: string;
+    name: string;
     fileName: string;
     category: string;
     questions: Question[];
@@ -215,6 +217,8 @@ const rawEbepMediumTest = {
 };
 
 export const advoGeneralTestMedium: SeedExam = {
+    id: "ebep-medium",
+    name: "EBEP - Nivel Medio",
     fileName: rawEbepMediumTest.fileName,
     category: rawEbepMediumTest.category,
     questions: rawEbepMediumTest.questions.map(q => {

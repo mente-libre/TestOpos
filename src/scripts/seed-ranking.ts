@@ -1,8 +1,8 @@
-
-import { db } from '@/lib/firebase/firebase-admin';
+import { getFirestore } from '@/lib/firebase/firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 
 async function seedRanking() {
+  const db = await getFirestore();
   if (!db) {
     console.error("Firestore is not initialized.");
     return;

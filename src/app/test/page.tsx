@@ -208,11 +208,13 @@ function TestPageContent() {
           sessionStorage.removeItem('testTitle');
         } else if (examId) {
           const result = await getExamById(examId);
-          if (result.success && result.exam) {
+          if ('exam' in result && result.exam) {
             rawQuestions = result.exam.questions;
             loadedTitle = result.exam.fileName;
-          } else {
+          } else if ('error' in result) {
             throw new Error(result.error || 'No se pudo cargar el examen.');
+          } else {
+             throw new Error('Respuesta inesperada del servidor al cargar el examen.');
           }
         } else {
           throw new Error("No se ha encontrado ningún test para cargar.");
@@ -307,14 +309,25 @@ function TestPageContent() {
       return;
     }
     try {
-      const result = await generateReviewTest(failedQuestions);
-      if (result.success && result.questions) {
-        sessionStorage.setItem('testQuestions', JSON.stringify(result.questions));
+      const reviewParams = {
+        numQuestions: failedQuestions.length > 10 ? 10 : failedQuestions.length, // Limitar a 10 preguntas por ahora
+        context: JSON.stringify(failedQuestions.map(q => ({
+          question: q.questionText,
+          options: q.options,
+          correctAnswerIndex: q.correctAnswerIndex
+        })))
+      };
+
+      const result = await generateReviewTest(reviewParams);
+      if ('test' in result && result.test?.questions) {
+        sessionStorage.setItem('testQuestions', JSON.stringify(result.test.questions));
         sessionStorage.setItem('testTitle', `Test de Repaso IA: ${title}`);
         router.push('/test');
         window.location.reload();
-      } else {
+      } else if ('error' in result) {
         toast({ variant: "destructive", title: "Error al generar el repaso", description: result.error });
+      } else {
+        toast({ variant: "destructive", title: "Error", description: "Respuesta inesperada del servicio de IA." });
       }
     } catch (e) {
       toast({ variant: "destructive", title: "Error", description: "Problema al conectar con el servicio de IA." });

@@ -1,11 +1,6 @@
 
 import type { Question } from './definitions';
-
-interface SeedExam {
-    fileName: string;
-    category: string;
-    questions: Question[];
-}
+import { type SeedExam } from './definitions';
 
 const rawLey9Test = {
   "title": "Ley 9/2017, de 8 de noviembre, de Contratos del Sector Público",
@@ -682,6 +677,8 @@ const transformedQuestions: Question[] = rawLey9Test.questions.map(q => ({
 }));
 
 export const ley9_2017Test: SeedExam = {
+    id: "ley9-2017",
+    name: "Ley 9/2017 Contratos Sector Público",
     fileName: rawLey9Test.title,
     category: 'ley9-2017',
     questions: transformedQuestions,
