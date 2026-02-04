@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { getFirestore } from '@/lib/firebase/firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 import { Question } from '@/lib/definitions';
