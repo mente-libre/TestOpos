@@ -12,7 +12,8 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "seed-ranking": "tsx -r dotenv/config src/scripts/seed-ranking.ts",
-    "test": "vitest"
+    "test": "vitest",
+    "postinstall": "rm -rf node_modules/@types/minimatch"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.2.2",
