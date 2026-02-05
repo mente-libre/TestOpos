@@ -1,12 +1,4 @@
 {
-  "type": "service_account",
-  "project_id": "tu-proyecto-id",
-  "private_key_id": "...",
-  "private_key": "-----BEGIN PRIVATE KEY-----\\n...\\n-----END PRIVATE KEY-----\\n",
-  "client_email": "firebase-adminsdk-...@tu-proyecto-id.iam.gserviceaccount.com",
-  ...
-}
-{
   "name": "nextn",
   "version": "0.1.0",
   "private": true,
